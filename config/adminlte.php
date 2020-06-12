@@ -242,12 +242,18 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'text' => 'reports',
+            'url'  => 'reports',
+            'icon' => 'fas fa-fw fa-book',
         ],
+        [
+            'text'        => 'images',
+            'url'         => 'images',
+            'icon'        => 'far fa-fw fa-file',
+            #'label'       => 4,
+            #'label_color' => 'success',
+        ],
+        /*
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
@@ -313,6 +319,7 @@ return [
             'icon_color' => 'cyan',
             'url'        => '#',
         ],
+        */
     ],
 
     /*
