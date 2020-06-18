@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Klustair',
+    'title' => 'KlustAIR',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -31,7 +31,7 @@ return [
     */
 
     'use_ico_only' => false,
-    'use_full_favicon' => false,
+    'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -188,7 +188,7 @@ return [
 
     'use_route_url' => false,
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => '/images',
 
     'logout_url' => 'logout',
 
@@ -242,8 +242,8 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text' => 'reports',
-            'url'  => 'reports',
+            'text' => 'latest reports',
+            'url'  => 'latestreport',
             'icon' => 'fas fa-fw fa-book',
         ],
         [
