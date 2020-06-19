@@ -1,11 +1,15 @@
 FROM php:7.3-apache-buster
 
-RUN apt update && apt install -y libmongoc-1.0-0 libcurl4-openssl-dev pkg-config libssl-dev
+RUN apt update && apt install -y libmongoc-1.0-0 libcurl4-openssl-dev pkg-config libssl-dev zip unzip
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer install
+
+COPY --from=node:10.21.0-buster-slim /usr/local /usr/local
+RUN npm install
 
 ENV APACHE_DOCUMENT_ROOT /var/www/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
