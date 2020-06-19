@@ -6,10 +6,9 @@ RUN pecl install mongodb \
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN composer install
 
+# get npm
 COPY --from=node:10.21.0-buster-slim /usr/local /usr/local
-RUN npm install
 
 ENV APACHE_DOCUMENT_ROOT /var/www/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -25,3 +24,6 @@ RUN rm -rf /var/www/storage/sessions/* /var/www/storage/views/* /var/www/storage
 RUN chown -R www-data: /var/www/storage
 
 COPY docker/apache/ /etc/apache2/sites-available/
+
+RUN composer install
+RUN npm install
