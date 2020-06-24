@@ -56,11 +56,36 @@ Route::get('/images', function () {
     return view('images', $data);
 });
 
-Route::get('/latestreport', function () {
+Route::get('/report/{checktime?}', function ($checktime=null) {
+    
+    if ($checktime == null) {
+        $data['checktime'] = DB::collection('pods')
+            ->distinct("checktime")
+            ->first();
+            print_r($data['checktime']);
+    }else{
+        $data['checktime'] = new MongoDB\BSON\UTCDateTime($checktime);
+    }
 
-    $data['checktime'] = DB::collection('pods')
+    $data['reports'] = DB::collection('pods')
         ->distinct("checktime")
-        ->first();
+        ->get();
+
+    $data['stats']['pods'] = DB::collection('pods')
+        ->where('checktime', $data['checktime'])
+        ->distinct("metadata.name")
+        ->get();
+
+    $data['stats']['images'] = DB::collection('pods')
+        ->where('checktime', $data['checktime'])
+        ->distinct("containers.0.image")
+        ->get();
+
+    $data['stats']['namespaces'] = DB::collection('pods')
+        ->where('checktime', $data['checktime'])
+        ->distinct("metadata.namespace")
+        ->get();
+
     $data['pods'] = DB::collection('pods')
         //->select("metadata.namespace","containers.image")
         ->where('checktime', $data['checktime'])
@@ -69,8 +94,8 @@ Route::get('/latestreport', function () {
         //print_r($data);
 
     $vulnseverity = array(
-                    "High" => 'bg-danger text-white',
-                    "Critical" => 'bg-warning text-dark',
+                    "Critical" => 'bg-danger text-dark',
+                    "High" => 'bg-warning text-white',
                     "Medium" => 'bg-info text-white',
                     "Low" => 'bg-secondary text-white',
                     "Negligible" => 'bg-dark text-white',
@@ -93,8 +118,8 @@ Route::get('/latestreport', function () {
 Route::get('/pod/{podid}', function ($podid) {
 
     $vulnseverity = array(
-                    "High" => 'bg-danger text-white',
-                    "Critical" => 'bg-warning text-dark',
+                    "Critical" => 'bg-danger text-dark',
+                    "High" => 'bg-warning text-white',
                     "Medium" => 'bg-info text-white',
                     "Low" => 'bg-secondary text-white',
                     "Negligible" => 'bg-dark text-white',

@@ -117,6 +117,7 @@
                     <span class="badge badge-pill bg-purple">base</span>
                     <span class="badge badge-pill bg-fuchsia">exploitability</span>
                     <span class="badge badge-pill badge-info">impact</span>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                 </div>
             </div>
             <!-- /.card-header -->
