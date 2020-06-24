@@ -1,8 +1,10 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<p align="center"><img src="https://github.com//mms-gianni/klustair-frontend//master/docs/img/klustair.png?raw=true" width="400"></p>
 
 # KlustAIR Frontend
 Frontend to klustair runner displays reports.
 
-![overview of a report](docs/img/reports.jpg?raw=true "Reports")
+## Report overview
+![overview of a report](https://github.com//mms-gianni/klustair-frontend//master/docs/img/reports.jpg?raw=true "Reports")
 
-![detail view of pods](docs/img/pods.jpg?raw=true "Pods")
+## Pod details
+![detail view of pods](https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/pods.jpg "Pods")
