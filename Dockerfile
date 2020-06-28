@@ -20,6 +20,8 @@ WORKDIR /var/www/
 
 COPY . /var/www/
 
+RUN cat /var/www/.env.apache >> /etc/apache2/envvars
+
 RUN rm -rf /var/www/storage/sessions/* /var/www/storage/views/* /var/www/storage/logs/* 
 RUN chown -R www-data: /var/www/storage
 
