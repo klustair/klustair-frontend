@@ -111,10 +111,12 @@
                                 <th>creation :</th>
                                 <td>{{ $pod['metadata']['creationTimestamp'] }}</td>
                             </tr>
+                            @isset($container['state'])
                             <tr>
                                 <th>started :</th>
                                 <td>{{ $container['state']['running']['startedAt'] }}</td>
                             </tr>
+                            @endisset
                             <tr>
                                 <th>imagePullPolicy :</th>
                                 <td>{{ $container['imagePullPolicy'] }}</td>

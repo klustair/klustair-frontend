@@ -62,7 +62,6 @@ Route::get('/report/{checktime?}', function ($checktime=null) {
         $data['checktime'] = DB::collection('pods')
             ->distinct("checktime")
             ->first();
-            print_r($data['checktime']);
     }else{
         $data['checktime'] = new MongoDB\BSON\UTCDateTime($checktime);
     }
