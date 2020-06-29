@@ -1,5 +1,8 @@
-APACHE_DOCUMENT_ROOT=${APACHE_DOCUMENT_ROOT:-/var/www/public/}
-APACHE_SERVERNAME=${APACHE_SERVERNAME:-klustair.test}
+#!/bin/bash
+
+cat >>/etc/apache2/envvars <<EOL
+export APACHE_DOCUMENT_ROOT=${APACHE_DOCUMENT_ROOT:-/var/www/public/}
+export APACHE_SERVERNAME=${APACHE_SERVERNAME:-klustair.test}
 
 export APP_NAME=${APP_NAME:-Klustair}
 export APP_ENV=${APP_ENV:-Klustair}local
@@ -21,3 +24,4 @@ export CACHE_DRIVER=${CACHE_DRIVER:-file}
 export QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
 export SESSION_DRIVER=${SESSION_DRIVER:-file}
 export SESSION_LIFETIME=${SESSION_LIFETIME:-120}
+EOL

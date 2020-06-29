@@ -29,3 +29,7 @@ COPY docker/apache/ /etc/apache2/sites-available/
 
 RUN composer install
 RUN npm install
+
+RUN chmod +x docker/startup.sh
+
+CMD ["docker/startup.sh", "apache2-foreground"]
