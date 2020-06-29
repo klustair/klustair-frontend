@@ -30,4 +30,4 @@ RUN npm install
 
 RUN chmod +x docker/startup.sh
 
-CMD ["docker/startup.sh", "apache2-foreground"]
+CMD ["/var/www/docker/startup.sh"]
