@@ -92,13 +92,15 @@
             @foreach ($pod['containers'] as $container)
                 <dl>
                     <dt>ADD</dt>
-                @foreach ($container['securityContext']['capabilities']['add'] as $capability)
+                    @isset($container['securityContext'])
+                    @foreach ($container['securityContext']['capabilities']['add'] as $capability)
                     <dd>- {{ $capability }}</dd>
-                @endforeach
+                    @endforeach
                     <dt>DROP</dt>
-                @foreach ($container['securityContext']['capabilities']['drop'] as $capability)
+                    @foreach ($container['securityContext']['capabilities']['drop'] as $capability)
                     <dd>- {{ $capability }}</dd>
-                @endforeach
+                    @endforeach
+                    @endisset
                 </dl>
             @endforeach
             </div>
