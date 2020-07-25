@@ -44,20 +44,6 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-md-4 col-sm-6 col-12">
-            <div class="info-box bg-success">
-              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Namespaces Checked</span>
-                <span class="info-box-number"><h3>{{ count($stats['namespaces']) }}</h3></span>
-
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
           <div class="col-md-4 col-sm-12 col-12">
             <div class="info-box bg-warning">
               <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
@@ -65,6 +51,20 @@
               <div class="info-box-content">
                 <span class="info-box-text">Images Scanned </span>
                 <span class="info-box-number"><h3>{{ count($stats['images']) }}</h3></span>
+
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-4 col-sm-6 col-12">
+            <div class="info-box bg-success">
+              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Namespaces Checked</span>
+                <span class="info-box-number"><h3>{{ count($stats['namespaces']) }}</h3></span>
 
               </div>
               <!-- /.info-box-content -->
@@ -130,9 +130,11 @@
                     @endforeach
                     </div>
                     <div class="col col-lg-3">
+                          @if(isset($container['vulnsum'])) 
                             @foreach ($container['vulnsum'] as $severity => $vulnsum)
                             <div class="p-1 mb-1 {{$vulnseverity[$severity]}} rounded">{{$severity}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
                             @endforeach
+                          @endif
                     </div>
                 </div>
             @endforeach
