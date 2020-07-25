@@ -130,7 +130,7 @@
                     @endforeach
                     </div>
                     <div class="col col-lg-3">
-                          @isset(container['vulnsum'])
+                          @isset($container['vulnsum'])
                             @foreach ($container['vulnsum'] as $severity => $vulnsum)
                             <div class="p-1 mb-1 {{$vulnseverity[$severity]}} rounded">{{$severity}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
                             @endforeach
