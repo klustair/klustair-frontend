@@ -111,12 +111,12 @@
                                 <th>creation :</th>
                                 <td>{{ $pod['metadata']['creationTimestamp'] }}</td>
                             </tr>
-                            @isset($container['state'])
+                            @if(isset($container['state']) && isset($container['state']['running']) && isset($container['state']['running']['startedAt']))
                             <tr>
                                 <th>started :</th>
                                 <td>{{ $container['state']['running']['startedAt'] }}</td>
                             </tr>
-                            @endisset
+                            @endif
                             <tr>
                                 <th>imagePullPolicy :</th>
                                 <td>{{ $container['imagePullPolicy'] }}</td>
@@ -130,11 +130,11 @@
                     @endforeach
                     </div>
                     <div class="col col-lg-3">
-                          @if(isset($container['vulnsum'])) 
+                          @isset(container['vulnsum'])
                             @foreach ($container['vulnsum'] as $severity => $vulnsum)
                             <div class="p-1 mb-1 {{$vulnseverity[$severity]}} rounded">{{$severity}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
                             @endforeach
-                          @endif
+                          @endisset
                     </div>
                 </div>
             @endforeach
