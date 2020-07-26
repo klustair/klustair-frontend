@@ -104,6 +104,7 @@ Route::get('/report/{checktime?}', function ($checktime=null) {
     $error = array(
             "danger",
             "success",
+            "unknown",
         );
         
     $data['vulnseverity'] = $vulnseverity;
