@@ -1,8 +1,10 @@
 FROM php:7.3-apache-buster
 
-RUN apt update && apt install -y libmongoc-1.0-0 libcurl4-openssl-dev pkg-config libssl-dev zip unzip
-RUN pecl install mongodb \
-    && docker-php-ext-enable mongodb
+RUN apt update && apt install -y libcurl4-openssl-dev pkg-config libssl-dev zip unzip
+
+RUN apt install -y libpq-dev
+RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql \
+    && docker-php-ext-enable pgsql pdo_pgsql 
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
