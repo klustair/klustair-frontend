@@ -18,7 +18,7 @@
               <div class="card-body table-responsive p-0">
 <div class="list-group" id="myList" role="tablist">
 @foreach ($reports as $report)
-    <a class="list-group-item list-group-item-action" data-toggle="list" href="#home" role="tab">{{ $report->toDateTime()->format('r') }}</a>
+    <a class="list-group-item list-group-item-action" data-toggle="list" href="#home" role="tab">{{ $report->checktime }}</a>
 @endforeach
 </div>
               </div>
@@ -36,7 +36,7 @@
               <div class="card-body table-responsive p-0">
               <div class="list-group" id="myList" role="tablist">
 @foreach ($pods as $pod)
-    <a class="list-group-item list-group-item-action" data-toggle="list" href="#home" role="tab">{{$pod}}</a>
+    <a class="list-group-item list-group-item-action" data-toggle="list" href="#home" role="tab">{{$pod->podname}}</a>
 @endforeach
 </div>
               </div>
@@ -54,7 +54,7 @@
               <div class="card-body table-responsive p-0">
               <div class="list-group" id="myList" role="tablist">
 @foreach ($images as $image)
-    <a class="list-group-item list-group-item-action" data-toggle="list" href="#home" role="tab">{{$image}}</a>
+    <a class="list-group-item list-group-item-action" data-toggle="list" href="#home" role="tab">{{$image->fulltag}}</a>
 @endforeach
 </div>
               </div>
