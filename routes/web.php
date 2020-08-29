@@ -103,8 +103,17 @@ Route::get('/report2/{report_uid?}', function ($report_uid=null) {
                     ->where('k_container_has_images.report_uid', $report_uid)
                     ->get();
                 foreach ($images_list as $i) {
-                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['images'][$i->uid] = json_decode(json_encode($i), true);
-                }
+                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']= json_decode(json_encode($i), true);
+
+                    $vulnsummary_list = DB::table('k_images_vulnsummary')
+                        ->where('image_uid', $i->uid)
+                        ->where('report_uid', $report_uid)
+                        ->get();
+                    }
+                    
+                    foreach ($vulnsummary_list as $v) {
+                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+                    }
             }
         }
     }

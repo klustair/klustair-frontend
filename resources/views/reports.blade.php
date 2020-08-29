@@ -101,15 +101,15 @@
                         <table>
                             <tbody>
                             <tr>
-                                <th>image :</th>
-                                <td>{{ $container['image'] }}</td>
+                                <th>Image :</th>
+                                <td><a href="/image/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
                             </tr>
                             <tr>
-                                <th>pod :</th>
+                                <th>Pod :</th>
                                 <td>{{ $pod['podname'] }}</td>
                             </tr>
                             <tr>
-                                <th>namespace :</th>
+                                <th>Namespace :</th>
                                 <td>{{ $namespace['name'] }}</td>
                             </tr>
                             <tr>
@@ -137,9 +137,9 @@
                     @endif
                     </div>
                     <div class="col col-lg-3">
-                          @isset($container['vulnsum'])
-                            @foreach ($container['vulnsum'] as $severity => $vulnsum)
-                            <div class="p-1 mb-1 {{$vulnseverity[$severity]}} rounded">{{$severity}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
+                          @isset($container['imagedetails']['vulnsummary'])
+                            @foreach ($container['imagedetails']['vulnsummary'] as $vulnsum)
+                            <div class="p-1 mb-1 {{$vulnseverity[$vulnsum['severity']]}} rounded">{{$vulnsum['severity']}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
                             @endforeach
                           @endisset
                     </div>
