@@ -3,7 +3,7 @@
 @section('title', 'Reports')
 
 @section('content_header')
-    <h1>Report {{$report_uid}}</h1>
+    <h1>Report {{$report_data->checktime}}</h1>{{$report_data->uid}}
 @stop
 
 @section('content')

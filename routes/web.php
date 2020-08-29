@@ -65,10 +65,16 @@ Route::get('/images', function () {
 Route::get('/report/{report_uid?}', function ($report_uid=null) {
     
     if ($report_uid == null) {
-        $report_uid = DB::table('k_reports')
+        $report = DB::table('k_reports')
             ->orderBy('checktime', 'DESC')
-            ->first()->uid;
+            ->first();
+    } else {
+        $report = DB::table('k_reports')
+            ->where('uid', $report_uid)
+            ->first();
     }
+    $report_uid = $report->uid;
+    $data['report_data'] = $report;
 
     $data['reports'] = DB::table('k_reports')
         ->distinct('uid')
@@ -145,9 +151,6 @@ Route::get('/report/{report_uid?}', function ($report_uid=null) {
         
     $data['vulnseverity'] = $vulnseverity;
     $data['error'] = $error;
-
-
-    $data['report_uid'] = $report_uid;
     
     $data['namespaces'] = $namespaces;
     /*
