@@ -116,7 +116,7 @@
                             <tbody>
                             <tr>
                                 <th>Image :</th>
-                                <td><a href="/image/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
+                                <td><a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
                             </tr>
                             <tr>
                                 <th>Pod :</th>

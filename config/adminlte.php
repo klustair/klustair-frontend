@@ -247,8 +247,8 @@ return [
             'icon' => 'fas fa-fw fa-book',
         ],
         [
-            'text'        => 'images',
-            'url'         => 'images',
+            'text'        => 'lists',
+            'url'         => 'lists',
             'icon'        => 'far fa-fw fa-file',
             #'label'       => 4,
             #'label_color' => 'success',

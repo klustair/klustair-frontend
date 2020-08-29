@@ -18,27 +18,8 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/images', function () {
-    /*
-    
-        $klustair_all = DB::collection('pods')
-            ->get();
-        print_r($klustair_all);
-    
-        $klustair_all = DB::collection('pods')
-            ->first();
-        print_r($klustair_all);
-    
-        $klustair_namespace = DB::collection('pods')
-            ->where('metadata.namespace', 'cms-search')
-            ->first();
-        print_r($klustair_namespace);
-    
-        $data['images'] = DB::collection('pods')
-            ->select("metadata.namespace","containers.image")
-            ->get();
-        print_r($data);
-    */
+Route::get('/lists', function () {
+
     $data['pods'] = DB::table('k_pods')
         ->distinct('podname')
         ->get();
@@ -125,11 +106,11 @@ Route::get('/report/{report_uid?}', function ($report_uid=null) {
                         ->where('image_uid', $i->uid)
                         ->where('report_uid', $report_uid)
                         ->get();
-                    }
+                }
 
-                    foreach ($vulnsummary_list as $v) {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
-                    }
+                foreach ($vulnsummary_list as $v) {
+                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+                }
             }
         }
     }
@@ -159,6 +140,58 @@ Route::get('/report/{report_uid?}', function ($report_uid=null) {
     echo "</pre>";
     */
     return view('reports', $data);
+});
+
+
+Route::get('/image/{report_uid}/{image_uid}', function ($report_uid, $image_uid) {
+
+    $vulnseverity = array(
+                    "Critical" => 'bg-danger text-dark',
+                    "High" => 'bg-warning text-white',
+                    "Medium" => 'bg-info text-white',
+                    "Low" => 'bg-secondary text-white',
+                    "Negligible" => 'bg-dark text-white',
+                    "Unknown" => 'bg-white text-dark'
+                );
+
+    $error = array(
+            "danger",
+            "success",
+        );
+        
+    $data['vulnseverity'] = $vulnseverity;
+    $data['error'] = $error;
+
+    $image = DB::table('k_images')
+        ->where('uid', $image_uid)
+        ->where('report_uid', $report_uid)
+        ->first();
+
+    $data['image']= json_decode(json_encode($image), true);
+
+    $vulnsummary_list = DB::table('k_images_vulnsummary')
+        ->where('image_uid', $image_uid)
+        ->where('report_uid', $report_uid)
+        ->get();
+
+    foreach ($vulnsummary_list as $v) {
+        $data['image']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+    }
+
+    $vuln_list = DB::table('k_images_vuln')
+        ->where('image_uid', $image_uid)
+        ->where('report_uid', $report_uid)
+        ->get();
+
+    foreach ($vuln_list as $vu) {
+        $data['image']['vulnerabilities'][$vu->uid] = json_decode(json_encode($vu), true);
+    }
+    /*
+    echo "<pre>";
+    print_r($data);
+    echo "</pre>";
+    */
+    return view('image', $data);
 });
 
 Route::get('/pod/{podid}', function ($podid) {
