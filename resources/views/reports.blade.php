@@ -23,13 +23,27 @@
 </p>
 
 <div class="row">
-          <div class="col-md-4 col-sm-6 col-12">
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-success">
+              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Namespaces Checked</span>
+                <span class="info-box-number"><h3>{{ $stats['namespaces'] }}</h3></span>
+
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box bg-info">
               <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Pods Checked</span>
-                <span class="info-box-number"><h3>TODO</h3></span>
+                <span class="info-box-number"><h3>{{ $stats['pods'] }}</h3></span>
 <!--
                 <div class="progress">
                   <div class="progress-bar" style="width: 70%"></div>
@@ -44,13 +58,13 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-md-4 col-sm-12 col-12">
+          <div class="col-md-3 col-sm-12 col-12">
             <div class="info-box bg-warning">
               <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Images Scanned </span>
-                <span class="info-box-number"><h3>TODO</h3></span>
+                <span class="info-box-text">Containters Scanned </span>
+                <span class="info-box-number"><h3>{{ $stats['containers'] }}</h3></span>
 
               </div>
               <!-- /.info-box-content -->
@@ -58,13 +72,13 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-md-4 col-sm-6 col-12">
-            <div class="info-box bg-success">
-              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+          <div class="col-md-3 col-sm-12 col-12">
+            <div class="info-box bg-warning">
+              <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Namespaces Checked</span>
-                <span class="info-box-number"><h3>TODO</h3></span>
+                <span class="info-box-text">Images Scanned </span>
+                <span class="info-box-number"><h3>{{ $stats['images'] }}</h3></span>
 
               </div>
               <!-- /.info-box-content -->
@@ -75,7 +89,7 @@
         </div>
 
 <p>
-  <button type="button" class="btn btn-block btn-default" id="toggler">show/hide details</button>
+  <button type="button" class="btn btn-block btn-default" id="toggler">show/hide Namespace details</button>
 </p>
 
 
@@ -107,10 +121,6 @@
                             <tr>
                                 <th>Pod :</th>
                                 <td>{{ $pod['podname'] }}</td>
-                            </tr>
-                            <tr>
-                                <th>Namespace :</th>
-                                <td>{{ $namespace['name'] }}</td>
                             </tr>
                             <tr>
                                 <th>Pod creation :</th>
