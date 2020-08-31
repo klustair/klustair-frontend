@@ -3,7 +3,7 @@
 @section('title', 'Reports')
 
 @section('content_header')
-    <h1>Report from {{$checktime->toDateTime()->format('r')}}</h1>
+    <h1>Report {{$report_data->checktime}}</h1>{{$report_data->uid}}
 @stop
 
 @section('content')
@@ -16,20 +16,34 @@
 
     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
     @foreach ($reports as $report)
-      <a class="dropdown-item" href="/report/{{ $report }}">{{ $report->toDateTime()->format('r') }}</a>
+      <a class="dropdown-item" href="/report/{{ $report->uid }}">{{ $report->checktime }}</a>
     @endforeach
     </div>
   </div>
 </p>
 
 <div class="row">
-          <div class="col-md-4 col-sm-6 col-12">
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-success">
+              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Namespaces Checked</span>
+                <span class="info-box-number"><h3>{{ $stats['namespaces'] }}</h3></span>
+
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box bg-info">
               <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Pods Checked</span>
-                <span class="info-box-number"><h3>{{ count($pods) }}</h3></span>
+                <span class="info-box-number"><h3>{{ $stats['pods'] }}</h3></span>
 <!--
                 <div class="progress">
                   <div class="progress-bar" style="width: 70%"></div>
@@ -44,13 +58,13 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-md-4 col-sm-12 col-12">
+          <div class="col-md-3 col-sm-12 col-12">
             <div class="info-box bg-warning">
               <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Images Scanned </span>
-                <span class="info-box-number"><h3>{{ count($stats['images']) }}</h3></span>
+                <span class="info-box-text">Containters Scanned </span>
+                <span class="info-box-number"><h3>{{ $stats['containers'] }}</h3></span>
 
               </div>
               <!-- /.info-box-content -->
@@ -58,13 +72,13 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-md-4 col-sm-6 col-12">
-            <div class="info-box bg-success">
-              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+          <div class="col-md-3 col-sm-12 col-12">
+            <div class="info-box bg-warning">
+              <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Namespaces Checked</span>
-                <span class="info-box-number"><h3>{{ count($stats['namespaces']) }}</h3></span>
+                <span class="info-box-text">Images Scanned </span>
+                <span class="info-box-number"><h3>{{ $stats['images'] }}</h3></span>
 
               </div>
               <!-- /.info-box-content -->
@@ -75,16 +89,16 @@
         </div>
 
 <p>
-  <button type="button" class="btn btn-block btn-default" id="toggler">show/hide details</button>
+  <button type="button" class="btn btn-block btn-default" id="toggler">show/hide Namespace details</button>
 </p>
 
 
-@foreach ($pods as $pod)
+@foreach ($namespaces as $namespace)
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><a href="/pod/{{ $pod['metadata']['uid'] }}">{{ $pod['metadata']['name'] }}</a></h3>
+                <h3 class="card-title"><a href="/namespace/{{ $namespace['uid'] }}">{{ $namespace['name'] }}</a></h3>
                 <!--
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -94,22 +108,23 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-3">
+            @foreach ($namespace['pods'] as $pod)
             @foreach ($pod['containers'] as $container)
                 <div class="row">
                     <div class="col">
                         <table>
                             <tbody>
                             <tr>
-                                <th>image :</th>
-                                <td>{{ $container['image'] }}</td>
+                                <th>Image :</th>
+                                <td><a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
                             </tr>
                             <tr>
-                                <th>namespace :</th>
-                                <td>{{ $pod['metadata']['namespace'] }}</td>
+                                <th>Pod :</th>
+                                <td>{{ $pod['podname'] }}</td>
                             </tr>
                             <tr>
-                                <th>creation :</th>
-                                <td>{{ $pod['metadata']['creationTimestamp'] }}</td>
+                                <th>Pod creation :</th>
+                                <td>TODO</td>
                             </tr>
                             @if(isset($container['state']) && isset($container['state']['running']) && isset($container['state']['running']['startedAt']))
                             <tr>
@@ -119,24 +134,28 @@
                             @endif
                             <tr>
                                 <th>imagePullPolicy :</th>
-                                <td>{{ $container['imagePullPolicy'] }}</td>
+                                <td>{{ $container['image_pull_policy'] }}</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <div  class="col-md-auto">
+                    @if(isset($container['checkresults']))
                     @foreach ($container['checkresults'] as $checkresult)
                         <span class="badge badge-pill badge-{{$error[$checkresult['result']]}}" style="width:60px">{{$error[$checkresult['result']]}}</span> {{$checkresult['description']}} </br>
                     @endforeach
+                    @endif
                     </div>
                     <div class="col col-lg-3">
-                          @isset($container['vulnsum'])
-                            @foreach ($container['vulnsum'] as $severity => $vulnsum)
-                            <div class="p-1 mb-1 {{$vulnseverity[$severity]}} rounded">{{$severity}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
+                          @isset($container['imagedetails']['vulnsummary'])
+                            @foreach ($container['imagedetails']['vulnsummary'] as $vulnsum)
+                            <div class="p-1 mb-1 {{$vulnseverity[$vulnsum['severity']]}} rounded">{{$vulnsum['severity']}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
                             @endforeach
                           @endisset
                     </div>
                 </div>
+            <hr>
+            @endforeach
             @endforeach
             </div>
             <!-- /.card-body -->

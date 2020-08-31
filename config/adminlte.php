@@ -247,8 +247,8 @@ return [
             'icon' => 'fas fa-fw fa-book',
         ],
         [
-            'text'        => 'images',
-            'url'         => 'images',
+            'text'        => 'lists',
+            'url'         => 'lists',
             'icon'        => 'far fa-fw fa-file',
             #'label'       => 4,
             #'label_color' => 'success',
@@ -338,7 +338,6 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\SubmenuFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
