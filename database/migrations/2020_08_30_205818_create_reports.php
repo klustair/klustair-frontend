@@ -29,7 +29,7 @@ class CreateReports extends Migration
 
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_reports
-                OWNER to postgres;
+                OWNER to $env('DB_USERNAME', 'anchoreengine');
         SQL;
 
         foreach ($create_sql as $sql ) {

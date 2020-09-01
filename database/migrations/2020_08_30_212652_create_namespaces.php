@@ -37,7 +37,7 @@ class CreateNamespaces extends Migration
 
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_namespaces
-                OWNER to postgres;
+                OWNER to $env('DB_USERNAME', 'anchoreengine');
         SQL;
 
         $create_sql[] = <<<SQL

@@ -51,7 +51,7 @@ class CreateImagesVuln extends Migration
 
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_images_vuln
-                OWNER to postgres;
+                OWNER to $env('DB_USERNAME', 'anchoreengine');
         SQL;
 
         $create_sql[] = <<<SQL
