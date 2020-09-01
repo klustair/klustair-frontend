@@ -35,9 +35,10 @@ class CreateImagesVulnsummary extends Migration
             TABLESPACE pg_default;
         SQL;
 
+        $dbuser = env('DB_USERNAME', 'anchoreengine');
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_images_vulnsummary
-                OWNER to $env('DB_USERNAME', 'anchoreengine');
+                OWNER to $dbuser;
         SQL;
 
         $create_sql[] = <<<SQL
