@@ -30,7 +30,7 @@ class CreateImagesVulnWhitelist extends Migration
 
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_images_vuln_whitelist
-                OWNER to postgres;
+                OWNER to $env('DB_USERNAME', 'anchoreengine');
         SQL;
 
         foreach ($create_sql as $sql ) {

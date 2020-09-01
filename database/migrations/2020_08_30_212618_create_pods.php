@@ -43,7 +43,7 @@ class CreatePods extends Migration
 
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_pods
-                OWNER to postgres;
+                OWNER to $env('DB_USERNAME', 'anchoreengine');
         SQL;
 
         $create_sql[] = <<<SQL

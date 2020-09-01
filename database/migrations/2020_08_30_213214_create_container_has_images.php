@@ -34,7 +34,7 @@ class CreateContainerHasImages extends Migration
 
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_container_has_images
-                OWNER to postgres;
+                OWNER to $env('DB_USERNAME', 'anchoreengine');
         SQL;
 
         $create_sql[] = <<<SQL
