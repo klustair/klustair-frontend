@@ -27,9 +27,10 @@ class CreateReports extends Migration
             TABLESPACE pg_default;
         SQL;
 
+        $dbuser = env('DB_USERNAME', 'anchoreengine');
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_reports
-                OWNER to $env('DB_USERNAME', 'anchoreengine');
+                OWNER to $dbuser;
         SQL;
 
         foreach ($create_sql as $sql ) {
