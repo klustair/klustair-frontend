@@ -54,7 +54,11 @@ Route::get('/report/{report_uid?}', function ($report_uid=null) {
             ->where('uid', $report_uid)
             ->first();
     }
-    $report_uid = $report->uid;
+    
+    if($report == null) {
+        $report_uid = 0;
+    }
+
     $data['report_data'] = $report;
 
     $data['reports'] = DB::table('k_reports')
@@ -71,6 +75,7 @@ Route::get('/report/{report_uid?}', function ($report_uid=null) {
         ->where('report_uid', $report_uid)
         ->get();
     
+    $namespaces = [];
     foreach ($namespaces_list as $n) {
         $data['stats']['namespaces']++;
         $namespaces[$n->uid] = json_decode(json_encode($n), true);
