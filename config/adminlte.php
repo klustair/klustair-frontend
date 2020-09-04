@@ -188,7 +188,7 @@ return [
 
     'use_route_url' => false,
 
-    'dashboard_url' => '/images',
+    'dashboard_url' => '/',
 
     'logout_url' => 'logout',
 
@@ -247,7 +247,7 @@ return [
             'icon' => 'fas fa-fw fa-book',
         ],
         [
-            'text'        => 'lists',
+            'text'        => 'debug',
             'url'         => 'lists',
             'icon'        => 'far fa-fw fa-file',
             #'label'       => 4,

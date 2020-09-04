@@ -8,10 +8,8 @@ use Illuminate\Http\Request;
 class DebugController extends Controller
 {
     /**
-     * Show imagedetailes of an image in specific Report
+     * Show several lists to debug
      *
-     * @param  string  $report_uid
-     * @param  string  $image_uid
      * @return View
      */
     public function list() 
