@@ -19,6 +19,7 @@ class ReportController extends Controller
             $report = DB::table('k_reports')
                 ->orderBy('checktime', 'DESC')
                 ->first();
+            $report_uid = $report->uid;
         } else {
             $report = DB::table('k_reports')
                 ->where('uid', $report_uid)
