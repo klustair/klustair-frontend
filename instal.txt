@@ -1,2 +1,0 @@
-pecl install mongodb
-composer require jenssegers/mongodb

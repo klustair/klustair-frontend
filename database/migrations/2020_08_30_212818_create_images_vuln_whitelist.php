@@ -16,9 +16,10 @@ class CreateImagesVulnWhitelist extends Migration
         $create_sql[] = <<<SQL
             CREATE TABLE public.k_images_vuln_whitelist
             (
-                uid uuid NOT NULL,
-                vuln character varying COLLATE pg_catalog."default",
-                image_uid uuid,
+                uid character varying COLLATE pg_catalog."default" NOT NULL,
+                wl_vuln character varying COLLATE pg_catalog."default",
+                wl_anchore_imageid character varying COLLATE pg_catalog."default",
+                whitelisttime timestamp with time zone NOT NULL,
                 message_txt text COLLATE pg_catalog."default",
                 CONSTRAINT k_images_vuln_whitelist_pkey PRIMARY KEY (uid)
             )

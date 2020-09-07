@@ -3,9 +3,7 @@
 @section('title', 'Reports')
 
 @section('content_header')
-    @if(isset($container['checkresults']))
-    <h1>Report {{$report_data->checktime}}</h1>{{$report_data->uid}}
-    @endif
+    <h1>Report {{ $report_data->checktime }}</h1>
 @stop
 
 @section('content')
