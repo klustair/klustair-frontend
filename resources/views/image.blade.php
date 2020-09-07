@@ -3,7 +3,7 @@
 @section('title', 'Pod details')
 
 @section('content_header')
-    <h1 id='image' data-imageuid='{{ $image['uid'] }}'>Image {{ $image['fulltag'] }}</h1>
+    <h1 id='image' data-imageuid='{{ $image['anchore_imageid'] }}'>Image {{ $image['fulltag'] }}</h1>
 @stop
 
 
@@ -133,7 +133,7 @@
                             @endif
                         </td>
                         <td>
-                            <input type="checkbox" id="{{ $vulnerabily['uid'] }}" class="whitelistItem" name="whitelist" value="{{ $vulnerabily['uid'] }}" @if ($vulnerabily['images_vuln_whitelist_uid'] != "") checked @endif>
+                            <input type="checkbox" id="{{ $vulnerabily['vuln'] }}" class="whitelistItem" name="whitelist" value="{{ $vulnerabily['uid'] }}" @if ($vulnerabily['images_vuln_whitelist_uid'] != "") checked @endif>
                         </td>
                     </tr>
                     <p>
@@ -223,22 +223,26 @@ $('.swalDefaultSuccess').click(function() {
     $('.whitelistItem').each(function( index ) {
         //console.log( index + ": " + $(this).prop('checked') );
         vuln = {
-            'uid' : $(this).attr('id'),
+            'vuln' : $(this).attr('id'),
             'state' :  $(this).prop('checked')
         }
-        vuln_uid_list.push(vuln)
+        if ($(this).prop('checked') == true) {
+            vuln_uid_list.push(vuln)
+        }
     });
 
-    console.log(vuln_uid_list)
+    // Encode and Stringify fields to avoid hitting the POST Max 
+    // field setting on images woth more than 500 vulnerabilities
+    var encodedString = btoa(JSON.stringify(vuln_uid_list));
 
     var data = {
-        vuln_uid_list: vuln_uid_list
+        vuln_list: encodedString
     }
+    console.log(data)
     $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageuid'), data, function( data ) {
         $( '.result' ).html( data );
     })
     
-
     Toast.fire({
     type: 'success',
     title: 'Updated Whitelist'

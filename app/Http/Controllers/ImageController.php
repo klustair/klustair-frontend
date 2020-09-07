@@ -51,10 +51,14 @@ class ImageController extends Controller
         }
     
         $vuln_list = DB::table('k_images_vuln')
-            ->leftJoin('k_images_vuln_whitelist', 'k_images_vuln.uid', '=', 'k_images_vuln_whitelist.images_vuln_uid')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_vuln.image_uid')
+            ->leftJoin('k_images_vuln_whitelist', function ($join) {
+                $join->on('k_images_vuln_whitelist.wl_anchore_imageid', '=', 'anchore_imageid')
+                      ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vuln');
+            })
             ->where('k_images_vuln.image_uid', $image_uid)
             ->where('k_images_vuln.report_uid', $report_uid)
-            ->select('k_images_vuln.*', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
+            ->select('k_images_vuln.*', 'k_images.anchore_imageid as anchore_imageid', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
             ->get();
     
         foreach ($vuln_list as $vu) {
