@@ -28,6 +28,9 @@ services:
       - QUEUE_CONNECTION=${QUEUE_CONNECTION}
       - SESSION_DRIVER=${SESSION_DRIVER}
       - SESSION_LIFETIME=${SESSION_LIFETIME}
+      - ANCHORE_API_URL=${ANCHORE_API_URL:-http://host.docker.internal:8228}
+      - ANCHORE_CLI_USER=${ANCHORE_CLI_USER:-admin}
+      - ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS:-foobar}
     ports:
       - 8080:80
     volumes:
