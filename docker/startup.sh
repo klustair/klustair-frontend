@@ -12,12 +12,12 @@ export APP_URL=${APP_URL}
 
 export LOG_CHANNEL=${LOG_CHANNEL:-stack}
 
-export DB_CONNECTION=${DB_CONNECTION:-mongodb}
+export DB_CONNECTION=${DB_CONNECTION:-pgsql}
 export DB_HOST=${DB_HOST}
-export DB_PORT=${DB_PORT:-27017}
+export DB_PORT=${DB_PORT:-5432}
 export DB_DATABASE=${DB_DATABASE:-klustair}
 export DB_USERNAME=${DB_USERNAME:-root}
-export DB_PASSWORD=${DB_PASSWORD}
+export DB_PASSWORD='${DB_PASSWORD}'
 
 export BROADCAST_DRIVER=${BROADCAST_DRIVER:-log}
 export CACHE_DRIVER=${CACHE_DRIVER:-file}
