@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 
-class homeController extends Controller
+class HomeController extends Controller
 {
     /**
      * Load Overview data

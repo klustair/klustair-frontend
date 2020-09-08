@@ -13,10 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'homeController@home');
+Route::get('/', 'HomeController@home');
 
 Route::get('/lists', 'DebugController@list' );
 
 Route::get('/report/{report_uid?}', 'ReportController@overview');
 
 Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
+
+Route::get('/anchore/images', 'Anchore\ImagesController@list' );
+
+Route::get('/anchore/feeds', 'Anchore\FeedsController@list' );
+
+Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
+
+Route::get('/anchore/system', 'Anchore\SystemController@list' );

@@ -247,6 +247,28 @@ return [
             'icon' => 'fas fa-fw fa-book',
         ],
         [
+            'text'    => 'Anchore',
+            'icon'    => 'fas fa-fw fa-anchor',
+            'submenu' => [
+                [
+                    'text' => 'images',
+                    'url'  => '/anchore/images',
+                ],
+                [
+                    'text' => 'feeds',
+                    'url'  => '/anchore/feeds',
+                ],
+                [
+                    'text' => 'registries',
+                    'url'  => '/anchore/registries',
+                ],
+                [
+                    'text' => 'Analyser status',
+                    'url'  => '/anchore/system',
+                ],
+            ],
+        ],
+        [
             'text'        => 'debug',
             'url'         => 'lists',
             'icon'        => 'far fa-fw fa-file',
