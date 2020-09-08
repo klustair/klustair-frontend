@@ -98,7 +98,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><a href="/namespace/{{ $namespace['uid'] }}">{{ $namespace['name'] }}</a></h3>
+                <h3 class="card-title">{{ $namespace['name'] }}</h3>
                 <!--
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
