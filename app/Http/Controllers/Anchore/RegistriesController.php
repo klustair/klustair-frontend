@@ -19,10 +19,11 @@ class RegistriesController extends Controller
         $status = $anchore_api->get("${anchore_api_url}/v1/registries");
         $data['registries'] = $status->json();
 
-        
+        /*
         echo "<pre>";
         print_r($data);
         echo "</pre>";
+        */
         
         return view('anchore/registries', $data);
     }
