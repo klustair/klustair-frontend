@@ -28,3 +28,5 @@ Route::get('/anchore/feeds', 'Anchore\FeedsController@list' );
 Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
 
 Route::get('/anchore/system', 'Anchore\SystemController@list' );
+
+Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
