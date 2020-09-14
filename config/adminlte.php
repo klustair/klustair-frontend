@@ -263,8 +263,8 @@ return [
                     'url'  => '/anchore/registries',
                 ],
                 [
-                    'text' => 'Analyser status',
-                    'url'  => '/anchore/system',
+                    'text' => 'policies',
+                    'url'  => '/anchore/policies',
                 ],
             ],
         ],
