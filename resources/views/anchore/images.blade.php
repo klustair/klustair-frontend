@@ -48,7 +48,7 @@
                       </ul>
                     </div>
                     <div class="col-2 text-center">
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Debian_logo.png" alt="" class="img-fluid">
+                      <img src="/img/distro/{{ $image['image_content']['metadata']['distro'] }}.png" alt="" class="img-fluid">
                     </div>
                   </div>
                 </div>
