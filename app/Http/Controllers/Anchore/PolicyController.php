@@ -17,11 +17,11 @@ class PolicyController extends Controller
         $anchore_api = Http::withBasicAuth($anchore_api_user, $anchore_api_pass);
 
         $data['policies'] = $anchore_api->get("${anchore_api_url}/v1/policies?detail=true")->json();
-        
+        /*
         echo "<pre>";
         print_r($data);
         echo "</pre>";
-        
+        */
         
         return view('anchore/policies', $data);
     }
