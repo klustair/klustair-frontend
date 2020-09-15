@@ -266,6 +266,10 @@ return [
                     'text' => 'policies',
                     'url'  => '/anchore/policies',
                 ],
+                [
+                    'text' => 'subscriptions',
+                    'url'  => '/anchore/subscriptions',
+                ],
             ],
         ],
         [

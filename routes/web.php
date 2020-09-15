@@ -30,3 +30,5 @@ Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
 Route::get('/anchore/system', 'Anchore\SystemController@list' );
 
 Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
+
+Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
