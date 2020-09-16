@@ -108,6 +108,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-3">
+            @if(isset($namespace['pods']))
             @foreach ($namespace['pods'] as $pod)
             @foreach ($pod['containers'] as $container)
                 <div class="row">
@@ -157,6 +158,7 @@
             <hr>
             @endforeach
             @endforeach
+            @endif
             </div>
             <!-- /.card-body -->
         </div>
