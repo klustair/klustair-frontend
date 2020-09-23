@@ -98,7 +98,11 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">{{ $namespace['name'] }}</h3>
+                <h3 class="card-title"><a href="/namespace/{{ $report_data->uid }}/{{ $namespace['uid'] }}">{{ $namespace['name'] }}</a>
+                <span class="badge badge-danger right">{{ $namespace['stats']['error'] }}</span>
+                <span class="badge badge-warning right">{{ $namespace['stats']['warning'] }}</span>
+                <span class="badge badge-info right">{{ $namespace['stats']['info'] }}</span>
+                </h3>
                 <!--
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -114,13 +118,14 @@
                       <theader>
                           <tr>
                           <th>Image</th>
-                          <th width="460px">Vulnerabiliteis</th>
+                          <th width="460px">Vulnerabilities</th>
                           <th width="50px">NO ACK</th>
                           </tr>
                       </theader>
                       <tbody>
             @if(isset($namespace['pods']))
             @foreach ($namespace['pods'] as $pod)
+            @if(isset($pod['containers']))
             @foreach ($pod['containers'] as $container)
                       <tr>
                           <td><a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
@@ -140,6 +145,7 @@
                           </td>
                       </tr>
             @endforeach
+            @endif
             @endforeach
             @endif
                       </tbody>
