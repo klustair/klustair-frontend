@@ -14,7 +14,7 @@ class CreateImagesVulnWhitelist extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE public.k_images_vuln_whitelist
+            CREATE TABLE IF NOT EXISTS public.k_images_vuln_whitelist
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 wl_vuln character varying COLLATE pg_catalog."default",

@@ -14,7 +14,7 @@ class CreateImages extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE public.k_images
+            CREATE TABLE IF NOT EXISTS public.k_images
             (
                 image_size bigint,
                 layer_count bigint,
@@ -50,7 +50,7 @@ class CreateImages extends Migration
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX k_images_report_uid_fkey
+            CREATE INDEX IF NOT EXISTS k_images_report_uid_fkey
                 ON public.k_images USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;

@@ -14,7 +14,7 @@ class CreateImagesVulnsummary extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE public.k_images_vulnsummary
+            CREATE TABLE IF NOT EXISTS public.k_images_vulnsummary
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 severity vulnerability_severities,
@@ -42,7 +42,7 @@ class CreateImagesVulnsummary extends Migration
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX k_images_vulnsummary_report_uid_fkey
+            CREATE INDEX IF NOT EXISTS k_images_vulnsummary_report_uid_fkey
                 ON public.k_images_vulnsummary USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;

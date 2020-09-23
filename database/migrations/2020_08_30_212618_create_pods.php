@@ -14,7 +14,7 @@ class CreatePods extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE public.k_pods
+            CREATE TABLE IF NOT EXISTS public.k_pods
             (
                 podname character varying COLLATE pg_catalog."default" NOT NULL,
                 report_uid character varying COLLATE pg_catalog."default" NOT NULL,
@@ -48,7 +48,7 @@ class CreatePods extends Migration
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX k_pods_namespace_uid_fkey
+            CREATE INDEX IF NOT EXISTS k_pods_namespace_uid_fkey
                 ON public.k_pods USING btree
                 (namespace_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;
@@ -56,7 +56,7 @@ class CreatePods extends Migration
 
 
         $create_sql[] = <<<SQL
-            CREATE INDEX k_pods_report_uid_fkey
+            CREATE INDEX IF NOT EXISTS k_pods_report_uid_fkey
                 ON public.k_pods USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;

@@ -14,7 +14,7 @@ class CreateReports extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE public.k_reports
+            CREATE TABLE IF NOT EXISTS public.k_reports
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 checktime timestamp with time zone NOT NULL,

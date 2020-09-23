@@ -14,7 +14,7 @@ class CreateImagesVuln extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE public.k_images_vuln
+            CREATE TABLE IF NOT EXISTS public.k_images_vuln
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 image_uid character varying COLLATE pg_catalog."default",
@@ -56,7 +56,7 @@ class CreateImagesVuln extends Migration
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX k_images_vuln_report_uid_fkey
+            CREATE INDEX IF NOT EXISTS k_images_vuln_report_uid_fkey
                 ON public.k_images_vuln USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;

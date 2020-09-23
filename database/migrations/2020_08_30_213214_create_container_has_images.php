@@ -14,7 +14,7 @@ class CreateContainerHasImages extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE public.k_container_has_images
+            CREATE TABLE IF NOT EXISTS public.k_container_has_images
             (
                 report_uid character varying COLLATE pg_catalog."default" NOT NULL,
                 container_uid character varying COLLATE pg_catalog."default" NOT NULL,
@@ -39,7 +39,7 @@ class CreateContainerHasImages extends Migration
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX k_container_has_images_report_uid_fkey
+            CREATE INDEX IF NOT EXISTS k_container_has_images_report_uid_fkey
                 ON public.k_container_has_images USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;
