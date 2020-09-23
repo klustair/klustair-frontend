@@ -19,6 +19,11 @@ class ReportController extends Controller
             $report = DB::table('k_reports')
                 ->orderBy('checktime', 'DESC')
                 ->first();
+                
+            if ($report == null) {
+                ## Cheapest solution. Go back to home, if there are no reports yet
+                return redirect('/');
+            }
             $report_uid = $report->uid;
         } else {
             $report = DB::table('k_reports')
@@ -54,7 +59,23 @@ class ReportController extends Controller
                 ->where('report_uid', $report_uid)
                 ->where('namespace_uid', $n->uid)
                 ->get();
-            
+
+            $audits_stats = DB::table('k_audits')
+                ->select('severity_level', DB::raw('count(*) as total'))
+                ->where('report_uid', $report_uid)
+                ->where('namespace_uid', $n->uid)
+                ->groupBy('severity_level')
+                ->get();
+
+            $namespaces[$n->uid]['stats'] = array(
+                'error' => 0,
+                'warning' => 0,
+                'info' => 0
+            );
+            foreach ($audits_stats as $s) {
+                $namespaces[$n->uid]['stats'][$s->severity_level] = $s->total;
+            };
+
             foreach ($pods_list as $p) {
                 $data['stats']['pods']++;
                 $namespaces[$n->uid]['pods'][$p->uid] = json_decode(json_encode($p), true);
