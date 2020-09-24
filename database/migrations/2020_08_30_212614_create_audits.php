@@ -23,7 +23,7 @@ class CreateAudits extends Migration
                 audit_name character varying COLLATE pg_catalog."default",
                 msg text COLLATE pg_catalog."default",
                 severity_level character varying COLLATE pg_catalog."default",
-                audit_time timestamp timestamp with time zone NOT NULL,
+                audit_time timestamp with time zone NOT NULL,
                 resource_name character varying COLLATE pg_catalog."default",
                 capability character varying COLLATE pg_catalog."default",
                 container character varying COLLATE pg_catalog."default",
