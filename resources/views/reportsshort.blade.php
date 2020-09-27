@@ -98,11 +98,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><a href="/namespace/{{ $report_data->uid }}/{{ $namespace['uid'] }}">{{ $namespace['name'] }}</a>
-                <span class="badge badge-danger right">{{ $namespace['stats']['error'] }}</span>
-                <span class="badge badge-warning right">{{ $namespace['stats']['warning'] }}</span>
-                <span class="badge badge-info right">{{ $namespace['stats']['info'] }}</span>
-                </h3>
+                <h3 class="card-title"><a href="/namespace/{{ $report_data->uid }}/{{ $namespace['uid'] }}">{{ $namespace['name'] }}</a></h3>
                 <!--
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -113,10 +109,41 @@
             <!-- /.card-header -->
             <div class="card-body table-responsive p-3">
 
+            <div class="row">
+
+            <a href="/namespace/{{ $report_data->uid }}/{{ $namespace['uid'] }}" class="info-box m-2 bg-light col-2" style="min-height: inherit">
+                <span class="info-box-icon bg-danger p-1" style="width: 50px"><i class="fas fa-exclamation"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-number" style="font-size: 2.1rem;color: #AFAFAF;">{{ $namespace['stats']['error'] }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </a>
+              <!-- /.info-box -->
+
+              <a href="/namespace/{{ $report_data->uid }}/{{ $namespace['uid'] }}" class="info-box m-2 bg-light col-2" style="min-height: inherit">
+                <span class="info-box-icon bg-warning p-1" style="width: 50px"><i class="fas fa-times"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-number" style="font-size: 2.1rem;color: #AFAFAF;">{{ $namespace['stats']['warning'] }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </a>
+              <!-- /.info-box -->
+
+              
+              <a href="/namespace/{{ $report_data->uid }}/{{ $namespace['uid'] }}" class="info-box m-2 bg-light col-2" style="min-height: inherit">
+                <span class="info-box-icon bg-info p-1" style="width: 50px"><i class="fas fa-info"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-number" style="font-size: 2.1rem;color: #AFAFAF;">{{ $namespace['stats']['info'] }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </a>
+              <!-- /.info-box -->
+            </div>
 
                     <table class="col-12">
                       <theader>
                           <tr>
+                          <th>Container</th>
                           <th>Image</th>
                           <th width="460px">Vulnerabilities</th>
                           <th width="50px">NO ACK</th>
@@ -128,6 +155,7 @@
             @if(isset($pod['containers']))
             @foreach ($pod['containers'] as $container)
                       <tr>
+                          <td>{{ $container['name'] }} </td>
                           <td><a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
                           <td>
                           @isset($container['imagedetails']['vulnsummary'])
