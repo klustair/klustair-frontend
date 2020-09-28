@@ -17,6 +17,8 @@ class ReportController extends Controller
     {
         if ($report_uid == null) {
             $report = DB::table('k_reports')
+                ->select('uid')
+                ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime")
                 ->orderBy('checktime', 'DESC')
                 ->first();
                 
@@ -27,6 +29,8 @@ class ReportController extends Controller
             $report_uid = $report->uid;
         } else {
             $report = DB::table('k_reports')
+            ->select('uid')
+            ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime")
                 ->where('uid', $report_uid)
                 ->first();
         }
@@ -38,6 +42,8 @@ class ReportController extends Controller
         $data['report_data'] = $report;
     
         $data['reports'] = DB::table('k_reports')
+            ->select('uid')
+            ->selectRaw("to_char(k_reports.checktime, 'DD.MM HH24:MI') as checktime")
             ->distinct('uid')
             ->get()
             ->toArray();
