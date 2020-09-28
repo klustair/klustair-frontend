@@ -40,7 +40,27 @@ class ImageController extends Controller
             ->first();
     
         $data['image']= json_decode(json_encode($image), true);
-    
+
+        $vulnhistory_sql = <<<SQL
+            to_char(k_reports.checktime, 'DD.MM HH24:MI') as checktime,
+            (SELECT 
+                COUNT(k_images_vuln.uid) AS total 
+                FROM k_images_vuln 
+                LEFT JOIN k_images ON image_uid = k_images.uid
+                WHERE fulltag='$image->fulltag' and 
+                    k_images_vuln.report_uid=k_reports.uid
+            )
+        SQL;
+
+        $vulnhistory_list = DB::table('k_reports')
+        ->selectRaw($vulnhistory_sql)
+        ->get();
+
+        foreach ($vulnhistory_list as $v) {
+            $data['vulnhistory']['data'][] = $v->total;
+            $data['vulnhistory']['labels'][] = "'".$v->checktime."'";
+        }
+        
         $vulnsummary_list = DB::table('k_images_vulnsummary')
             ->where('image_uid', $image_uid)
             ->where('report_uid', $report_uid)

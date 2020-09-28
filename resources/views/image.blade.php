@@ -7,6 +7,8 @@
 @stop
 
 
+@section('plugins.Chartjs', true)
+
 @section('content')
 <!-- {{print_r($image)}} -->
 <div class="row">
@@ -44,6 +46,21 @@
             </div>
             <!-- /.card-body -->
         </div>
+
+            <!-- STACKED BAR CHART -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Vulnerability history</h3>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
     </div>
     <div class="col-5">
         <div class="card">
@@ -197,6 +214,57 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
 <script> 
+
+$(function () {
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+
+
+    var areaChartData = {
+      labels  : [{!! implode(',', $vulnhistory['labels']) !!}],
+      datasets: [
+        {
+          label               : 'Vulnerabilities',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [{{ implode(",", $vulnhistory['data']) }}]
+        },
+      ]
+    }
+
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    barChartData.datasets[0] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false,
+      scales                  : {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+    }
+
+    var barChart = new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    })
+
+
+})
 
 $("#checkAll").click(function(){
     $('input:checkbox').not(this).prop('checked', this.checked);
