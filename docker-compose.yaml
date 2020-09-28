@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        KUBECTL_VERSION: "${KUBECTL_VERSION:-v1.17.0}"
     image: klustair-frontend:latest
     restart: on-failure
     environment:

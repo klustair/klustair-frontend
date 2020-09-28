@@ -1,6 +1,5 @@
 <p align="center"><img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/klustair.png" width="200"></p>
 
-
 # KlustAIR Frontend
 The Klustair scanner scanns your Kubernetes namespaces for the used images and submits them to Anchore. This frontend displays the result of the scanned namespaces and images in a report. 
 
@@ -8,9 +7,13 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 - The vulnerabilities of an images can be reviewed and whitelisted if they dont apply to any risk.
 - The Anchore system can be viewed (Policies, Subcriptions, Images, Feeds, Registries ...)
 
-### Related Projects: 
+### Related Klustair projects: 
 - <a href="https://github.com/mms-gianni/klustair">Klustair scanner</a> to submit all your used images to Anchore
 - <a href="https://github.com/mms-gianni/klustair-helm">Klustair Helm charts</a> to spin up Anchore and Klustair
+
+### Related opensource projects
+- <a href="https://github.com/anchore/anchore-engine">anchore-engine</a> A service that analyzes docker images and applies user-defined acceptance policies to allow automated container image validation and certification
+- <a href="https://github.com/Shopify/kubeaudit">kubeaudit</a> kubeaudit helps you audit your Kubernetes clusters against common security controls
 
 ## Home Screen
 <img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/home.png" width="700" alt="Home">
