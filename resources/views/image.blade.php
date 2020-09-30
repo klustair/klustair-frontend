@@ -12,7 +12,7 @@
 @section('content')
 <!-- {{print_r($image)}} -->
 <div class="row">
-    <div class="col-7">
+    <div class="col-8">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Pod Checks</h3>
@@ -44,31 +44,31 @@
                     </tbody>
                 </table>
             </div>
-            <!-- /.card-body -->
         </div>
 
             <!-- STACKED BAR CHART -->
-            <div class="card">
-              <div class="card-header">
+        <div class="card">
+            <div class="card-header">
                 <h3 class="card-title">Vulnerability history</h3>
-              </div>
-              <div class="card-body">
-                <div class="chart">
-                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                </div>
-              </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
+            <div class="card-body">
+                <div class="chart">
+                    <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
 
     </div>
-    <div class="col-5">
+    <div class="col-4">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Vulnerabilty Summary</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-3">
+                <div class="chart">
+                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
                 @foreach ($image['vulnsummary'] as $vulnsum)
                 <div class="p-1 mb-1 {{$vulnseverity[$vulnsum['severity']]}} rounded">{{$vulnsum['severity']}} : {{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
                 @endforeach
@@ -218,11 +218,11 @@
 $(function () {
 
     //-------------
-    //- BAR CHART -
+    //- VULNHIST CHART -
     //-------------
 
 
-    var areaChartData = {
+    var vulnhistChartData = {
       labels  : [{!! implode(',', $vulnhistory['labels']) !!}],
       datasets: [
         {
@@ -240,8 +240,8 @@ $(function () {
     }
 
     var barChartCanvas = $('#barChart').get(0).getContext('2d')
-    var barChartData = $.extend(true, {}, areaChartData)
-    var temp0 = areaChartData.datasets[0]
+    var barChartData = $.extend(true, {}, vulnhistChartData)
+    var temp0 = vulnhistChartData.datasets[0]
     barChartData.datasets[0] = temp0
 
     var barChartOptions = {
@@ -263,6 +263,40 @@ $(function () {
       options: barChartOptions
     })
 
+    //-------------
+    //- PIE CHART -
+    //-------------
+    var donutData        = {
+      labels: [
+          'Unknown',
+          'Negligible',
+          'Low',
+          'Medium',
+          'High',
+          'Critical',
+      ],
+      datasets: [
+        {
+          data: [{{ implode(",", $image['vulnsummary_list']) }}],
+          backgroundColor : ['#F8F9FA', '#343A40', '#6C757D', '#17A2B8', '#FFC108','#DC3545' ],
+        }
+      ]
+    }
+
+    // Get context with jQuery - using jQuery's .get() method.
+    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieData        = donutData;
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var pieChart = new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
 
 })
 

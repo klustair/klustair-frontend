@@ -68,6 +68,7 @@ class ImageController extends Controller
     
         foreach ($vulnsummary_list as $v) {
             $data['image']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+            $data['image']['vulnsummary_list'][] = $v->total;
         }
     
         $vuln_list = DB::table('k_images_vuln')
