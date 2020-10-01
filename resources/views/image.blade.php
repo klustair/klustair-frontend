@@ -127,6 +127,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                    @isset ($image['vulnerabilities'])
                     @foreach ($image['vulnerabilities'] as $vulnerabily)
                     <tr>
                         <td><a target="_blank" href="{{$vulnerabily['url']}}">{{$vulnerabily['vuln']}}</a></td>
@@ -155,6 +156,7 @@
                     </tr>
                     <p>
                     @endforeach
+                    @endisset
                 </tbody>
                 <tr>
                 <td colspan="3"></td>
