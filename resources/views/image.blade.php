@@ -270,17 +270,17 @@ $(function () {
     //-------------
     var donutData        = {
       labels: [
-          'Unknown',
-          'Negligible',
-          'Low',
-          'Medium',
-          'High',
           'Critical',
+          'High',
+          'Medium',
+          'Low',
+          'Negligible',
+          'Unknown',
       ],
       datasets: [
         {
-          data: [{{ implode(",", $image['vulnsummary_list']) }}],
-          backgroundColor : ['#F8F9FA', '#343A40', '#6C757D', '#17A2B8', '#FFC108','#DC3545' ],
+          data: [{{ $image['vulnsummary_list']['Critical'] }}, {{ $image['vulnsummary_list']['High'] }}, {{ $image['vulnsummary_list']['Medium'] }}, {{ $image['vulnsummary_list']['Low'] }}, {{ $image['vulnsummary_list']['Negligible'] }}, {{ $image['vulnsummary_list']['Unknown'] }}, ],
+          backgroundColor : ['#DC3545', '#FFC108', '#17A2B8', '#6C757D', '#343A40','#F8F9FA' ],
         }
       ]
     }
