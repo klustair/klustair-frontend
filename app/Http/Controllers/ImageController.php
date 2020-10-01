@@ -85,11 +85,11 @@ class ImageController extends Controller
         foreach ($vuln_list as $vu) {
             $data['image']['vulnerabilities'][$vu->uid] = json_decode(json_encode($vu), true);
         }
-        
+        /*
         echo "<pre>";
         print_r($data);
         echo "</pre>";
-        
+        */
         return view('image', $data);
     }
 }
