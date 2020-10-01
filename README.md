@@ -19,10 +19,10 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 <img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/home.png" width="700" alt="Home">
 
 ## Report
-<img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/report_censored.jpg" width="700" alt="Report">
+<img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/reports.jpg" width="700" alt="Report">
 
 ## Pod Details
-<img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/pod_details.png" width="700" alt="Pod details">
+<img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/image_details.png" width="700" alt="Pod details">
 
 ## Images
 <img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/anchore_images_censored.jpg" width="700" alt="Report">
