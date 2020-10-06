@@ -18,6 +18,7 @@ class CreateReports extends Migration
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 checktime timestamp with time zone NOT NULL,
+                title character varying COLLATE pg_catalog."default",
                 CONSTRAINT k_reports_test_pkey PRIMARY KEY (uid),
                 CONSTRAINT k_reports_test_uid_key UNIQUE (uid)
             )
