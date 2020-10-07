@@ -3,7 +3,7 @@
 @section('title', 'Reports')
 
 @section('content_header')
-    <h1>Report {{ $report_data->checktime }}</h1>
+    <h1>Report {{ $report_data->checktime }} {{ $report_data->title }}</h1>
 @stop
 
 @section('content')
@@ -16,7 +16,7 @@
 
     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
     @foreach ($reports as $report)
-      <a class="dropdown-item" href="/report/{{ $report->uid }}">{{ $report->checktime }}</a>
+      <a class="dropdown-item" href="/report/{{ $report->uid }}">{{ $report->checktime }} {{ $report->title }}</a>
     @endforeach
     </div>
   </div>
