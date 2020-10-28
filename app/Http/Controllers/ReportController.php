@@ -125,11 +125,12 @@ class ReportController extends Controller
                             ->count();
                         
                         $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vuln_ack_count'] = $vuln_ack_count;
+                        
+                        foreach ($vulnsummary_list as $v) {
+                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+                        }
                     }
-    
-                    foreach ($vulnsummary_list as $v) {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
-                    }
+                    
                 }
             }
         }

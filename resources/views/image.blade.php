@@ -13,6 +13,7 @@
 <!-- {{print_r($image)}} -->
 <div class="row">
     <div class="col-8">
+        @if ($image['layer_count'] != "")
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Pod Checks</h3>
@@ -45,6 +46,7 @@
                 </table>
             </div>
         </div>
+        @endif
 
             <!-- STACKED BAR CHART -->
         <div class="card">
@@ -78,7 +80,7 @@
     </div>
 </div>
 
-
+@if ($image['dockerfile'] != "")
 <div class="row">
     <div class="col-12">
         <div class="card collapsed-card">
@@ -98,6 +100,7 @@
     </div>
 <!-- /.card -->
 </div>
+@endif
 
 <div class="row">
     <div class="col-12">
@@ -117,11 +120,12 @@
             <table class="table table-condensed">
                 <thead>
                 <tr>
+                    <th></th>
+                    <th>Title</th>
                     <th>CVE</th>
                     <th>Package</th>
-                    <th>Feed</th>
                     <th>Score</th>
-                    <th style="width: 40px">Severity</th>
+                    <th style="width: 40px">CVSS</th>
                     <th style="width: 40px">Fixed</th>
                     <th style="width: 20px"><input type="checkbox" id="checkAll"></th>
                 </tr>
@@ -130,36 +134,95 @@
                     @isset ($image['vulnerabilities'])
                     @foreach ($image['vulnerabilities'] as $vulnerabily)
                     <tr>
-                        <td><a target="_blank" href="{{$vulnerabily['url']}}">{{$vulnerabily['vuln']}}</a></td>
-                        <td>{{$vulnerabily['package_fullname']}}</td>
-                        <td>{{$vulnerabily['feed_group']}}</td>
+                        <td style="padding: 0.5rem;"><button type="button" class="btn btn-tool collapseDetails"><i class="fas fa-plus"></i></button></td>
+                        <td><b>{{$vulnerabily['title']}}</b></td>
+                        <td><nobr>{{$vulnerabily['vulnerability_id']}}<nobr></td>
+                        <td>{{$vulnerabily['pkg_name']}}</td>
                         <td>
+                            @isset ($vulnerabily['cvss']['V3Score'])
                             <div class="progress progress-xs">
-                                <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['nvd_data_base_score']*10}}%"></div>
+                                <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['V3Vector_base_score']*10}}%"></div>
                             </div>
                             <div class="progress progress-xs">
-                                <div class="progress-bar bg-fuchsia" style="width: {{ $vulnerabily['nvd_data_exploitability_score']*10}}%"></div>
+                                <div class="progress-bar bg-fuchsia" style="width: {{ $vulnerabily['cvss']['V3Vector_modified_esc']*10}}%"></div>
                             </div>
                             <div class="progress progress-xs">
-                                <div class="progress-bar bg-info" style="width: {{ $vulnerabily['nvd_data_impact_score']*10}}%"></div>
+                                <div class="progress-bar bg-info" style="width: {{ $vulnerabily['cvss']['V3Vector_modified_isc']*10}}%"></div>
                             </div>
+                            @endisset
+                            @if (@isset ($vulnerabily['cvss']['V2Score']) && !@isset ($vulnerabily['cvss']['V3Score']))
+                            <div class="progress progress-xs">
+                                <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['V2Vector_base_score']*10}}%"></div>
+                            </div>
+                            @endif
                         </td>
-                        <td><span class="badge {{$vulnseverity[$vulnerabily['severity']]}}">{{$vulnerabily['severity']}}</span></td>
+                        <td><span class="badge {{$vulnseverity[$vulnerabily['severity']]}}">{{$vulnerabily['cvss_base_score']}}</span></td>
                         <td>
-                            @if ($vulnerabily['fix'] != "None")
+                            @if ($vulnerabily['fixed_version'] != "")
                             <span class="badge badge-pill badge-success">yes</span>
                             @endif
                         </td>
                         <td>
-                            <input type="checkbox" id="{{ $vulnerabily['vuln'] }}" class="whitelistItem" name="whitelist" value="{{ $vulnerabily['uid'] }}" @if ($vulnerabily['images_vuln_whitelist_uid'] != "") checked @endif>
+                            <input type="checkbox" id="{{ $vulnerabily['vulnerability_id'] }}" class="whitelistItem" name="whitelist" value="{{ $vulnerabily['uid'] }}" @if ($vulnerabily['images_vuln_whitelist_uid'] != "") checked @endif>
                         </td>
                     </tr>
+                    <tr style="display: none">
+                        <td colspan="8" style="border-top: none">
+                            <div class="row">
+                                <div class="col-sm-7 p-3 bg-light rounded border">
+                                {{ $vulnerabily['descr'] }}
+                                </div>
+                                <div class="col-sm-5">
+                                    <table>
+                                        <tr>
+                                            <th>installed version</th>
+                                            <td>{{ $vulnerabily['installed_version'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>fixed version</th>
+                                            <td>{{ $vulnerabily['fixed_version'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>published</th>
+                                            <td>{{ $vulnerabily['published_date'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>last modified</th>
+                                            <td>{{ $vulnerabily['last_modified_date'] }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row pt-4">
+                                <div class="col-sm-7">
+                                    @if ($vulnerabily['links'] != '')
+                                    <ul class="fa-ul">
+                                        @foreach ($vulnerabily['links'] as $link)
+                                        <li><span class="fa-li" style="color: gray"><i class="fas fa-link fa-xs"></i></span><a href="{{ $link }}" target="_blank">{{ $link }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </div>
+                                <div class=col-sm-5>
+                                    <span class="badge badge-danger">Attack Vector (AV)</span><br>
+                                    <span class="badge badge-success">Attack Complexity (AC)*</span><br>
+                                    <span class="badge badge-success">Privileges Required (PR)*</span><br>
+                                    <span class="badge badge-success">User Interaction (UI)*</span><br>
+                                    <span class="badge badge-warning">Scope (S)*</span><br>
+                                    <span class="badge badge-success">Confidentiality Impact (C)*</span><br>
+                                    <span class="badge badge-info">Attack Vector (AV)</span><br>
+                                    <span class="badge badge-info">Integrity Impact (I)*</span><br>
+                                    <span class="badge badge-success">Availability Impact (A)*</span><br>
+                                </div>
+                            </div>
+                        </td>
+                    <tr>
                     <p>
                     @endforeach
                     @endisset
                 </tbody>
                 <tr>
-                <td colspan="3"></td>
+                <td colspan="4"></td>
                 <td colspan="4"><button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess">Add to Whitelist</button></td>
                 <tr>
             </table>
@@ -274,13 +337,12 @@ $(function () {
           'High',
           'Medium',
           'Low',
-          'Negligible',
           'Unknown',
       ],
       datasets: [
         {
-          data: [{{ $image['vulnsummary_list']['Critical'] }}, {{ $image['vulnsummary_list']['High'] }}, {{ $image['vulnsummary_list']['Medium'] }}, {{ $image['vulnsummary_list']['Low'] }}, {{ $image['vulnsummary_list']['Negligible'] }}, {{ $image['vulnsummary_list']['Unknown'] }}, ],
-          backgroundColor : ['#DC3545', '#FFC108', '#17A2B8', '#6C757D', '#343A40','#F8F9FA' ],
+          data: [{{ $image['vulnsummary_list']['Critical'] }}, {{ $image['vulnsummary_list']['High'] }}, {{ $image['vulnsummary_list']['Medium'] }}, {{ $image['vulnsummary_list']['Low'] }}, {{ $image['vulnsummary_list']['Unknown'] }}, ],
+          backgroundColor : ['#DC3545', '#FFC108', '#17A2B8', '#6C757D' ,'#F8F9FA' ],
         }
       ]
     }
@@ -304,6 +366,12 @@ $(function () {
 
 $("#checkAll").click(function(){
     $('input:checkbox').not(this).prop('checked', this.checked);
+});
+
+
+$(".collapseDetails").click(function(){
+    var tr = $(this).closest('tr').next('tr');
+    tr.toggle()
 });
 
 $("#aaaaaaUpdateWhitelist").click(function(){

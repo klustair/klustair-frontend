@@ -24,7 +24,6 @@ class CreateImagesTrivyvuln extends Migration
                 image_uid character varying COLLATE pg_catalog."default",
                 report_uid character varying COLLATE pg_catalog."default",
                 vulnerability_id character varying COLLATE pg_catalog."default",
-                feed_group character varying COLLATE pg_catalog."default",
                 pkg_name character varying COLLATE pg_catalog."default",
                 descr character varying COLLATE pg_catalog."default",
                 title character varying COLLATE pg_catalog."default",
@@ -34,8 +33,9 @@ class CreateImagesTrivyvuln extends Migration
                 severity double precision,
                 last_modified_date character varying COLLATE pg_catalog."default",
                 published_date character varying COLLATE pg_catalog."default",
-                ref character varying COLLATE pg_catalog."default",
-                cvss character varying COLLATE pg_catalog."default",
+                links jsonb,
+                cvss jsonb,
+                cwe_ids jsonb,
                 CONSTRAINT k_images_trivyvuln_pkey PRIMARY KEY (uid),
                 CONSTRAINT k_images_trivyvuln_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE
