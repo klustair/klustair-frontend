@@ -3,7 +3,7 @@
 @section('title', 'Pod details')
 
 @section('content_header')
-    <h1 id='image' data-imageuid='{{ $image['anchore_imageid'] }}'>Image {{ $image['fulltag'] }}</h1>
+    <h1 id='image' data-imageb64='{{ $image['image_b64'] }}'>Image {{ $image['fulltag'] }}</h1>
 @stop
 
 
@@ -204,15 +204,7 @@
                                     @endif
                                 </div>
                                 <div class=col-sm-5>
-                                    <span class="badge badge-danger">Attack Vector (AV)</span><br>
-                                    <span class="badge badge-success">Attack Complexity (AC)*</span><br>
-                                    <span class="badge badge-success">Privileges Required (PR)*</span><br>
-                                    <span class="badge badge-success">User Interaction (UI)*</span><br>
-                                    <span class="badge badge-warning">Scope (S)*</span><br>
-                                    <span class="badge badge-success">Confidentiality Impact (C)*</span><br>
-                                    <span class="badge badge-info">Attack Vector (AV)</span><br>
-                                    <span class="badge badge-info">Integrity Impact (I)*</span><br>
-                                    <span class="badge badge-success">Availability Impact (A)*</span><br>
+                                    @include('cvss', ['vuln_cvss' => $vulnerabily['cvss']])
                                 </div>
                             </div>
                         </td>
