@@ -33,3 +33,23 @@ services:
       - 8080:80
     volumes:
       - ./:/var/www
+
+  klustairdb:
+    image: "postgres:12-alpine"
+    volumes:
+      - klustair-db-volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 100m
+
+volumes:
+  klustair-db-volume:
+    # Set this to 'true' to use an external volume. In which case, it must be created manually with "docker volume create anchore-db-volume"
+    external: false

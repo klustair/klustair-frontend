@@ -158,7 +158,7 @@
                           <td>{{ $container['name'] }} </td>
                           <td><a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
                           <td>
-                          @isset($container['imagedetails']['vulnsummary'])
+                          @isset($container['imagedetails'], $container['imagedetails']['vulnsummary'])
                             @foreach ($container['imagedetails']['vulnsummary'] as $vulnsum)
                             <div style="width: 65px" class="float-left p-1 m-1 text-center {{$vulnseverity[$vulnsum['severity']]}} rounded">{{$vulnsum['total']}}/{{$vulnsum['fixed']}}</div>
                             @endforeach

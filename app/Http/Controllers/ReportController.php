@@ -110,26 +110,27 @@ class ReportController extends Controller
                             ->where('report_uid', $report_uid)
                             ->get();
 
-                        $vuln_ack_count = DB::table('k_images_vuln')
-                            ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_vuln.image_uid')
+                        $vuln_ack_count = DB::table('k_images_trivyvuln')
+                            ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_trivyvuln.image_uid')
                             ->leftJoin('k_images_vuln_whitelist', function ($join) {
-                                $join->on('k_images_vuln_whitelist.wl_anchore_imageid', '=', 'anchore_imageid')
-                                      ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vuln');
+                                $join->on('k_images_vuln_whitelist.wl_image_b64', '=', 'image_b64')
+                                      ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vulnerability_id');
                             })
-                            ->where('k_images_vuln.image_uid', $i->uid)
-                            ->where('k_images_vuln.report_uid', $report_uid)
+                            ->where('k_images_trivyvuln.image_uid', $i->uid)
+                            ->where('k_images_trivyvuln.report_uid', $report_uid)
                             ->where('k_images_vuln_whitelist.uid', null)
-                            ->distinct('k_images_vuln.uid')
+                            ->distinct('k_images_trivyvuln.uid')
                             ->select('k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
                             //->toSql();
                             ->count();
                         
                         $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vuln_ack_count'] = $vuln_ack_count;
+                        
+                        foreach ($vulnsummary_list as $v) {
+                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+                        }
                     }
-    
-                    foreach ($vulnsummary_list as $v) {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
-                    }
+                    
                 }
             }
         }

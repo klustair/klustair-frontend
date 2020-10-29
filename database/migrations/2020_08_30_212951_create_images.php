@@ -19,6 +19,7 @@ class CreateImages extends Migration
                 image_size bigint,
                 layer_count bigint,
                 uid character varying COLLATE pg_catalog."default",
+                image_b64 character varying COLLATE pg_catalog."default",
                 image_digest character varying COLLATE pg_catalog."default",
                 fulltag character varying COLLATE pg_catalog."default",
                 arch character varying(15) COLLATE pg_catalog."default",
