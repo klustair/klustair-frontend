@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::prefix('v1')->group(function () {
-    Route::post('/vulnwhitelist/update/{wl_anchore_imageid}', function (Request $request, $wl_anchore_imageid) {
+    Route::post('/vulnwhitelist/update/{wl_image_b64}', function (Request $request, $wl_image_b64) {
         $postdata = $request->post();
         $insertdata = array();
 
@@ -30,13 +30,13 @@ Route::prefix('v1')->group(function () {
             foreach ($vulnlist as $vuln) {
                 
                 if (isset($vuln['state']) && $vuln['state']=='true') {
-                    $insertdata[] = ['uid'=>uniqid('', true), 'wl_anchore_imageid'=>$wl_anchore_imageid, 'wl_vuln'=> $vuln['vuln'], 'whitelisttime'=>$now ];
+                    $insertdata[] = ['uid'=>uniqid('', true), 'wl_image_b64'=>$wl_image_b64, 'wl_vuln'=> $vuln['vuln'], 'whitelisttime'=>$now ];
                 }
             }
         }
-        DB::table('k_images_vuln_whitelist')->where('wl_anchore_imageid', '=', $wl_anchore_imageid)->delete();
+        DB::table('k_images_vuln_whitelist')->where('wl_image_b64', '=', $wl_image_b64)->delete();
         DB::table('k_images_vuln_whitelist')->insert($insertdata);
-        return ['success'=>'true', 'vuln_list'=>$insertdata, 'wl_anchore_imageid'=>$wl_anchore_imageid];
+        return ['success'=>'true', 'vuln_list'=>$insertdata, 'wl_image_b64'=>$wl_image_b64];
     });
 });
 

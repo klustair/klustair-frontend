@@ -78,24 +78,24 @@ class ImageController extends Controller
         $vuln_list_ancore = DB::table('k_images_vuln')
             ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_vuln.image_uid')
             ->leftJoin('k_images_vuln_whitelist', function ($join) {
-                $join->on('k_images_vuln_whitelist.wl_anchore_imageid', '=', 'anchore_imageid')
+                $join->on('k_images_vuln_whitelist.wl_image_b64', '=', 'image_b64')
                       ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vuln');
             })
             ->where('k_images_vuln.image_uid', $image_uid)
             ->where('k_images_vuln.report_uid', $report_uid)
-            ->select('k_images_vuln.*', 'k_images.anchore_imageid as anchore_imageid', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
+            ->select('k_images_vuln.*', 'k_images.image_b64 as image_b64', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
             ->get();
 */
 
         $vuln_list = DB::table('k_images_trivyvuln')
             ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_trivyvuln.image_uid')
             ->leftJoin('k_images_vuln_whitelist', function ($join) {
-                $join->on('k_images_vuln_whitelist.wl_anchore_imageid', '=', 'anchore_imageid')
+                $join->on('k_images_vuln_whitelist.wl_image_b64', '=', 'image_b64')
                       ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vulnerability_id');
             })
             ->where('k_images_trivyvuln.image_uid', $image_uid)
             ->where('k_images_trivyvuln.report_uid', $report_uid)
-            ->select('k_images_trivyvuln.*', 'k_images.anchore_imageid as anchore_imageid', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
+            ->select('k_images_trivyvuln.*', 'k_images.image_b64 as image_b64', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
             ->orderBy('severity', 'ASC')
             ->get();
 

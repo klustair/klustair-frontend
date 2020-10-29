@@ -411,7 +411,7 @@ $('.swalDefaultSuccess').click(function() {
         vuln_list: encodedString
     }
     console.log(data)
-    $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageuid'), data, function( data ) {
+    $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageb64'), data, function( data ) {
         $( '.result' ).html( data );
     })
     
