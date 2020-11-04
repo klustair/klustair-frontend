@@ -1,5 +1,14 @@
 #!/bin/bash
 
+mkdir -p ${APACHE_DOCUMENT_ROOT:-/var/www/public/}/../storage/app/public
+mkdir -p ${APACHE_DOCUMENT_ROOT:-/var/www/public/}/../storage/framework/cache
+mkdir -p ${APACHE_DOCUMENT_ROOT:-/var/www/public/}/../storage/framework/sessions
+mkdir -p ${APACHE_DOCUMENT_ROOT:-/var/www/public/}/../storage/framework/testing
+mkdir -p ${APACHE_DOCUMENT_ROOT:-/var/www/public/}/../storage/framework/views
+mkdir -p ${APACHE_DOCUMENT_ROOT:-/var/www/public/}/../storage/logs
+
+chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT:-/var/www/public/}/../storage
+
 cat >>/etc/apache2/envvars <<EOL
 export APACHE_DOCUMENT_ROOT=${APACHE_DOCUMENT_ROOT:-/var/www/public/}
 export APACHE_SERVERNAME=${APACHE_SERVERNAME:-klustair.test}
