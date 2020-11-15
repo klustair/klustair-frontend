@@ -1,5 +1,52 @@
 <?php
 
+$menu = [
+        [
+            'text' => 'reports',
+            'url'  => 'report',
+            'icon' => 'fas fa-fw fa-book',
+        ],
+];
+
+if (env('ANCHORE_ENABLED', false) == true) {
+
+    $menu[] = [
+        'text'    => 'Anchore',
+        'icon'    => 'fas fa-fw fa-anchor',
+        'submenu' => [
+            [
+                'text' => 'images',
+                'url'  => '/anchore/images',
+            ],
+            [
+                'text' => 'feeds',
+                'url'  => '/anchore/feeds',
+            ],
+            [
+                'text' => 'registries',
+                'url'  => '/anchore/registries',
+            ],
+            [
+                'text' => 'policies',
+                'url'  => '/anchore/policies',
+            ],
+            [
+                'text' => 'subscriptions',
+                'url'  => '/anchore/subscriptions',
+            ],
+        ],
+    ];
+
+}
+
+if (env('APP_DEBUG', false) == true) {
+    $menu[] = [
+        'text'        => 'debug',
+        'url'         => 'lists',
+        'icon'        => 'far fa-fw fa-file',
+    ];
+}
+
 return [
 
     /*
@@ -230,6 +277,8 @@ return [
     |
     */
 
+    'menu' => $menu,
+    /*
     'menu' => [
         [
             'text' => 'search',
@@ -345,8 +394,8 @@ return [
             'icon_color' => 'cyan',
             'url'        => '#',
         ],
-        */
     ],
+        */
 
     /*
     |--------------------------------------------------------------------------
