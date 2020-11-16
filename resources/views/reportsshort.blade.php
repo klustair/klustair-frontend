@@ -202,7 +202,4 @@ Hello
   </script>
 @stop
 
-
-@section('footer')
-hello
-@stop
+@include('footer')
