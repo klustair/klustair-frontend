@@ -207,3 +207,8 @@ Hello
   });
   </script>
 @stop
+
+
+@section('footer')
+hello
+@stop

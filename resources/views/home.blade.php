@@ -171,9 +171,6 @@
     </div>
     <!-- ./col -->
   </div>
-
-
-
-
-  
 @stop
+
+@include('footer')
