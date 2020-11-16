@@ -182,3 +182,5 @@ Hello
   });
   </script>
 @stop
+
+@include('footer')

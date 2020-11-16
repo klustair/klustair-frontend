@@ -415,3 +415,5 @@ $('.swalDefaultSuccess').click(function() {
 
 </script>
 @stop
+
+@include('footer')

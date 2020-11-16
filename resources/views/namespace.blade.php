@@ -260,3 +260,5 @@
 }
 </style>
 @stop
+
+@include('footer')
