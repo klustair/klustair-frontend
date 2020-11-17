@@ -156,7 +156,13 @@
             @foreach ($pod['containers'] as $container)
                       <tr>
                           <td>{{ $container['name'] }} </td>
-                          <td><a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a></td>
+                          <td>
+                          @if(isset($container['imagedetails']['vulnsummary']))
+                            <a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a>
+                          @else
+                            {{ $container['image'] }}
+                          @endif
+                          </td>
                           <td>
                           @isset($container['imagedetails'], $container['imagedetails']['vulnsummary'])
                             @foreach ($container['imagedetails']['vulnsummary'] as $vulnsum)
