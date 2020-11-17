@@ -50,11 +50,11 @@ class HomeController extends Controller
             ->count();
 
         $data['container_count'] = DB::table('k_containers')
-            ->distinct('uid')
+            ->distinct('name')
             ->count();
 
         $data['namespaces_count'] = DB::table('k_namespaces')
-            ->distinct('uid')
+            ->distinct('name')
             ->count();
 
         $data['vuln_count'] = DB::table('k_images_trivyvuln')
