@@ -1,4 +1,4 @@
-FROM php:7.3-apache-buster
+FROM php:7.4-apache
 
 RUN apt update && apt install -y libcurl4-openssl-dev pkg-config libssl-dev zip unzip
 
@@ -10,7 +10,7 @@ RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # get npm
-COPY --from=node:10.21.0-buster-slim /usr/local /usr/local
+COPY --from=node:10.23-buster-slim /usr/local /usr/local
 
 ENV APACHE_DOCUMENT_ROOT /var/www/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
