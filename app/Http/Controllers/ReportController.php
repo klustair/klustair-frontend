@@ -44,7 +44,7 @@ class ReportController extends Controller
         $data['reports'] = DB::table('k_reports')
             ->select('uid')
             ->selectRaw("to_char(k_reports.checktime, 'DD.MM HH24:MI') as checktime, title")
-            ->distinct('uid')
+            ->orderBy('checktime', 'DESC')
             ->get()
             ->toArray();
         
