@@ -31,6 +31,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        $force_scheme = env('REQUEST_SCHEME', 'http');
+        resolve(\Illuminate\Routing\UrlGenerator::class)->forceScheme($force_scheme);
 
         parent::boot();
     }
