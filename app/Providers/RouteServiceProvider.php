@@ -31,8 +31,12 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        $force_scheme = env('REQUEST_SCHEME', 'http');
-        resolve(\Illuminate\Routing\UrlGenerator::class)->forceScheme($force_scheme);
+        $request_scheme = env('REQUEST_SCHEME', 'http');
+        $http_x_forwarded_proto = env('HTTP_X_FORWARDED_PROTO', 'http');
+        
+        if ($request_scheme == 'https' || $http_x_forwarded_proto == 'https') {
+            resolve(\Illuminate\Routing\UrlGenerator::class)->forceScheme('https');
+        }
 
         parent::boot();
     }
