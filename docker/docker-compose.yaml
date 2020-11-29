@@ -5,8 +5,8 @@ services:
     image: klustair-php-fpm:latest
     container_name: klustair-php-fpm
     build:
-      context: php-fpm
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker/php-fpm/Dockerfile
     restart: on-failure
     environment:
       - APP_NAME=${APP_NAME}
@@ -40,8 +40,8 @@ services:
     image: klustair-nginx:latest
     container_name: klustair-nginx
     build:
-      context: nginx
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker/nginx/Dockerfile
     restart: on-failure
     #command: ["tail", "-f", "/dev/null"]
     command: ["nginx", "-g", "daemon off;"]
