@@ -21,15 +21,15 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 
 ## Docker
 
-Docker images an tags
+Docker images an tags can be found on <a href="https://hub.docker.com/r/klustair/klustair-frontend">hub.docker.com</a>
 
-- <b>[VERSION]-apache</b><br>
+- <b>klustair/klustair-frontend:v[VERSION]-apache</b><br>
   runs apache and PHP in a combined server. This container is based on Debian and is therefore bigger and has more vulnerabilities.
 
-- <b>[VERSION]-nginx</b><br>
+- <b>klustair/klustair-frontend:v[VERSION]-nginx</b><br>
   Alpine baes Nginx server
 
-- <b>[VERSION]-php-fpm</b><br>
+- <b>klustair/klustair-frontend:v[VERSION]-php-fpm</b><br>
   Alpine based php-fpm server
 
 ### Starting the Apache stack
