@@ -34,10 +34,14 @@ Docker images an tags can be found on <a href="https://hub.docker.com/r/klustair
 
 ### Starting the Apache stack
 
+    cd docker
+    cp .env.example .env
     docker-compose up klustair-db klustair-apache
 
 ### Staring the Nginx/php-fpm stack
 
+    cd docker
+    cp .env.example .env
     docker-compose up klustair-db klustair-nginx klustair-php-fpm
 
 
