@@ -29,7 +29,7 @@ Docker images an tags
 - <b>[VERSION]-nginx</b><br>
   Alpine baes Nginx server
 
-- <b>[VERSION]-phpp-fpm</b><br>
+- <b>[VERSION]-php-fpm</b><br>
   Alpine based php-fpm server
 
 ### Starting the Apache stack
