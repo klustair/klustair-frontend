@@ -13,7 +13,7 @@ location ~ [^/]\.php(/|$) {
     fastcgi_param HTTP_PROXY "";
 
     # FastCGI pass reference.
-    fastcgi_pass            klustair-php-fpm:9000;
+    fastcgi_pass            ${PHP_FPM_HOST}:9000;
 
     # FastCGI index file.
     fastcgi_index           index.php;

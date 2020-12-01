@@ -80,7 +80,9 @@ services:
       dockerfile: docker/nginx/Dockerfile
     restart: on-failure
     #command: ["tail", "-f", "/dev/null"]
-    command: ["nginx", "-g", "daemon off;"]
+    #command: ["nginx", "-g", "daemon off;"]
+    environment:
+      - PHP_FPM_HOST=klustair-php-fpm
     ports:
       - 8080:80
       - 8443:443
@@ -100,6 +102,7 @@ services:
 
   klustair-db:
     image: "postgres:12-alpine"
+    container_name: klustair-db
     volumes:
       - klustair-db-volume:/var/lib/postgresql/data
     environment:
