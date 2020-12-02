@@ -1,4 +1,4 @@
-FROM php:fpm-alpine
+FROM php:7.4-fpm-alpine
 
 RUN apk --no-cache add postgresql-dev
 
