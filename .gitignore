@@ -21,3 +21,6 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+
+# generated on nginx startup
+docker/nginx/config/etc/nginx/conf.d/fastcgi.conf

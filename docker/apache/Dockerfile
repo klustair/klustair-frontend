@@ -18,7 +18,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 RUN a2enmod rewrite
 RUN a2enmod ssl
 
-COPY ./docker/apache/ssl/* /etc/apache2/ssl/
+COPY ./docker/apache/config/etc/ssl/* /etc/ssl/
 
 EXPOSE 80
 EXPOSE 443
@@ -31,11 +31,12 @@ COPY . /var/www/
 RUN rm -rf /var/www/storage/sessions/* /var/www/storage/views/* /var/www/storage/logs/* 
 RUN chown -R www-data: /var/www/storage
 
-COPY docker/apache/ /etc/apache2/sites-available/
+COPY docker/apache/config/etc/apache2/sites-available/* /etc/apache2/sites-available/
+COPY docker/apache/startup.sh /startup.sh
 
 RUN composer install
 RUN npm install
 
-RUN chmod +x docker/startup.sh
+RUN chmod +x /startup.sh
 
-CMD ["/var/www/docker/startup.sh"]
+CMD ["/startup.sh"]

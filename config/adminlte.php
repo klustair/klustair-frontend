@@ -476,7 +476,8 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    #'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '/js/libs/Chart.js/2.7.0/Chart.bundle.min.js'
                 ],
             ],
         ],
@@ -487,7 +488,8 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    #'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '/js/libs/sweetalert2/10/sweetalert.min.js'
                 ],
             ],
         ],
