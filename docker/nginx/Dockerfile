@@ -17,5 +17,8 @@ WORKDIR /var/www/
 
 RUN npm install
 
+RUN mkdir -p /var/cache/nginx && \
+    chown -R nobody:root /var/cache/nginx
+
 #CMD ["nginx", "-g", "daemon off;"]
 EXPOSE 80 443
