@@ -69,7 +69,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ../:/var/www/html
+      - ../:/var/www
       - ./php-fpm/config/usr/local/etc/php/php.ini:/usr/local/etc/php/php.ini
 
   klustair-nginx:
