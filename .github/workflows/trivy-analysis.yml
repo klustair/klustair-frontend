@@ -14,7 +14,7 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          docker build -t docker.io/klustair/klustair-frontend:${{ github.sha }}-php-fpm docker/php-fpm
+          docker build -t docker.io/klustair/klustair-frontend:${{ github.sha }}-php-fpm -f docker/php-fpm/Dockerfile .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
