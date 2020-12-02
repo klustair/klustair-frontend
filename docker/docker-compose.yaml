@@ -86,12 +86,12 @@ services:
     ports:
       - 8080:80
       - 8443:443
-    working_dir: /var/www/html
+    working_dir: /var/www
     expose:
       - 8080
       - 8443
     volumes:
-      - ../:/var/www/html
+      - ../:/var/www
       - ./nginx/config/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/config/etc/nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/config/etc/ssl:/etc/ssl
