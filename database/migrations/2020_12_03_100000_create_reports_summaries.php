@@ -18,7 +18,8 @@ class CreateReportsSummaries extends Migration
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 report_uid character varying COLLATE pg_catalog."default" NOT NULL,
-                namespaces integer,
+                namespaces_checked integer,
+                namespaces_total integer,
                 vuln_total integer,
                 vuln_critical integer,
                 vuln_high integer,
