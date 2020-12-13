@@ -71,7 +71,7 @@ class HomeController extends Controller
             ->distinct('name')
             ->count();
 
-        $data['vuln_count'] = DB::table('k_images_trivyvuln')
+        $data['vuln_count'] = DB::table('k_vuln_trivy')
             ->distinct('vulnerability_id')
             ->count();
     
