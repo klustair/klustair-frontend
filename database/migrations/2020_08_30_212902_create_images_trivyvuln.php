@@ -18,7 +18,7 @@ class CreateImagesTrivyvuln extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE IF NOT EXISTS public.k_images_trivyvuln
+            CREATE TABLE IF NOT EXISTS public.k_vuln_trivy
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 image_uid character varying COLLATE pg_catalog."default",
@@ -36,8 +36,8 @@ class CreateImagesTrivyvuln extends Migration
                 links jsonb,
                 cvss jsonb,
                 cwe_ids jsonb,
-                CONSTRAINT k_images_trivyvuln_pkey PRIMARY KEY (uid),
-                CONSTRAINT k_images_trivyvuln_report_uid_fkey FOREIGN KEY (report_uid)
+                CONSTRAINT k_vuln_trivy_pkey PRIMARY KEY (uid),
+                CONSTRAINT k_vuln_trivy_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE
                     ON UPDATE NO ACTION
                     ON DELETE CASCADE
@@ -51,13 +51,13 @@ class CreateImagesTrivyvuln extends Migration
 
         $dbuser = env('DB_USERNAME', 'anchoreengine');
         $create_sql[] = <<<SQL
-            ALTER TABLE public.k_images_trivyvuln
+            ALTER TABLE public.k_vuln_trivy
                 OWNER to $dbuser;
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX IF NOT EXISTS k_images_trivyvuln_report_uid_fkey
-                ON public.k_images_trivyvuln USING btree
+            CREATE INDEX IF NOT EXISTS k_vuln_trivy_report_uid_fkey
+                ON public.k_vuln_trivy USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;
         SQL;
@@ -74,6 +74,6 @@ class CreateImagesTrivyvuln extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('k_images_trivyvuln');
+        Schema::dropIfExists('k_vuln_trivy');
     }
 }

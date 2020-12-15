@@ -14,7 +14,7 @@ class CreateImagesVulnsummary extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE IF NOT EXISTS public.k_images_vulnsummary
+            CREATE TABLE IF NOT EXISTS public.k_vulnsummary
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 severity vulnerability_severities,
@@ -22,8 +22,8 @@ class CreateImagesVulnsummary extends Migration
                 fixed integer,
                 report_uid character varying COLLATE pg_catalog."default",
                 image_uid character varying COLLATE pg_catalog."default",
-                CONSTRAINT "k_imageVulnSummary_pkey" PRIMARY KEY (uid),
-                CONSTRAINT k_images_vulnsummary_report_uid_fkey FOREIGN KEY (report_uid)
+                CONSTRAINT k_images_vulnsummary_pkey PRIMARY KEY (uid),
+                CONSTRAINT k_vulnsummary_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE
                     ON UPDATE NO ACTION
                     ON DELETE CASCADE
@@ -37,13 +37,13 @@ class CreateImagesVulnsummary extends Migration
 
         $dbuser = env('DB_USERNAME', 'anchoreengine');
         $create_sql[] = <<<SQL
-            ALTER TABLE public.k_images_vulnsummary
+            ALTER TABLE public.k_vulnsummary
                 OWNER to $dbuser;
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX IF NOT EXISTS k_images_vulnsummary_report_uid_fkey
-                ON public.k_images_vulnsummary USING btree
+            CREATE INDEX IF NOT EXISTS k_vulnsummary_report_uid_fkey
+                ON public.k_vulnsummary USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;
         SQL;
@@ -60,6 +60,6 @@ class CreateImagesVulnsummary extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('k_images_vulnsummary');
+        Schema::dropIfExists('k_vulnsummary');
     }
 }
