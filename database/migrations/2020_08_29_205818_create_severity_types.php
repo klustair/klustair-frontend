@@ -23,7 +23,7 @@ class CreateSeverityTypes extends Migration
         END$$;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'anchoreengine');
+        $dbuser = env('DB_USERNAME', 'postgres');
         $create_sql[] = <<<SQL
             ALTER TYPE public.vulnerability_severities
                 OWNER to $dbuser;

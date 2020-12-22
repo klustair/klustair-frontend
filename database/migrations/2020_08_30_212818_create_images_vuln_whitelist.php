@@ -29,7 +29,7 @@ class CreateImagesVulnWhitelist extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'anchoreengine');
+        $dbuser = env('DB_USERNAME', 'postgres');
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_vulnwhitelist
                 OWNER to $dbuser;
