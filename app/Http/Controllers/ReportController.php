@@ -115,7 +115,12 @@ class ReportController extends Controller
                             ->where('report_uid', $report_uid)
                             ->select('k_target_trivy.target_type as distro')
                             ->first();
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = $os->distro;
+
+                        if ($os) {
+                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = $os->distro;
+                        } else {
+                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = "unknown";
+                        }
 
                         $vuln_ack_count = DB::table('k_vuln_trivy')
                             ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
