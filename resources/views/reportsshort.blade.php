@@ -143,6 +143,7 @@
                     <table class="col-12">
                       <theader>
                           <tr>
+                          <th></th>
                           <th>Container</th>
                           <th>Image</th>
                           <th width="460px">Vulnerabilities</th>
@@ -155,6 +156,7 @@
             @if(isset($pod['containers']))
             @foreach ($pod['containers'] as $container)
                       <tr>
+                          <td><img src="/img/distro/{{ $container['imagedetails']['distro'] }}.png" alt="{{ $container['imagedetails']['distro'] }}" class="img-fluid" width="20px"> </td>
                           <td>{{ $container['name'] }} </td>
                           <td>
                           @if(isset($container['imagedetails']['vulnsummary']))
