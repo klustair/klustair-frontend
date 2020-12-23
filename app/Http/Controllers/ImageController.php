@@ -87,36 +87,49 @@ class ImageController extends Controller
             ->get();
 */
 
-        $vuln_list = DB::table('k_vuln_trivy')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
-            ->leftJoin('k_vulnwhitelist', function ($join) {
-                $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
-                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
-            })
-            ->where('k_vuln_trivy.image_uid', $image_uid)
-            ->where('k_vuln_trivy.report_uid', $report_uid)
-            ->select('k_vuln_trivy.*', 'k_images.image_b64 as image_b64', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
-            ->orderBy('severity', 'ASC')
+        $targets_list = DB::table('k_target_trivy')
+            ->where('image_uid', $image_uid)
+            ->where('report_uid', $report_uid)
             ->get();
+        
+        foreach ($targets_list as $t) {
+            $data['image']['targets'][$t->uid]['metadata'] = json_decode(json_encode($t), true);
 
-        foreach ($vuln_list as $vu) {
-            $data['image']['vulnerabilities'][$vu->uid] = json_decode(json_encode($vu), true);
-            $data['image']['vulnerabilities'][$vu->uid]['links'] = json_decode($data['image']['vulnerabilities'][$vu->uid]['links'] , true);
+            $data['image']['targets'][$t->uid]['vulnerabilities'] = [];
 
-            $data['image']['vulnerabilities'][$vu->uid]['cvss'] = json_decode($data['image']['vulnerabilities'][$vu->uid]['cvss'], true);
+            $vuln_list = DB::table('k_vuln_trivy')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                ->leftJoin('k_vulnwhitelist', function ($join) {
+                    $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                        ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+                })
+                ->where('k_vuln_trivy.image_uid', $image_uid)
+                ->where('k_vuln_trivy.report_uid', $report_uid)
+                ->where('k_vuln_trivy.target_uid', $t->uid)
+                ->select('k_vuln_trivy.*', 'k_images.image_b64 as image_b64', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+                ->orderBy('severity', 'ASC')
+                ->get();
 
-            if ($data['image']['vulnerabilities'][$vu->uid]['cvss'] != ''){
-                $data['image']['vulnerabilities'][$vu->uid]['cvss'] = current($data['image']['vulnerabilities'][$vu->uid]['cvss']);
+            foreach ($vuln_list as $vu) {
+                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid] = json_decode(json_encode($vu), true);
+                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['links'] = json_decode($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['links'] , true);
 
+                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'] = json_decode($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'], true);
+
+                if ($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'] != ''){
+                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'] = current($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']);
+
+                }
+
+                if (isset($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'])) {
+                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'];
+                } elseif (isset($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score']) && !isset($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score']) ) {
+                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score'];
+                } else {
+                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss_base_score'] = '?';
+                }
             }
 
-            if (isset($data['image']['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'])) {
-                $data['image']['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'];
-            } elseif (isset($data['image']['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score']) && !isset($data['image']['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score']) ) {
-                $data['image']['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score'];
-            } else {
-                $data['image']['vulnerabilities'][$vu->uid]['cvss_base_score'] = '?';
-            }
         }
         /*
         echo "<pre>";
