@@ -2,7 +2,7 @@
         @foreach ($vulnerabilities as $vulnerabily)
         <tr>
             <td style="padding: 0.5rem;"><button type="button" class="btn btn-tool collapseDetails"><i class="fas fa-plus"></i></button></td>
-            <td><b><div style="max-width: 300px;">{{$vulnerabily['title']}}</div></b></td>
+            <td><b>{{$vulnerabily['title']}}</b></td>
             <td><nobr>{{$vulnerabily['vulnerability_id']}}<nobr></td>
             <td>{{$vulnerabily['pkg_name']}}</td>
             <td>
@@ -71,7 +71,7 @@
                         @endif
                     </div>
                     <div class=col-sm-5>
-                        @include('cvss', ['vuln_cvss' => $vulnerabily['cvss']])
+                        @include('elements.cvss', ['vuln_cvss' => $vulnerabily['cvss']])
                     </div>
                 </div>
             </td>

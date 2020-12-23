@@ -21,6 +21,10 @@ Route::get('/report/{report_uid?}', 'ReportController@overview');
 
 Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
 
+Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
+
+Route::get('/vulnerability/{vuln_uid}', 'VulnerabilitiesController@details' );
+
 Route::get('/namespace/{report_uid}/{namespace_uid}', 'NamespaceController@show' );
 
 Route::get('/anchore/images', 'Anchore\ImagesController@list' );
