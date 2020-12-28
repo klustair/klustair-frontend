@@ -48,11 +48,11 @@ class ImageController extends Controller
         $vulnhistory_sql = <<<SQL
             to_char(k_reports.checktime, 'DD.MM HH24:MI') as checktime,
             (SELECT 
-                COUNT(k_images_trivyvuln.uid) AS total 
-                FROM k_images_trivyvuln 
+                COUNT(k_vuln_trivy.uid) AS total 
+                FROM k_vuln_trivy 
                 LEFT JOIN k_images ON image_uid = k_images.uid
                 WHERE fulltag='$image->fulltag' and 
-                k_images_trivyvuln.report_uid=k_reports.uid
+                k_vuln_trivy.report_uid=k_reports.uid
             )
         SQL;
 
@@ -65,7 +65,7 @@ class ImageController extends Controller
             $data['vulnhistory']['labels'][] = "'".$v->checktime."'";
         }
         
-        $vulnsummary_list = DB::table('k_images_vulnsummary')
+        $vulnsummary_list = DB::table('k_vulnsummary')
             ->where('image_uid', $image_uid)
             ->where('report_uid', $report_uid)
             ->get();
@@ -75,48 +75,63 @@ class ImageController extends Controller
             $data['image']['vulnsummary_list'][$v->severity] = $v->total;
         }
 /*
-        $vuln_list_ancore = DB::table('k_images_vuln')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_vuln.image_uid')
-            ->leftJoin('k_images_vuln_whitelist', function ($join) {
-                $join->on('k_images_vuln_whitelist.wl_image_b64', '=', 'image_b64')
-                      ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vuln');
+        $vuln_list_ancore = DB::table('k_vuln_anchore')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_anchore.image_uid')
+            ->leftJoin('k_vulnwhitelist', function ($join) {
+                $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vuln');
             })
-            ->where('k_images_vuln.image_uid', $image_uid)
-            ->where('k_images_vuln.report_uid', $report_uid)
-            ->select('k_images_vuln.*', 'k_images.image_b64 as image_b64', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
+            ->where('k_vuln_anchore.image_uid', $image_uid)
+            ->where('k_vuln_anchore.report_uid', $report_uid)
+            ->select('k_vuln_anchore.*', 'k_images.image_b64 as image_b64', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
             ->get();
 */
 
-        $vuln_list = DB::table('k_images_trivyvuln')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_trivyvuln.image_uid')
-            ->leftJoin('k_images_vuln_whitelist', function ($join) {
-                $join->on('k_images_vuln_whitelist.wl_image_b64', '=', 'image_b64')
-                      ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vulnerability_id');
-            })
-            ->where('k_images_trivyvuln.image_uid', $image_uid)
-            ->where('k_images_trivyvuln.report_uid', $report_uid)
-            ->select('k_images_trivyvuln.*', 'k_images.image_b64 as image_b64', 'k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
-            ->orderBy('severity', 'ASC')
+        $targets_list = DB::table('k_target_trivy')
+            ->where('image_uid', $image_uid)
+            ->where('report_uid', $report_uid)
             ->get();
+        
+        foreach ($targets_list as $t) {
+            $data['image']['targets'][$t->uid]['metadata'] = json_decode(json_encode($t), true);
 
-        foreach ($vuln_list as $vu) {
-            $data['image']['vulnerabilities'][$vu->uid] = json_decode(json_encode($vu), true);
-            $data['image']['vulnerabilities'][$vu->uid]['links'] = json_decode($data['image']['vulnerabilities'][$vu->uid]['links'] , true);
+            $data['image']['targets'][$t->uid]['vulnerabilities'] = [];
 
-            $data['image']['vulnerabilities'][$vu->uid]['cvss'] = json_decode($data['image']['vulnerabilities'][$vu->uid]['cvss'], true);
+            $vuln_list = DB::table('k_vuln_trivy')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                ->leftJoin('k_vulnwhitelist', function ($join) {
+                    $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                        ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+                })
+                ->where('k_vuln_trivy.image_uid', $image_uid)
+                ->where('k_vuln_trivy.report_uid', $report_uid)
+                ->where('k_vuln_trivy.target_uid', $t->uid)
+                ->select('k_vuln_trivy.*', 'k_images.image_b64 as image_b64', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+                ->orderBy('severity', 'ASC')
+                ->get();
 
-            if ($data['image']['vulnerabilities'][$vu->uid]['cvss'] != ''){
-                $data['image']['vulnerabilities'][$vu->uid]['cvss'] = current($data['image']['vulnerabilities'][$vu->uid]['cvss']);
+            foreach ($vuln_list as $vu) {
+                $vulnerability =  json_decode(json_encode($vu), true);
+                $vulnerability['links'] = json_decode($vulnerability['links'] , true);
 
+                $vulnerability['cvss'] = json_decode($vulnerability['cvss'], true);
+
+                if ($vulnerability['cvss'] != ''){
+                    $vulnerability['cvss'] = current($vulnerability['cvss']);
+
+                }
+
+                if (isset($vulnerability['cvss']['V3Vector_base_score'])) {
+                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V3Vector_base_score'];
+                } elseif (isset($vulnerability['cvss']['V2Vector_base_score']) && !isset($vulnerability['cvss']['V3Vector_base_score']) ) {
+                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V2Vector_base_score'];
+                } else {
+                    $vulnerability['cvss_base_score'] = '?';
+                }
+                
+                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid] = $vulnerability;
             }
 
-            if (isset($data['image']['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'])) {
-                $data['image']['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'];
-            } elseif (isset($data['image']['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score']) && !isset($data['image']['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score']) ) {
-                $data['image']['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score'];
-            } else {
-                $data['image']['vulnerabilities'][$vu->uid]['cvss_base_score'] = '?';
-            }
         }
         /*
         echo "<pre>";

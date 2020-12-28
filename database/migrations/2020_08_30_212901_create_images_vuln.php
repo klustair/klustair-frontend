@@ -14,7 +14,7 @@ class CreateImagesVuln extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE IF NOT EXISTS public.k_images_vuln
+            CREATE TABLE IF NOT EXISTS public.k_vuln_anchore
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 image_uid character varying COLLATE pg_catalog."default",
@@ -36,8 +36,8 @@ class CreateImagesVuln extends Migration
                 severity vulnerability_severities,
                 url character varying COLLATE pg_catalog."default",
                 vuln character varying COLLATE pg_catalog."default",
-                CONSTRAINT k_images_vuln_pkey PRIMARY KEY (uid),
-                CONSTRAINT k_images_vuln_report_uid_fkey FOREIGN KEY (report_uid)
+                CONSTRAINT k_vuln_anchore_pkey PRIMARY KEY (uid),
+                CONSTRAINT k_vuln_anchore_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE
                     ON UPDATE NO ACTION
                     ON DELETE CASCADE
@@ -49,15 +49,15 @@ class CreateImagesVuln extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'anchoreengine');
+        $dbuser = env('DB_USERNAME', 'postgres');
         $create_sql[] = <<<SQL
-            ALTER TABLE public.k_images_vuln
+            ALTER TABLE public.k_vuln_anchore
                 OWNER to $dbuser;
         SQL;
 
         $create_sql[] = <<<SQL
-            CREATE INDEX IF NOT EXISTS k_images_vuln_report_uid_fkey
-                ON public.k_images_vuln USING btree
+            CREATE INDEX IF NOT EXISTS k_vuln_anchore_report_uid_fkey
+                ON public.k_vuln_anchore USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;
         SQL;
@@ -74,6 +74,6 @@ class CreateImagesVuln extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('k_images_vuln');
+        Schema::dropIfExists('k_vuln_anchore');
     }
 }

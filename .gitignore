@@ -24,3 +24,5 @@ Homestead.json
 
 # generated on nginx startup
 docker/nginx/config/etc/nginx/conf.d/fastcgi.conf
+
+notest.txt

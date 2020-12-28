@@ -105,22 +105,34 @@ class ReportController extends Controller
                         $data['stats']['images']++;
                         $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']= json_decode(json_encode($i), true);
     
-                        $vulnsummary_list = DB::table('k_images_vulnsummary')
+                        $vulnsummary_list = DB::table('k_vulnsummary')
                             ->where('image_uid', $i->uid)
                             ->where('report_uid', $report_uid)
                             ->get();
 
-                        $vuln_ack_count = DB::table('k_images_trivyvuln')
-                            ->leftJoin('k_images', 'k_images.uid', '=', 'k_images_trivyvuln.image_uid')
-                            ->leftJoin('k_images_vuln_whitelist', function ($join) {
-                                $join->on('k_images_vuln_whitelist.wl_image_b64', '=', 'image_b64')
-                                      ->on('k_images_vuln_whitelist.wl_vuln', '=', 'vulnerability_id');
+                        $os = DB::table('k_target_trivy')
+                            ->where('image_uid', $i->uid)
+                            ->where('report_uid', $report_uid)
+                            ->select('k_target_trivy.target_type as distro')
+                            ->first();
+
+                        if ($os) {
+                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = $os->distro;
+                        } else {
+                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = "unknown";
+                        }
+
+                        $vuln_ack_count = DB::table('k_vuln_trivy')
+                            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                            ->leftJoin('k_vulnwhitelist', function ($join) {
+                                $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
                             })
-                            ->where('k_images_trivyvuln.image_uid', $i->uid)
-                            ->where('k_images_trivyvuln.report_uid', $report_uid)
-                            ->where('k_images_vuln_whitelist.uid', null)
-                            ->distinct('k_images_trivyvuln.uid')
-                            ->select('k_images_vuln_whitelist.uid as images_vuln_whitelist_uid')
+                            ->where('k_vuln_trivy.image_uid', $i->uid)
+                            ->where('k_vuln_trivy.report_uid', $report_uid)
+                            ->where('k_vulnwhitelist.uid', null)
+                            ->distinct('k_vuln_trivy.uid')
+                            ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
                             //->toSql();
                             ->count();
                         

@@ -14,14 +14,14 @@ class CreateImagesVulnWhitelist extends Migration
     public function up()
     {
         $create_sql[] = <<<SQL
-            CREATE TABLE IF NOT EXISTS public.k_images_vuln_whitelist
+            CREATE TABLE IF NOT EXISTS public.k_vulnwhitelist
             (
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 wl_vuln character varying COLLATE pg_catalog."default",
                 wl_image_b64 character varying COLLATE pg_catalog."default",
                 whitelisttime timestamp with time zone NOT NULL,
                 message_txt text COLLATE pg_catalog."default",
-                CONSTRAINT k_images_vuln_whitelist_pkey PRIMARY KEY (uid)
+                CONSTRAINT k_vulnwhitelist_pkey PRIMARY KEY (uid)
             )
             WITH (
                 OIDS = FALSE
@@ -29,9 +29,9 @@ class CreateImagesVulnWhitelist extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'anchoreengine');
+        $dbuser = env('DB_USERNAME', 'postgres');
         $create_sql[] = <<<SQL
-            ALTER TABLE public.k_images_vuln_whitelist
+            ALTER TABLE public.k_vulnwhitelist
                 OWNER to $dbuser;
         SQL;
 
@@ -47,6 +47,6 @@ class CreateImagesVulnWhitelist extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('k_images_vuln_whitelist');
+        Schema::dropIfExists('k_vulnwhitelist');
     }
 }
