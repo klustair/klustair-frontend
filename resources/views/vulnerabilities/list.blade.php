@@ -27,6 +27,7 @@
                     <th>CVE</th>
                     <th>Title</th>
                     <th>Package</th>
+                    <th>IMG</th>
                     <th>Score</th>
                     <th style="width: 40px">CVSS</th>
                     <th style="width: 40px">Fixed</th>
