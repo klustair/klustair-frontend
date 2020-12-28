@@ -1,15 +1,15 @@
 
         @foreach ($vulnerabilities as $vulnerabily)
         <tr>
+            <td><a href="vulnerability/{{$vulnerabily['vulnerability_id']}}"><nobr>{{$vulnerabily['vulnerability_id']}}<nobr></a></td>
             <td>
-                <b><a href="vulnerability/{{$vulnerabily['uid']}}">
+                <b>
                 {{$vulnerabily['title']}}
                 @if ($vulnerabily['title'] == "")
                 {{ Str::limit($vulnerabily['descr'],200) }}
                 @endif
-                </a></b>
+                </b>
             </td>
-            <td><nobr>{{$vulnerabily['vulnerability_id']}}<nobr></td>
             <td>{{$vulnerabily['pkg_name']}}</td>
             <td>
                 @isset ($vulnerabily['cvss']['V3Score'])
