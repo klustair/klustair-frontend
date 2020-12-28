@@ -1,9 +1,9 @@
 FROM php:7.4-fpm-alpine
 
-RUN apk --no-cache add postgresql-dev
+RUN apk --no-cache add postgresql-dev libzip-dev libxml2-dev
 
-RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql \
-    && docker-php-ext-enable pgsql pdo_pgsql 
+RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql xml zip\
+    && docker-php-ext-enable pgsql pdo_pgsql xml zip
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
