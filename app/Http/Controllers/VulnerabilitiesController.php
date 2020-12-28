@@ -36,11 +36,26 @@ class VulnerabilitiesController extends Controller
         $data['vulnseverity'] = $vulnseverity;
         $data['error'] = $error;
 
+        # get only latest Report CVE's
+        $report = DB::table('k_reports')
+            ->select('uid')
+            ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime, title")
+            ->orderBy('checktime', 'DESC')
+            ->first();
+            
+            if ($report == null) {
+                ## Cheapest solution. Go back to home, if there are no reports yet
+                return redirect('/');
+            }
+        $report_uid = $report->uid;
+
         $vuln_trivy_list = DB::table('k_vuln_trivy')
             ->leftJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
+            ->distinct('vulnerability_id', 'severity')
             ->select('k_vuln_trivy.*', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+            //->where('report_uid', '=', $report_uid)
             ->orderBy('severity', 'ASC')
             ->get();
 
@@ -80,7 +95,7 @@ class VulnerabilitiesController extends Controller
      *
      * @return View
      */
-     public function details($vuln_uid) 
+     public function details($vulnerability_id) 
      {
 
         $vulnseverity = array(
@@ -89,11 +104,26 @@ class VulnerabilitiesController extends Controller
             "Medium" => 'bg-info text-white',
             "Low" => 'bg-secondary text-white',
             "Unknown" => 'bg-light text-dark',
-            "0" => 'bg-danger text-dark',
-            "1" => 'bg-warning text-white',
-            "2" => 'bg-info text-white',
-            "3" => 'bg-secondary text-white',
-            "4" => 'bg-light text-dark'
+            "0" => array(
+                'name' => 'Critical',
+                'css' => 'bg-danger text-dark'
+            ),
+            "1" => array(
+                'name' => 'High',
+                'css' => 'bg-warning text-white'
+            ),
+            "2" => array(
+                'name' => 'Medium',
+                'css' => 'bg-info text-white'
+            ),
+            "3" => array(
+                'name' => 'Low',
+                'css' => 'bg-secondary text-white'
+            ),
+            "4" => array(
+                'name' => 'Unknown',
+                'css' => 'bg-light text-dark'
+            )
         );
 
         $error = array(
@@ -110,7 +140,7 @@ class VulnerabilitiesController extends Controller
                 $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
             ->select('k_vuln_trivy.*', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
-            ->where('k_vuln_trivy.uid', $vuln_uid)
+            ->where('k_vuln_trivy.vulnerability_id', $vulnerability_id)
             ->first();
 
         $vulnerability = json_decode(json_encode($vulnerability), true);;
@@ -131,9 +161,27 @@ class VulnerabilitiesController extends Controller
         } else {
             $vulnerability['cvss_base_score'] = '?';
         }
-            
 
-        $data['vulnerability'] = json_decode(json_encode($vulnerability), true);;
+        $data['vulnerability'] = json_decode(json_encode($vulnerability), true);
+        
+        $packages_list =  DB::table('k_vuln_trivy')
+            ->distinct('k_vuln_trivy.pkg_name', 'k_vuln_trivy.installed_version', 'k_vuln_trivy.fixed_version',)
+            ->select('k_vuln_trivy.pkg_name', 'k_vuln_trivy.installed_version', 'k_vuln_trivy.fixed_version')
+            ->where('k_vuln_trivy.vulnerability_id', $vulnerability_id)
+            ->get();
+        $data['packages'] = json_decode(json_encode($packages_list), true);
+        
+        $images_list =  DB::table('k_vuln_trivy')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+            ->leftJoin('k_containers', 'k_containers.image', '=', 'k_images.fulltag')
+            ->leftJoin('k_namespaces', 'k_namespaces.uid', '=', 'k_containers.namespace_uid')
+            ->distinct('k_images.fulltag',)
+            ->select('k_images.fulltag', 'k_images.uid', 'k_images.report_uid', 'k_namespaces.name')
+            ->where('k_vuln_trivy.vulnerability_id', $vulnerability_id)
+            ->get();
+
+        $data['images'] = json_decode(json_encode($images_list), true);
+            
         /*
         echo "<pre>";
         print_r($data);

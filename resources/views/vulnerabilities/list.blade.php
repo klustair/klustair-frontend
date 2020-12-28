@@ -24,8 +24,8 @@
             <table class="table table-condensed">
                 <thead>
                 <tr>
-                    <th>Title</th>
                     <th>CVE</th>
+                    <th>Title</th>
                     <th>Package</th>
                     <th>Score</th>
                     <th style="width: 40px">CVSS</th>
