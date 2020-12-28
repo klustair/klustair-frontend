@@ -10,29 +10,16 @@
 <div class="row">
     <div class="col-8">
         <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <b>{{$vulnerability['title']}}
+                    @if ($vulnerability['title'] == "")
+                    {{ Str::limit($vulnerability['descr'],200) }}
+                    @endif</b></h3>
+            </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0">
-                <table class="table table-condensed">
-                    <tbody>
-                        <tr>
-                            <td><b>
-                                {{$vulnerability['title']}}
-                                @if ($vulnerability['title'] == "")
-                                {{ Str::limit($vulnerability['descr'],200) }}
-                                @endif</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="border-top: none">
-                                <div class="row">
-                                    <div class=" bg-light rounded border p-1">
-                                    {{ $vulnerability['descr'] }}
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="card-body table-responsive">
+                    {{ $vulnerability['descr'] }}
             <!-- /.card-body -->
             </div>
         </div>

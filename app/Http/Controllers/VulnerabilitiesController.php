@@ -77,7 +77,18 @@ class VulnerabilitiesController extends Controller
             } else {
                 $vulnerability['cvss_base_score'] = '?';
             }
-            
+
+            $images_count =  DB::table('k_vuln_trivy')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                ->leftJoin('k_containers', 'k_containers.image', '=', 'k_images.fulltag')
+                ->leftJoin('k_namespaces', 'k_namespaces.uid', '=', 'k_containers.namespace_uid')
+                ->distinct('k_images.fulltag',)
+                ->select('k_images.fulltag', 'k_images.uid', 'k_images.report_uid', 'k_namespaces.name')
+                ->where('k_vuln_trivy.vulnerability_id', $vu->vulnerability_id)
+                ->count();
+
+            $vulnerability['imagecount'] = $images_count;
+
             $data['vulnerabilities'][$vu->uid] = $vulnerability;
         }
 

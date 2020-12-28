@@ -11,6 +11,7 @@
                 </b>
             </td>
             <td>{{$vulnerabily['pkg_name']}}</td>
+            <td>{{$vulnerabily['imagecount']}}</td>
             <td>
                 @isset ($vulnerabily['cvss']['V3Score'])
                 <div class="progress progress-xs">
