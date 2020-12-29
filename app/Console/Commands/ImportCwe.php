@@ -19,7 +19,7 @@ class ImportCwe extends Command
     public $url;
     public $file_name;
     public $database_name;
-    public $cve_version;
+    public $cwe_version;
 
     /**
      * The console command description.
@@ -46,11 +46,11 @@ class ImportCwe extends Command
      */
     public function handle()
     {
-        $this->cve_version = $this->argument('version');
+        $this->cwe_version = $this->argument('version');
 
-        $this->url = 'https://cwe.mitre.org/data/xml/cwec_v'.$this->cve_version.'.xml.zip';
-        $this->file_name = storage_path('app/cwec_v'.$this->cve_version.'.xml.gz');
-        $this->xml_name = storage_path('app/cwec_v'.$this->cve_version.'.xml');
+        $this->url = 'https://cwe.mitre.org/data/xml/cwec_v'.$this->cwe_version.'.xml.zip';
+        $this->file_name = storage_path('app/cwec_v'.$this->cwe_version.'.xml.gz');
+        $this->xml_name = storage_path('app/cwec_v'.$this->cwe_version.'.xml');
         $this->extract_dir = storage_path('app');
         
         //$this->download();
@@ -85,25 +85,6 @@ class ImportCwe extends Command
         $zip_obj = new \ZipArchive;
         $zip_obj->open($this->file_name);
         $zip_obj->extractTo($this->extract_dir);
-/*
-        // Raising this value may increase performance
-        $buffer_size = 4096; // read 4kb at a time
-
-        // Open our files (in binary mode)
-        $file = gzopen($this->file_name, 'rb');
-        $out_file = fopen($this->xml_name, 'wb');
-
-        // Keep repeating until the end of the input file
-        while (!gzeof($file)) {
-            // Read buffer-size bytes
-            // Both fwrite and gzread and binary-safe
-            fwrite($out_file, gzread($file, $buffer_size));
-        }
-
-        // Files are done, close files
-        fclose($out_file);
-        gzclose($file);
-*/
         $this->comment('Extracted file : '.$this->xml_name);
     }
 
@@ -115,7 +96,7 @@ class ImportCwe extends Command
         $create_sql[] = <<<SQL
             CREATE TABLE IF NOT EXISTS public.k_cwe
             (   
-                cve_id character varying COLLATE pg_catalog."default",
+                cwe_id character varying COLLATE pg_catalog."default",
                 title character varying COLLATE pg_catalog."default",
                 short_description character varying COLLATE pg_catalog."default",
                 extended_description character varying COLLATE pg_catalog."default",
@@ -141,24 +122,15 @@ class ImportCwe extends Command
 
     public function importData()
     {   
-        /*
-        #$xml = new \DomDocument('1.0', 'utf-8'); // Or the right version and encoding of your xml file
-        #$xml->load($this->xml_name);
-        $xml = new \SimpleXMLElement($this->xml_name, null, true);
-        */
+        $this->comment('Importing CWE Data');
         $xml = simplexml_load_file($this->xml_name);
-        //print_r($xml);
-        //$results = print_r($xml, true)
-        
-        //echo $this->extract_dir.'/debug.txt';
-        //file_put_contents($this->extract_dir.'/debug.txt', print_r($xml, true));
 
         foreach($xml->Weaknesses as $weakness){
             foreach($weakness as $w){
                 //echo $w->Description . PHP_EOL;
-                echo $w->attributes()->ID . PHP_EOL;
+                //echo $w->attributes()->ID . PHP_EOL;
                 DB::table('k_cwe')->insert([
-                    'cve_id' => 'CVE-'.$w->attributes()->ID,
+                    'cwe_id' => 'CWE-'.$w->attributes()->ID,
                     'title' => $w->attributes()->Name,
                     'short_description' => $w->Description,
                     'extended_description' => $w->Extended_Description,

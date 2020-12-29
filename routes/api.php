@@ -34,8 +34,8 @@ Route::prefix('v1')->group(function () {
                 }
             }
         }
-        DB::table('k_images_vuln_whitelist')->where('wl_image_b64', '=', $wl_image_b64)->delete();
-        DB::table('k_images_vuln_whitelist')->insert($insertdata);
+        DB::table('k_vulnwhitelist')->where('wl_image_b64', '=', $wl_image_b64)->delete();
+        DB::table('k_vulnwhitelist')->insert($insertdata);
         return ['success'=>'true', 'vuln_list'=>$insertdata, 'wl_image_b64'=>$wl_image_b64];
     });
 });
