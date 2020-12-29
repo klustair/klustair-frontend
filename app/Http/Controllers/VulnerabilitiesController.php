@@ -173,6 +173,21 @@ class VulnerabilitiesController extends Controller
             $vulnerability['cvss_base_score'] = '?';
         }
 
+        if ($vulnerability['cwe_ids'] != ''){
+            
+            foreach (json_decode($vulnerability['cwe_ids']) as $cwe_id){
+        
+                $cwe_arr =  (array) DB::table('k_cwe')
+                    ->where('k_cwe.cwe_id', $cwe_id)
+                    ->first();
+                $cwe_arr['common_consequences'] = json_decode($cwe_arr['common_consequences']);
+                $vulnerability['cwe'][] = $cwe_arr;
+            }
+            
+        } else {
+            $vulnerability['cwe'] = array();
+        }
+
         $data['vulnerability'] = json_decode(json_encode($vulnerability), true);
         
         $packages_list =  DB::table('k_vuln_trivy')

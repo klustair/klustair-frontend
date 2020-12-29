@@ -25,6 +25,30 @@
         </div>
         <div class="card">
             <div class="card-header">
+                <h3 class="card-title">Risks (CWE)</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+
+                <table class="table table-striped">
+                    <tr>
+                        <th>CWE</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                    </tr>
+                    @foreach ($vulnerability['cwe'] as $cwe)
+                    <tr>
+                        <td><a href="https://cwe.mitre.org/data/definitions/{{ substr($cwe['cwe_id'], 4) }}.html" target="_blank"><nobr>{{$cwe['cwe_id']}}</nobr></a></td>
+                        <td>{{$cwe['title']}}</td>
+                        <td>{{$cwe['short_description']}} </p>{{$cwe['extended_description']}}</td>
+                    </tr>
+                    @endforeach
+                </table>
+            <!-- /.card-body -->
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
                 <h3 class="card-title">Affected Packages</h3>
             </div>
             <!-- /.card-header -->

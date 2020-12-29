@@ -53,11 +53,21 @@ class ImportCwe extends Command
         $this->xml_name = storage_path('app/cwec_v'.$this->cwe_version.'.xml');
         $this->extract_dir = storage_path('app');
         
-        //$this->download();
-        //$this->unzip();
-        $this->createDB();
-        $this->importData();
-        return 0;
+
+        try {
+            
+            $this->download();
+            $this->unzip();
+            
+            $this->createDB();
+            $this->importData();
+
+            $this->line("\n");
+            $this->info('All CWE Data has been imported!');
+            return 0;
+        } catch (\Exception $e) {
+            $this->error(PHP_EOL . PHP_EOL . "    " . $e->getMessage() . PHP_EOL);
+        }
     }
 
 
@@ -101,7 +111,7 @@ class ImportCwe extends Command
                 short_description character varying COLLATE pg_catalog."default",
                 extended_description character varying COLLATE pg_catalog."default",
                 likelihoof_of_exploit character varying COLLATE pg_catalog."default",
-                common_consequences character varying COLLATE pg_catalog."default"
+                common_consequences json 
             )
             WITH (
                 OIDS = FALSE
@@ -115,6 +125,13 @@ class ImportCwe extends Command
                 OWNER to $dbuser;
         SQL;
 
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_cwe_id_fkey
+                ON public.k_cwe USING btree
+                (cwe_id COLLATE pg_catalog."default" ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }
@@ -126,18 +143,36 @@ class ImportCwe extends Command
         $xml = simplexml_load_file($this->xml_name);
 
         foreach($xml->Weaknesses as $weakness){
+            
+            $bar = $this->output->createProgressBar(count($weakness));
+            $bar->start();
+
             foreach($weakness as $w){
                 //echo $w->Description . PHP_EOL;
                 //echo $w->attributes()->ID . PHP_EOL;
+                
+                $common_consequences = array();
+                foreach ($w->Common_Consequences as $consequence){
+                    foreach($consequence->Consequence as $c){
+                        $common_consequences[] = array(
+                            'Scope' => (array)$c->Scope, 
+                            'Impact' => (array)$c->Impact, 
+                            'Note' => (array)$c->Note, 
+                        );
+                    }
+                }
                 DB::table('k_cwe')->insert([
                     'cwe_id' => 'CWE-'.$w->attributes()->ID,
                     'title' => $w->attributes()->Name,
                     'short_description' => $w->Description,
                     'extended_description' => $w->Extended_Description,
                     'likelihoof_of_exploit' => $w->Likelihood_Of_Exploit,
-                    'common_consequences' => '0'
+                    'common_consequences' => json_encode($common_consequences)
                 ]);
+                $bar->advance();
             }
+
+            $bar->finish();
         }
     }
 }
