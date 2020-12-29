@@ -6,6 +6,11 @@ $menu = [
             'url'  => 'report',
             'icon' => 'fas fa-fw fa-book',
         ],
+        [
+            'text' => 'vulnerabilities',
+            'url'  => 'vulnerabilities',
+            'icon' => 'fas fa-fw fa-bug',
+        ],
 ];
 
 if (env('ANCHORE_ENABLED', false) == true) {

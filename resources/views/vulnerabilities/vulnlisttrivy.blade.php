@@ -1,10 +1,17 @@
 
         @foreach ($vulnerabilities as $vulnerabily)
         <tr>
-            <td style="padding: 0.5rem;"><button type="button" class="btn btn-tool collapseDetails"><i class="fas fa-plus"></i></button></td>
-            <td><b>{{$vulnerabily['title']}}</b></td>
-            <td><nobr><a href="/vulnerability/{{ $vulnerabily['vulnerability_id'] }}">{{$vulnerabily['vulnerability_id']}}</a><nobr></td>
+            <td><a href="vulnerability/{{$vulnerabily['vulnerability_id']}}"><nobr>{{$vulnerabily['vulnerability_id']}}<nobr></a></td>
+            <td>
+                <b>
+                {{$vulnerabily['title']}}
+                @if ($vulnerabily['title'] == "")
+                {{ Str::limit($vulnerabily['descr'],200) }}
+                @endif
+                </b>
+            </td>
             <td>{{$vulnerabily['pkg_name']}}</td>
+            <td>{{$vulnerabily['imagecount']}}</td>
             <td>
                 @isset ($vulnerabily['cvss']['V3Score'])
                 <div class="progress progress-xs">
@@ -31,35 +38,6 @@
             </td>
             <td>
                 <input type="checkbox" id="{{ $vulnerabily['vulnerability_id'] }}" class="whitelistItem" name="whitelist" value="{{ $vulnerabily['uid'] }}" @if ($vulnerabily['images_vuln_whitelist_uid'] != "") checked @endif>
-            </td>
-        </tr>
-        <tr style="display: none">
-            <td colspan="8" style="border-top: none">
-                <div class="row">
-                    <div class="col-sm-7 p-3 bg-light rounded border">
-                    {{ $vulnerabily['descr'] }}
-                    </div>
-                    <div class="col-sm-5">
-                        <table>
-                            <tr>
-                                <th>installed version</th>
-                                <td>{{ $vulnerabily['installed_version'] }}</td>
-                            </tr>
-                            <tr>
-                                <th>fixed version</th>
-                                <td>{{ $vulnerabily['fixed_version'] }}</td>
-                            </tr>
-                            <tr>
-                                <th>published</th>
-                                <td>{{ $vulnerabily['published_date'] }}</td>
-                            </tr>
-                            <tr>
-                                <th>last modified</th>
-                                <td>{{ $vulnerabily['last_modified_date'] }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
             </td>
         </tr>
         <p>
