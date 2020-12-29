@@ -10,7 +10,7 @@ class UpdateVulnTrivy extends Migration
      * Run the migrations.
      *
      * @return void
-     */ target_uid character varying COLLATE pg_catalog."default",
+     */
     public function up()
     {
         $create_sql[] = <<<SQL
