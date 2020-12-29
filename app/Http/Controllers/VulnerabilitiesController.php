@@ -57,6 +57,10 @@ class VulnerabilitiesController extends Controller
             ->select('k_vuln_trivy.*', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
             //->where('report_uid', '=', $report_uid)
             ->orderBy('severity', 'ASC')
+<<<<<<< HEAD
+            ->limit(80)
+=======
+>>>>>>> 838088eb6b1e111dadb9d9eb1600c5e40f9dff28
             ->get();
 
         foreach ($vuln_trivy_list as $vu) {
