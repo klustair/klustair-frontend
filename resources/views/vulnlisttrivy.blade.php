@@ -3,7 +3,7 @@
         <tr>
             <td style="padding: 0.5rem;"><button type="button" class="btn btn-tool collapseDetails"><i class="fas fa-plus"></i></button></td>
             <td><b>{{$vulnerabily['title']}}</b></td>
-            <td><nobr>{{$vulnerabily['vulnerability_id']}}<nobr></td>
+            <td><nobr><a href="/vulnerability/{{ $vulnerabily['vulnerability_id'] }}">{{$vulnerabily['vulnerability_id']}}</a><nobr></td>
             <td>{{$vulnerabily['pkg_name']}}</td>
             <td>
                 @isset ($vulnerabily['cvss']['V3Score'])
@@ -58,20 +58,6 @@
                                 <td>{{ $vulnerabily['last_modified_date'] }}</td>
                             </tr>
                         </table>
-                    </div>
-                </div>
-                <div class="row pt-4">
-                    <div class="col-sm-7">
-                        @if ($vulnerabily['links'] != '')
-                        <ul class="fa-ul" style="max-width: 800px;">
-                            @foreach ($vulnerabily['links'] as $link)
-                            <li><span class="fa-li" style="color: gray"><i class="fas fa-link fa-xs"></i></span><a href="{{ $link }}" target="_blank">{{ $link }}</a></li>
-                            @endforeach
-                        </ul>
-                        @endif
-                    </div>
-                    <div class=col-sm-5>
-                        @include('elements.cvss', ['vuln_cvss' => $vulnerabily['cvss']])
                     </div>
                 </div>
             </td>

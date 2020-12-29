@@ -2,9 +2,10 @@ FROM php:7.4-apache
 
 RUN apt update && apt install -y libcurl4-openssl-dev pkg-config libssl-dev zip unzip
 
-RUN apt install -y libpq-dev
-RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql \
-    && docker-php-ext-enable pgsql pdo_pgsql 
+RUN apt install -y libpq-dev libzip-dev libxml2-dev
+RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql xml zip\
+    && docker-php-ext-enable pgsql pdo_pgsql xml zip
+
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
