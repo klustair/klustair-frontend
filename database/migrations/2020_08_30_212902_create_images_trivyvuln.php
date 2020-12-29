@@ -23,6 +23,7 @@ class CreateImagesTrivyvuln extends Migration
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 image_uid character varying COLLATE pg_catalog."default",
                 report_uid character varying COLLATE pg_catalog."default",
+                target_uid character varying COLLATE pg_catalog."default",
                 vulnerability_id character varying COLLATE pg_catalog."default",
                 pkg_name character varying COLLATE pg_catalog."default",
                 descr character varying COLLATE pg_catalog."default",
