@@ -111,23 +111,25 @@ class ImageController extends Controller
                 ->get();
 
             foreach ($vuln_list as $vu) {
-                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid] = json_decode(json_encode($vu), true);
-                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['links'] = json_decode($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['links'] , true);
+                $vulnerability =  json_decode(json_encode($vu), true);
+                $vulnerability['links'] = json_decode($vulnerability['links'] , true);
 
-                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'] = json_decode($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'], true);
+                $vulnerability['cvss'] = json_decode($vulnerability['cvss'], true);
 
-                if ($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'] != ''){
-                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss'] = current($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']);
+                if ($vulnerability['cvss'] != ''){
+                    $vulnerability['cvss'] = current($vulnerability['cvss']);
 
                 }
 
-                if (isset($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'])) {
-                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score'];
-                } elseif (isset($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score']) && !isset($data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V3Vector_base_score']) ) {
-                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss_base_score'] = $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss']['V2Vector_base_score'];
+                if (isset($vulnerability['cvss']['V3Vector_base_score'])) {
+                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V3Vector_base_score'];
+                } elseif (isset($vulnerability['cvss']['V2Vector_base_score']) && !isset($vulnerability['cvss']['V3Vector_base_score']) ) {
+                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V2Vector_base_score'];
                 } else {
-                    $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid]['cvss_base_score'] = '?';
+                    $vulnerability['cvss_base_score'] = '?';
                 }
+                
+                $data['image']['targets'][$t->uid]['vulnerabilities'][$vu->uid] = $vulnerability;
             }
 
         }
