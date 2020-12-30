@@ -13,9 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Auth::routes();
 Route::get('/', 'HomeController@home');
 
-Route::get('/lists', 'DebugController@list' );
+Route::middleware(['auth:sanctum', 'verified'])->get('/lists', 'DebugController@list' );
 
 Route::get('/report/{report_uid?}', 'ReportController@overview');
 
@@ -38,9 +39,6 @@ Route::get('/anchore/system', 'Anchore\SystemController@list' );
 Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
 
 Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
