@@ -14,8 +14,11 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "jeroennoten/laravel-adminlte": "^3.3",
         "laravel/framework": "^8.0",
+        "laravel/jetstream": "^1.6",
+        "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^3.0"
+        "laravel/ui": "^3.0",
+        "livewire/livewire": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
