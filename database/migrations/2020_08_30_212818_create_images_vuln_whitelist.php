@@ -35,6 +35,13 @@ class CreateImagesVulnWhitelist extends Migration
                 OWNER to $dbuser;
         SQL;
 
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_vulnwhitelist_wl_vuln
+                ON public.k_vulnwhitelist USING btree
+                (wl_vuln ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }

@@ -80,6 +80,20 @@ class CreateContainers extends Migration
                 TABLESPACE pg_default;
         SQL;
 
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_containers_namespace_uid
+                ON public.k_containers USING btree
+                (namespace_uid COLLATE pg_catalog."default" ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_containers_image
+                ON public.k_containers USING btree
+                (image COLLATE pg_catalog."default" ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }
