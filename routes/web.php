@@ -13,28 +13,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@home');
+Auth::routes();
 
-Route::get('/lists', 'DebugController@list' );
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', 'HomeController@home');
 
-Route::get('/report/{report_uid?}', 'ReportController@overview');
+    Route::get('/lists', 'DebugController@list' );
 
-Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
+    Route::get('/report/{report_uid?}', 'ReportController@overview');
 
-Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
+    Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
 
-Route::get('/vulnerability/{vuln_uid}', 'VulnerabilitiesController@details' );
+    Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
 
-Route::get('/namespace/{report_uid}/{namespace_uid}', 'NamespaceController@show' );
+    Route::get('/vulnerability/{vuln_uid}', 'VulnerabilitiesController@details' );
 
-Route::get('/anchore/images', 'Anchore\ImagesController@list' );
+    Route::get('/namespace/{report_uid}/{namespace_uid}', 'NamespaceController@show' );
 
-Route::get('/anchore/feeds', 'Anchore\FeedsController@list' );
+    Route::get('/anchore/images', 'Anchore\ImagesController@list' );
 
-Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
+    Route::get('/anchore/feeds', 'Anchore\FeedsController@list' );
 
-Route::get('/anchore/system', 'Anchore\SystemController@list' );
+    Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
 
-Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
+    Route::get('/anchore/system', 'Anchore\SystemController@list' );
 
-Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
+    Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
+
+    Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
+});
