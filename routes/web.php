@@ -13,9 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes();
+Auth::routes([
+    'register' => config('klustair.auth.register'), 
+    'reset' => config('klustair.auth.reset'), 
+    'verify' => config('klustair.auth.verify')
+    ]);
 
-Route::middleware(['auth'])->group(function () {
+$middlewares = array();
+if (config('klustair.auth.enabled')) {
+    $middlewares[] = 'auth';
+}
+
+Route::middleware($middlewares)->group(function () {
     Route::get('/', 'HomeController@home');
 
     Route::get('/lists', 'DebugController@list' );
