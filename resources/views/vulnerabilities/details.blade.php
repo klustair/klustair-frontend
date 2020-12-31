@@ -162,7 +162,11 @@ var options = {
   series: [
         {
             name: 'cvss scores',
+            @if (isset($vulnerability['cvss']['V3Vector_base_score']))
             data: [{{ $vulnerability['cvss']['V3Vector_base_score']}},{{ $vulnerability['cvss']['V3Vector_modified_esc']}},{{ $vulnerability['cvss']['V3Vector_modified_isc']}}]
+            @elseif (isset($vulnerability['cvss']['V2Vector_base_score']))
+            data: [{{ $vulnerability['cvss']['V2Vector_base_score']}}]
+            @endif
         },
   ],
   xaxis: {
