@@ -23,6 +23,12 @@ $middlewares = array();
 if (config('klustair.auth.enabled')) {
     $middlewares[] = 'auth';
 }
+if (!config('klustair.auth.register')) {
+    config(['adminlte.register_url' => false]);
+}
+if (!config('klustair.auth.reset')) {
+    config(['adminlte.password_reset_url' => false]);
+}
 
 Route::middleware($middlewares)->group(function () {
     Route::get('/', 'HomeController@home');
