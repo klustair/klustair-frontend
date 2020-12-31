@@ -27,7 +27,8 @@ class ImageController extends Controller
                         "1" => 'bg-warning text-white',
                         "2" => 'bg-info text-white',
                         "3" => 'bg-secondary text-white',
-                        "4" => 'bg-light text-dark'
+                        "4" => 'bg-light text-dark',
+                        "5" => 'bg-light text-dark', ## Caused by a bug in runner
                     );
     
         $error = array(
