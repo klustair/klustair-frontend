@@ -28,6 +28,25 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 | AUTH_RESET    | Boolean | false   | Allows password reset      |
 | AUTH_VERIFY   | Boolean | false   | Enables E-Mail verfication |
 
+## CLI Commands
+
+### import CWE's (Common Weakness Enumeration)
+
+```
+php artisan klustair:importcwe <version> [<force>]
+```
+The current latest Version is 4.3 (2020-12-10) 
+https://cwe.mitre.org/ 
+
+### Manage User
+```
+php artisan klustair:user <action> [<email> [<fullname>]]
+```
+Available actions are : 
+ - create 
+ - list
+ - delete
+
 ## Docker
 
 Docker images an tags can be found on <a href="https://hub.docker.com/r/klustair/klustair-frontend">hub.docker.com</a>
