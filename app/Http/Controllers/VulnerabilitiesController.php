@@ -175,7 +175,7 @@ class VulnerabilitiesController extends Controller
         }
 
         $cwe_id_arr = json_decode($vulnerability['cwe_ids'], true);
-        print_r($cwe_id_arr);
+        
         if (is_array($cwe_id_arr)){
 
             foreach ($cwe_id_arr as $cwe_id){
@@ -211,11 +211,11 @@ class VulnerabilitiesController extends Controller
 
         $data['images'] = json_decode(json_encode($images_list), true);
             
-        
+        /*
         echo "<pre>";
         print_r($data);
         echo "</pre>";
-        
+        */
         return view('vulnerabilities.details', $data);
     }
  
