@@ -19,7 +19,7 @@ class CreateConfigRunner extends Migration
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 runner_label character varying COLLATE pg_catalog."default",
                 kubeaudit character varying COLLATE pg_catalog."default",
-                "verbose" boolean,
+                verbosity boolean,
                 namespacesblacklist character varying COLLATE pg_catalog."default",
                 namespaces character varying COLLATE pg_catalog."default",
                 anchore boolean,

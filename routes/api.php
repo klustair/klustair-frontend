@@ -38,9 +38,16 @@ Route::prefix('v1')->group(function () {
         DB::table('k_vulnwhitelist')->insert($insertdata);
         return ['success'=>'true', 'vuln_list'=>$insertdata, 'wl_image_b64'=>$wl_image_b64];
     });
+
 });
 
-
+Route::group(['prefix' => 'v1', 'middleware' => ['auth:api']], function(){
+    
+    Route::get('/test', function () {
+        return [1, 2, 3];
+    });
+    
+});
 
 /*
 Route::get('/test', function () {
