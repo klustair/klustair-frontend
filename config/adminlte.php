@@ -116,8 +116,8 @@ return [
     |
     */
 
-    'usermenu_enabled' => false,
-    'usermenu_header' => false,
+    'usermenu_enabled' => true,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,

@@ -17,7 +17,35 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 - (DEPRECATED) <a href="https://github.com/anchore/anchore-engine">anchore-engine</a> A service that analyzes docker images and applies user-defined acceptance policies to allow automated container image validation and certification
 
 ## Pod Details
-<img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/image_details.png" width="700" alt="Pod details">
+<img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/image_details.png" height="500" alt="Pod details">
+
+## Configuration
+
+| ENV VAR       | Type    | default | description                |
+|---------------|---------|---------|----------------------------|
+| AUTH          | Boolean | false   | Enables Authentication     |
+| AUTH_REGISTER | Boolean | false   | Allows public registration |
+| AUTH_RESET    | Boolean | false   | Allows password reset      |
+| AUTH_VERIFY   | Boolean | false   | Enables E-Mail verfication |
+
+## CLI Commands
+
+### import CWE's (Common Weakness Enumeration)
+
+```
+php artisan klustair:importcwe <version> [<force>]
+```
+The current latest Version is 4.3 (2020-12-10) 
+https://cwe.mitre.org/ 
+
+### Manage User
+```
+php artisan klustair:user <action> [<email> [<fullname>]]
+```
+Available actions are : 
+ - create 
+ - list
+ - delete
 
 ## Docker
 
