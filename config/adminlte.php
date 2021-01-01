@@ -11,6 +11,11 @@ $menu = [
             'url'  => 'vulnerabilities',
             'icon' => 'fas fa-fw fa-bug',
         ],
+        [
+            'text' => 'Configuration',
+            'url'  => 'config',
+            'icon' => 'fas fa-fw fa-cogs',
+        ],
 ];
 
 if (env('ANCHORE_ENABLED', false) == true) {

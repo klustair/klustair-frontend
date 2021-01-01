@@ -57,3 +57,6 @@ Route::middleware($middlewares)->group(function () {
 
     Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
 });
+
+
+Route::middleware(['auth'])->get('/config', 'ConfigController@main' );
