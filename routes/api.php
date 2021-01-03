@@ -43,14 +43,9 @@ Route::prefix('v1')->group(function () {
 
 Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function(){
     
+    Route::post('/config/runner/create', 'ConfigController@apiCreateConfigRunner');
     Route::get('/test', function () {
         return [1, 2, 3];
     });
     
 });
-
-/*
-Route::get('/test', function () {
-    return [1, 2, 3];
-});
-*/
