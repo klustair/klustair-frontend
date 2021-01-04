@@ -492,6 +492,22 @@ return [
             ],
         ],
         [
+            'name' => 'jqueryValidate',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '/js/libs/jquery-validation/1.19.2/jquery.validate.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '/js/libs/jquery-validation/1.19.2/additional-methods.min.js'
+                ],
+            ],
+        ],
+        [
             'name' => 'Sweetalert2',
             'active' => false,
             'files' => [

@@ -6,6 +6,8 @@
     <h1>Config</h1>
 @stop
 
+@section('plugins.jqueryValidate', true)
+
 @section('content')
 <div class="row">
     <div class="col-12">

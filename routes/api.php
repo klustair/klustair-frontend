@@ -44,6 +44,7 @@ Route::prefix('v1')->group(function () {
 Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function(){
     
     Route::post('/config/runner/create', 'ConfigController@apiCreateConfigRunner');
+    Route::get('/config/runner/delete/{uid}', 'ConfigController@apiDeleteConfigRunner');
     Route::get('/test', function () {
         return [1, 2, 3];
     });

@@ -13,13 +13,26 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class ConfigController extends Controller
 {
+
+    
+    public function apiDeleteConfigRunner($uid)
+    {
+        ConfigRunner::destroy($uid);
+    }
+
     public function apiCreateConfigRunner(Request $request)
     {
         
         $runner = new ConfigRunner;
 
         $runner->uid = (string) Str::uuid();
-        $runner->runner_label = "asdf";
+        $runner->runner_label = $request->input('label');
+        $runner->kubeaudit = $request->input('kubeaudit');
+        $runner->namespacesblacklist = $request->input('namespacesblacklist');
+        $runner->namespaces = $request->input('namespaces');
+        $runner->limit_date = $request->input('limit_date');
+        $runner->limit_nr = $request->input('limit_nr');
+        $runner->verbosity = $request->input('verbosity');
 
         $runner->save();
     }
