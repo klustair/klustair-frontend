@@ -112,22 +112,28 @@ $.get( "/api/v1/test", function( data ) {
 
 $('#RunnerConfigForm').validate({
     rules: {
-      formRunnerLimitNr: {
-        required: false,
-        number: true,
-      },
-      formRunnerLimitDate: {
-        required: false,
-        number: true
-      }
+        label: {
+            required: true,
+        },
+        formRunnerLimitNr: {
+            required: false,
+            number: true,
+        },
+        formRunnerLimitDate: {
+            required: false,
+            number: true
+        }
     },
     messages: {
-      formRunnerLimitNr: {
-        number: "Please enter a Number"
-      },
-      formRunnerLimitDate: {
-        number: "Please enter a Number"
-      },
+        label: {
+            number: "Please enter a Label"
+        },
+        formRunnerLimitNr: {
+            number: "Please enter a Number"
+        },
+        formRunnerLimitDate: {
+            number: "Please enter a Number"
+        },
     },
     errorElement: 'span',
     errorPlacement: function (error, element) {
@@ -158,17 +164,19 @@ $("#btnCreateRunnerConfig").click(function(){
     values = $("#RunnerConfigForm").serializeArray();
     console.log(values)
 
-    $.post( "/api/v1/config/runner/create", values);
-    //$.post( "/api/v1/config/runner/create", { label: values.value, time: "2pm" } );
+    $.post( "/api/v1/config/runner/create", values, function( data ) {
+        location.reload();
+    });
     
     //$('#RunnerConfigModal').modal('hide')
+    
 });
 
 $(".btnDeleteRunnerConfig").click(function(){
     console.log('Delete: '+$(this).data('userid'))
     
     $.get( "/api/v1/config/runner/delete/"+$(this).data('userid'), function( data ) {
-    //alert( "Load was performed." + data);
+        location.reload();
     });
 });
  </script>
