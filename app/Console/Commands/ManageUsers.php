@@ -24,9 +24,9 @@ class ManageUsers extends Command
      *
      * @var string
      */
-    protected $description = 'Manage Klustair Users
+    protected $description = 'Manage Klustair Users';
 
-  Available actions: 
+    protected $help = 'Available actions: 
     - create [<email> [<fullname>]]
     - list
     - delete [<email>]
