@@ -2,7 +2,7 @@
 <table class="table table-condensed">
     <thead>
     <tr>
-        <td style="width: 90px;"></td>
+        <td style="width: 50px;"></td>
         <th>label</th>
         <th>kubeaudit</th>
         <th>namespacesblacklist</th>
@@ -17,9 +17,11 @@
         <tr>
             <td class="pl-3">
                 <ul class="list-inline m-0">
+                <!-- Not implemented yet
                     <li class="list-inline-item">
                         <button class="btn btn-success btn-xs btnEditRunnerConfig" data-userid="{{ $runner->uid}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="fa fa-edit"></i></button>
                     </li>
+                -->
                     <li class="list-inline-item">
                         <button class="btn btn-danger btn-xs btnDeleteRunnerConfig" data-userid="{{ $runner->uid}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
                     </li>

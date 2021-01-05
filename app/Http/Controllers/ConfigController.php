@@ -15,6 +15,22 @@ class ConfigController extends Controller
 {
 
     
+    public function apiDeleteUser($uid)
+    {
+        User::destroy($uid);
+    }
+
+    public function apiDeleteToken($uid)
+    {
+        PersonalAccessToken::destroy($uid);
+    }
+
+    public function apiCreateToken(Request $request)
+    {
+        $token = $request->user()->createToken($request->tokenName);
+        return ['token' => $token->plainTextToken];
+    }
+
     public function apiDeleteConfigRunner($uid)
     {
         ConfigRunner::destroy($uid);
@@ -49,7 +65,6 @@ class ConfigController extends Controller
         $tokens = PersonalAccessToken::all();
         $data['tokens'] = $tokens;
 
-      
         return view('config.main', $data);
     }
 }

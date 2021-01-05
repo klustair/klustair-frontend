@@ -15,7 +15,7 @@
             <td class="pl-3">
                 <ul class="list-inline m-0">
                     <li class="list-inline-item">
-                        <button class="btn btn-danger btn-xs" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
+                        <button class="btn btn-danger btn-xs btnDeleteUser" data-userid="{{ $user->id}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
                     </li>
                 </ul>
             </td>
@@ -28,3 +28,18 @@
     @endforeach
     </tbody>
 </table>
+
+
+@section('js')
+@parent
+<script>
+
+$(".btnDeleteUser").click(function(){
+    console.log('Delete UserId: '+$(this).data('userid'))
+    
+    $.get( "/api/v1/config/user/delete/"+$(this).data('userid'), function( data ) {
+        location.reload();
+    });
+});
+ </script>
+@stop

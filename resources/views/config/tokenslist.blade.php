@@ -3,12 +3,11 @@
     <thead>
     <tr>
         <th></th>
-        <th>Name</th>
+        <th>Name/Purpose</th>
         <th>Token</th>
-        <th>Abilities</th>
+        <!--<th>Abilities</th> Not implemented yet-->
         <th>last used at</th>
         <th>created at</th>
-        <th>updated at</th>
     </tr>
     </thead>
     <tbody>
@@ -17,16 +16,14 @@
             <td class="pl-3">
                 <ul class="list-inline m-0">
                     <li class="list-inline-item">
-                        <button class="btn btn-danger btn-xs" class="btnDeleteToken" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
+                        <button class="btn btn-danger btn-xs btnDeleteToken" data-tokenid="{{ $token->id}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
                     </li>
                 </ul>
             </td>
-            <td>{{ $user->name}}</td>
-            <td>{{ $user->token}}</td>
-            <td>{{ $user->abilities}}</td>
-            <td>{{ $user->last_used_at}}</td>
-            <td>{{ $user->created_at}}</td>
-            <td>{{ $user->updated_at}}</td>
+            <td>{{ $token->name}}</td>
+            <td>{{ $token->token}}</td>
+            <td>{{ $token->last_used_at}}</td>
+            <td>{{ $token->created_at}}</td>
         </tr>
         <p>
     @endforeach
@@ -44,7 +41,8 @@
 
 <div class="modal fade" id="TokenModal" tabindex="-1"  role="dialog">
     <div class="modal-dialog modal-lg">
-        <form role="form">
+        <form id="TokenForm">
+        @csrf
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Token</h4>
@@ -55,20 +53,25 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="tokenName">Name/Purpose</label>
-                    <input type="label" class="form-control" id="tokenName" placeholder="Enter label">
+                    <input type="text" class="form-control" name="tokenName" id="tokenName" placeholder="Enter label">
                 </div>
-
+<!--
                 <div class="form-group">
                     Abilities
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox">
-                        <label class="form-check-label">Checkbox</label>
+                        <input class="form-check-input" name="ability_full" type="checkbox">
+                        <label class="form-check-label">Full</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="ability_monitoring" value="monitoring" type="checkbox">
+                        <label class="form-check-label">Monitoring</label>
                     </div>
                 </div>
+-->
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" id="btnCreateToken" class="btn btn-primary">Save changes</button>
             </div>
         </div>
         </form>
@@ -83,9 +86,33 @@
 <script>
 $("#btnNewToken").click(function(){
     $('#TokenModal').modal('show')
+    $('#TokenModal').find("input[type=text], input[type=checkbox], textarea")
+        .val("")
+        .prop('checked', false)
+        .prop('selected', false);
 });
+
+
+$("#btnCreateToken").click(function(){
+    console.log('Create new Token')
+    values = $("#TokenForm").serializeArray();
+    console.log(values)
+
+    $.post( "/api/v1/config/token/create", values, function( data ) {
+        location.reload();
+    });
+    
+    //$('#RunnerConfigModal').modal('hide')
+    
+});
+
 $(".btnDeleteToken").click(function(){
-    $('#TokenModal').modal('show')
+    console.log('Delete: '+$(this).data('tokenid'))
+    
+    $.get( "/api/v1/config/token/delete/"+$(this).data('tokenid'), function( data ) {
+        location.reload();
+        //$(this).closest("tr").remove();
+    });
 });
  </script>
 @stop

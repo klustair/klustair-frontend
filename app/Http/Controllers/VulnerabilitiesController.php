@@ -8,6 +8,30 @@ use Illuminate\Support\Facades\DB;
 class VulnerabilitiesController extends Controller
 {
     /**
+     * Whitelist a list of vulnerabilities
+     *
+     * @return View
+     */
+    public function apiVulnwhitelist (Request $request, $wl_image_b64) 
+    {
+        $postdata = $request->post();
+        $insertdata = array();
+
+        $now = date(DATE_ATOM);
+        if (isset($postdata['vuln_list'])) {
+            $vulnlist = json_decode(base64_decode($postdata['vuln_list']), true);
+            foreach ($vulnlist as $vuln) {
+                
+                if (isset($vuln['state']) && $vuln['state']=='true') {
+                    $insertdata[] = ['uid'=>uniqid('', true), 'wl_image_b64'=>$wl_image_b64, 'wl_vuln'=> $vuln['vuln'], 'whitelisttime'=>$now ];
+                }
+            }
+        }
+        DB::table('k_vulnwhitelist')->where('wl_image_b64', '=', $wl_image_b64)->delete();
+        DB::table('k_vulnwhitelist')->insert($insertdata);
+        return ['success'=>'true', 'vuln_list'=>$insertdata, 'wl_image_b64'=>$wl_image_b64];
+    }
+    /**
      * Show a overview of Reports
      *
      * @return View
@@ -163,7 +187,6 @@ class VulnerabilitiesController extends Controller
 
         if ($vulnerability['cvss'] != ''){
             $vulnerability['cvss'] = current($vulnerability['cvss']);
-
         }
 
         if (isset($vulnerability['cvss']['V3Vector_base_score'])) {
