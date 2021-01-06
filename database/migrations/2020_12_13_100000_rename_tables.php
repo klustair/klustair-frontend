@@ -17,18 +17,18 @@ class RenameTables extends Migration
         k_images_vuln -> k_vuln_anchore
         */
         $create_sql[] = <<<SQL
+        ALTER TABLE IF EXISTS k_images_vuln
+        RENAME CONSTRAINT k_images_vuln_pkey TO k_vuln_anchore_pkey;
+        SQL;
+
+        $create_sql[] = <<<SQL
+            ALTER TABLE IF EXISTS k_images_vuln
+            RENAME CONSTRAINT k_images_vuln_report_uid_fkey TO k_vuln_anchore_report_uid_fkey;
+        SQL;
+
+        $create_sql[] = <<<SQL
             ALTER TABLE IF EXISTS k_images_vuln
             RENAME TO k_vuln_anchore;
-        SQL;
-
-        $create_sql[] = <<<SQL
-            ALTER TABLE IF EXISTS k_vuln_anchore
-            RENAME CONSTRAINT k_images_vuln_pkey TO k_vuln_anchore_pkey;
-        SQL;
-
-        $create_sql[] = <<<SQL
-            ALTER TABLE IF EXISTS k_vuln_anchore
-            RENAME CONSTRAINT k_images_vuln_report_uid_fkey TO k_vuln_anchore_report_uid_fkey;
         SQL;
 
         $create_sql[] = <<<SQL
@@ -46,19 +46,20 @@ class RenameTables extends Migration
         /*
         k_images_trivyvuln -> k_vuln_trivy
         */
+
+        $create_sql[] = <<<SQL
+        ALTER TABLE IF EXISTS k_images_trivyvuln
+        RENAME CONSTRAINT k_images_trivyvuln_pkey TO k_vuln_trivy_pkey;
+        SQL;
+
+        $create_sql[] = <<<SQL
+            ALTER TABLE IF EXISTS k_images_trivyvuln
+            RENAME CONSTRAINT k_images_trivyvuln_report_uid_fkey TO k_vuln_trivy_report_uid_fkey;
+        SQL;
+
         $create_sql[] = <<<SQL
             ALTER TABLE IF EXISTS k_images_trivyvuln
             RENAME TO k_vuln_trivy;
-        SQL;
-
-        $create_sql[] = <<<SQL
-            ALTER TABLE IF EXISTS k_vuln_trivy
-            RENAME CONSTRAINT k_images_trivyvuln_pkey TO k_vuln_trivy_pkey;
-        SQL;
-
-        $create_sql[] = <<<SQL
-            ALTER TABLE IF EXISTS k_vuln_trivy
-            RENAME CONSTRAINT k_images_trivyvuln_report_uid_fkey TO k_vuln_trivy_report_uid_fkey;
         SQL;
 
         $create_sql[] = <<<SQL
@@ -77,19 +78,20 @@ class RenameTables extends Migration
         k_images_vulnsummary -> k_vulnsummary
         */
 
-        $create_sql[] = <<<SQL
-            ALTER TABLE IF EXISTS k_images_vulnsummary
-            RENAME TO k_vulnsummary;
-        SQL;
 
         $create_sql[] = <<<SQL
-            ALTER TABLE IF EXISTS k_vulnsummary
+            ALTER TABLE IF EXISTS k_images_vulnsummary
             RENAME CONSTRAINT "k_imageVulnSummary_pkey" TO k_images_vulnsummary_pkey;
         SQL;
 
         $create_sql[] = <<<SQL
-            ALTER TABLE IF EXISTS k_vulnsummary
+            ALTER TABLE IF EXISTS k_images_vulnsummary
             RENAME CONSTRAINT k_images_vulnsummary_report_uid_fkey TO k_vulnsummary_report_uid_fkey;
+        SQL;
+
+        $create_sql[] = <<<SQL
+            ALTER TABLE IF EXISTS k_images_vulnsummary
+            RENAME TO k_vulnsummary;
         SQL;
 
         $create_sql[] = <<<SQL
@@ -106,14 +108,13 @@ class RenameTables extends Migration
 
         $create_sql[] = <<<SQL
             ALTER TABLE IF EXISTS k_images_vuln_whitelist
-            RENAME TO k_vulnwhitelist;
+            RENAME CONSTRAINT k_images_vuln_whitelist_pkey TO k_vulnwhitelist_pkey;
         SQL;
 
         $create_sql[] = <<<SQL
             ALTER TABLE IF EXISTS k_images_vuln_whitelist
-            RENAME CONSTRAINT k_images_vuln_whitelist_pkey TO k_vulnwhitelist_pkey;
+            RENAME TO k_vulnwhitelist;
         SQL;
-
 
         
         foreach ($create_sql as $sql ) {
