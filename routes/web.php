@@ -13,28 +13,50 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@home');
+Auth::routes([
+    'register' => config('klustair.auth.register'), 
+    'reset' => config('klustair.auth.reset'), 
+    'verify' => config('klustair.auth.verify')
+    ]);
 
-Route::get('/lists', 'DebugController@list' );
+$middlewares = array();
+if (config('klustair.auth.enabled')) {
+    $middlewares[] = 'auth';
+}
+if (!config('klustair.auth.register')) {
+    config(['adminlte.register_url' => false]);
+}
+if (!config('klustair.auth.reset')) {
+    config(['adminlte.password_reset_url' => false]);
+}
 
-Route::get('/report/{report_uid?}', 'ReportController@overview');
+Route::middleware($middlewares)->group(function () {
+    Route::get('/', 'HomeController@home');
 
-Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
+    Route::get('/lists', 'DebugController@list' );
 
-Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
+    Route::get('/report/{report_uid?}', 'ReportController@overview');
 
-Route::get('/vulnerability/{vuln_uid}', 'VulnerabilitiesController@details' );
+    Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
 
-Route::get('/namespace/{report_uid}/{namespace_uid}', 'NamespaceController@show' );
+    Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
 
-Route::get('/anchore/images', 'Anchore\ImagesController@list' );
+    Route::get('/vulnerability/{vuln_uid}', 'VulnerabilitiesController@details' );
 
-Route::get('/anchore/feeds', 'Anchore\FeedsController@list' );
+    Route::get('/namespace/{report_uid}/{namespace_uid}', 'NamespaceController@show' );
 
-Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
+    Route::get('/anchore/images', 'Anchore\ImagesController@list' );
 
-Route::get('/anchore/system', 'Anchore\SystemController@list' );
+    Route::get('/anchore/feeds', 'Anchore\FeedsController@list' );
 
-Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
+    Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
 
-Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
+    Route::get('/anchore/system', 'Anchore\SystemController@list' );
+
+    Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
+
+    Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
+});
+
+
+Route::middleware(['auth'])->get('/config', 'ConfigController@main' );

@@ -11,6 +11,7 @@
 
 @section('content')
 <!-- {{print_r($image)}} -->
+@csrf
 <div class="row">
     <div class="col-8">
         @if ($image['layer_count'] != "")
@@ -300,8 +301,8 @@ $("#aaaaaaUpdateWhitelist").click(function(){
 });
 
 const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
+    //toast: true,
+    //position: 'top-end',
     showConfirmButton: false,
     timer: 3000
 });
@@ -325,16 +326,15 @@ $('.swalDefaultSuccess').click(function() {
     var encodedString = btoa(JSON.stringify(vuln_uid_list));
 
     var data = {
+        _token: $('input[name="_token"]').val(),
         vuln_list: encodedString
     }
     console.log(data)
     $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageb64'), data, function( data ) {
-        $( '.result' ).html( data );
-    })
-    
-    Toast.fire({
-    type: 'success',
-    title: 'Updated Whitelist'
+        Toast.fire({
+            icon: 'success',
+            title: 'Updated Whitelist'
+        })
     })
 });
 
