@@ -8,16 +8,18 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 - Auditing the configuration of your kubernetes cluster 
 
 ### Related Klustair projects: 
-- <a href="https://github.com/mms-gianni/klustair">Klustair runner</a> to scan all your used images with trivy
-- <a href="https://github.com/mms-gianni/klustair-helm">Klustair Helm charts</a> to spin up Anchore and Klustair
+- <a href="https://github.com/klustair/klustair">Klustair runner</a> to scan all your used images with trivy
+- <a href="https://github.com/klustair/klustair-helm">Klustair Helm charts</a> to spin up Anchore and Klustair
 
 ### Related opensource projects
 - <a href="https://github.com/aquasecurity/trivy">trivxy</a> A Simple and Comprehensive Vulnerability Scanner for Containers and other Artifacts
 - <a href="https://github.com/Shopify/kubeaudit">kubeaudit</a> kubeaudit helps you audit your Kubernetes clusters against common security controls
 - (DEPRECATED) <a href="https://github.com/anchore/anchore-engine">anchore-engine</a> A service that analyzes docker images and applies user-defined acceptance policies to allow automated container image validation and certification
 
-## Pod Details
-<img src="https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/image_details.png" width="700" alt="Pod details">
+## Screenshots
+
+<img src="https://raw.githubusercontent.com/klustair/klustair-frontend/master/docs/screenshots/0.3.0/vulnerabilities.details.png" width="300" alt="vulnerabilities details">
+
 
 ## Docker
 
