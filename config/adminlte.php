@@ -11,6 +11,11 @@ $menu = [
             'url'  => 'vulnerabilities',
             'icon' => 'fas fa-fw fa-bug',
         ],
+        [
+            'text' => 'Configuration',
+            'url'  => 'config',
+            'icon' => 'fas fa-fw fa-cogs',
+        ],
 ];
 
 if (env('ANCHORE_ENABLED', false) == true) {
@@ -116,8 +121,8 @@ return [
     |
     */
 
-    'usermenu_enabled' => false,
-    'usermenu_header' => false,
+    'usermenu_enabled' => true,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,
@@ -483,6 +488,22 @@ return [
                     'asset' => false,
                     #'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
                     'location' => '/js/libs/Chart.js/2.7.0/Chart.bundle.min.js'
+                ],
+            ],
+        ],
+        [
+            'name' => 'jqueryValidate',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '/js/libs/jquery-validation/1.19.2/jquery.validate.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '/js/libs/jquery-validation/1.19.2/additional-methods.min.js'
                 ],
             ],
         ],
