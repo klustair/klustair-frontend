@@ -8,8 +8,8 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 - Auditing the configuration of your kubernetes cluster 
 
 ### Related Klustair projects: 
-- <a href="https://github.com/mms-gianni/klustair">Klustair runner</a> to scan all your used images with trivy
-- <a href="https://github.com/mms-gianni/klustair-helm">Klustair Helm charts</a> to spin up Anchore and Klustair
+- <a href="https://github.com/klustair/klustair">Klustair runner</a> to scan all your used images with trivy
+- <a href="https://github.com/klustair/klustair-helm">Klustair Helm charts</a> to spin up Anchore and Klustair
 
 ### Related opensource projects
 - <a href="https://github.com/aquasecurity/trivy">trivy</a> A Simple and Comprehensive Vulnerability Scanner for Containers and other Artifacts
@@ -46,6 +46,12 @@ Available actions are :
  - create 
  - list
  - delete
+ 
+## Screenshots
+<a href="https://github.com/klustair/klustair-frontend/blob/master/docs/screenshots/0.3.0/SCREENSHOTS.md">Finde more screenshots here</a>
+
+<img src="https://raw.githubusercontent.com/klustair/klustair-frontend/master/docs/screenshots/0.3.0/vulnerabilities.details.png" width="500" alt="vulnerabilities details">
+
 
 ## Docker
 
