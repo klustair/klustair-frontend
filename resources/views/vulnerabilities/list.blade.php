@@ -49,3 +49,5 @@
 </div>
 
 @stop
+
+@include('footer')
