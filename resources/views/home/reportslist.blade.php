@@ -24,7 +24,7 @@
                             @auth
                                 <ul class="list-inline m-0">
                                     <li class="list-inline-item">
-                                        <button class="btn btn-danger btn-xs btnDeleteToken" data-tokenid="{{ $report->uid}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
+                                        <button class="btn btn-danger btn-xs btnDeleteToken" data-reportuid="{{ $report->uid}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
                                     </li>
                                 </ul>
                             @endauth
@@ -52,3 +52,16 @@
 </div>
 
 <!--<pre>{{ print_r($reports) }}</pre>-->
+
+@section('js')
+@parent
+<script>
+$(".btnDeleteToken").click(function(){
+    console.log('Delete: '+$(this).data('reportuid'))
+    
+    $.get( "/api/v1/report/delete/"+$(this).data('reportuid'), function( data ) {
+        location.reload();
+    });
+});
+ </script>
+@stop

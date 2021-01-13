@@ -26,6 +26,9 @@ Route::group(['prefix' => 'v1', 'middleware' => $middlewares], function(){
 
 # Forced auth routes 
 Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function(){
+
+    Route::get('/report/delete/{uid}', 'ReportController@apiDeleteReport');
+
     Route::get('/config/user/delete/{uid}', 'ConfigController@apiDeleteUser');
     
     Route::post('/config/token/create', 'ConfigController@apiCreateToken');

@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+
+    
+    public function apiDeleteReport($reportuid)
+    {
+        //User::destroy($uid);
+    }
+
+
     /**
      * Show a overview of Reports
      *
