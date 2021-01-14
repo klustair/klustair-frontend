@@ -24,7 +24,7 @@
                             @auth
                                 <ul class="list-inline m-0">
                                     <li class="list-inline-item">
-                                        <button class="btn btn-danger btn-xs btnDeleteToken" data-reportuid="{{ $report->uid}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
+                                        <button class="btn btn-danger btn-xs btnDeleteToken" data-reportuid="{{ $report->reports_uid}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
                                     </li>
                                 </ul>
                             @endauth
