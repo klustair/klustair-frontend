@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Auth;
 
 $menu = [
         [
@@ -15,6 +16,7 @@ $menu = [
             'text' => 'Configuration',
             'url'  => 'config',
             'icon' => 'fas fa-fw fa-cogs',
+            'can'=> 'logged-in',
         ],
 ];
 
@@ -121,7 +123,7 @@ return [
     |
     */
 
-    'usermenu_enabled' => true,
+    'usermenu_enabled' => false,
     'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
