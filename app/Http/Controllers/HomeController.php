@@ -48,7 +48,7 @@ class HomeController extends Controller
 
         $reports_summaries = DB::table('k_reports_summaries')
             ->leftJoin('k_reports', 'k_reports.uid', '=', 'k_reports_summaries.report_uid')
-            ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime, title, k_reports_summaries.*, vuln_total/images as vuln_avg")
+            ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime, k_reports.uid as reports_uid, title, k_reports_summaries.*, vuln_total/images as vuln_avg")
             ->get()
             ->toArray();
         
