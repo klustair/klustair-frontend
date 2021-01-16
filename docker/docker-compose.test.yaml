@@ -31,6 +31,10 @@ services:
       - ANCHORE_API_URL=${ANCHORE_API_URL:-http://host.docker.internal:8228}
       - ANCHORE_CLI_USER=${ANCHORE_CLI_USER:-admin}
       - ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS:-foobar}
+      - AUTH=${AUTH:-false}
+      - AUTH_REGISTER=${AUTH_REGISTER:-false}
+      - AUTH_RESET=${AUTH_RESET:-false}
+      - AUTH_VERIFY=${AUTH_VERIFY:-false}
     ports:
       - 8080:80
       - 8443:443
@@ -64,6 +68,10 @@ services:
       - ANCHORE_API_URL=${ANCHORE_API_URL:-http://host.docker.internal:8228}
       - ANCHORE_CLI_USER=${ANCHORE_CLI_USER:-admin}
       - ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS:-foobar}
+      - AUTH=${AUTH:-false}
+      - AUTH_REGISTER=${AUTH_REGISTER:-false}
+      - AUTH_RESET=${AUTH_RESET:-false}
+      - AUTH_VERIFY=${AUTH_VERIFY:-false}
     ports:
       - "9000:9000"
     volumes:

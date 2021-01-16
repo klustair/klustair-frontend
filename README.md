@@ -12,15 +12,71 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 - <a href="https://github.com/klustair/klustair-helm">Klustair Helm charts</a> to spin up Anchore and Klustair
 
 ### Related opensource projects
-- <a href="https://github.com/aquasecurity/trivy">trivxy</a> A Simple and Comprehensive Vulnerability Scanner for Containers and other Artifacts
+- <a href="https://github.com/aquasecurity/trivy">trivy</a> A Simple and Comprehensive Vulnerability Scanner for Containers and other Artifacts
 - <a href="https://github.com/Shopify/kubeaudit">kubeaudit</a> kubeaudit helps you audit your Kubernetes clusters against common security controls
 - (DEPRECATED) <a href="https://github.com/anchore/anchore-engine">anchore-engine</a> A service that analyzes docker images and applies user-defined acceptance policies to allow automated container image validation and certification
 
+<br>
+<br>
+
 ## Screenshots
-<a href="https://github.com/klustair/klustair-frontend/blob/master/docs/screenshots/0.3.0/SCREENSHOTS.md">Finde more screenshots here</a>
+<a href="https://github.com/klustair/klustair-frontend/blob/master/docs/screenshots/0.3.0/SCREENSHOTS.md">Find more screenshots here</a>
 
 <img src="https://raw.githubusercontent.com/klustair/klustair-frontend/master/docs/screenshots/0.3.0/vulnerabilities.details.png" width="500" alt="vulnerabilities details">
 
+<br>
+<br>
+<br>
+
+## Configuration
+
+| ENV VAR       | Type    | default | description                |
+|---------------|---------|---------|----------------------------|
+| AUTH          | Boolean | false   | Enables Authentication     |
+| AUTH_REGISTER | Boolean | false   | Allows public registration |
+| AUTH_RESET    | Boolean | false   | Allows password reset      |
+| AUTH_VERIFY   | Boolean | false   | Enables E-Mail verfication |
+
+<br>
+<br>
+
+## CLI Commands
+
+### import CWE's (Common Weakness Enumeration)
+
+```
+php artisan klustair:importcwe <version> [<force>]
+```
+The current latest Version is 4.3 (2020-12-10) 
+https://cwe.mitre.org/ 
+
+### Manage User
+```
+php artisan klustair:user <action> [<email> [<fullname>]]
+```
+Available actions are : 
+ - create 
+ - list
+ - delete
+ 
+### Manage Tokens
+```
+php artisan lustair:token <action> [<name> [<email>]]
+```
+Available actions are : 
+  - create [<name> [<email>]]
+  - list
+  - delete [<name>]
+
+### Manage Init actions
+```
+php artisan lustair:init <action>]
+```
+Available actions are : 
+  - waitForDB
+
+<br>
+<br>
 
 ## Docker
 

@@ -14,36 +14,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+$middlewares = array();
+if (config('klustair.auth.enabled')) {
+    $middlewares[] = 'auth:sanctum';
+}
+
+# Optional auth routes 
+Route::group(['prefix' => 'v1', 'middleware' => $middlewares], function(){
+    Route::post('/vulnwhitelist/update/{wl_image_b64}', 'VulnerabilitiesController@apiVulnwhitelist');
 });
 
+# Forced auth routes 
+Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function(){
 
-Route::prefix('v1')->group(function () {
-    Route::post('/vulnwhitelist/update/{wl_image_b64}', function (Request $request, $wl_image_b64) {
-        $postdata = $request->post();
-        $insertdata = array();
+    Route::get('/report/delete/{uid}', 'ReportController@apiDeleteReport');
 
-        $now = date(DATE_ATOM);
-        if (isset($postdata['vuln_list'])) {
-            $vulnlist = json_decode(base64_decode($postdata['vuln_list']), true);
-            foreach ($vulnlist as $vuln) {
-                
-                if (isset($vuln['state']) && $vuln['state']=='true') {
-                    $insertdata[] = ['uid'=>uniqid('', true), 'wl_image_b64'=>$wl_image_b64, 'wl_vuln'=> $vuln['vuln'], 'whitelisttime'=>$now ];
-                }
-            }
-        }
-        DB::table('k_vulnwhitelist')->where('wl_image_b64', '=', $wl_image_b64)->delete();
-        DB::table('k_vulnwhitelist')->insert($insertdata);
-        return ['success'=>'true', 'vuln_list'=>$insertdata, 'wl_image_b64'=>$wl_image_b64];
+    Route::get('/config/user/delete/{uid}', 'ConfigController@apiDeleteUser');
+    
+    Route::post('/config/token/create', 'ConfigController@apiCreateToken');
+    Route::get('/config/token/delete/{uid}', 'ConfigController@apiDeleteToken');
+
+    Route::post('/config/runner/create', 'ConfigController@apiCreateConfigRunner');
+    Route::get('/config/runner/delete/{uid}', 'ConfigController@apiDeleteConfigRunner');
+
+    Route::get('/test', function () {
+        return [1, 2, 3];
     });
+    
 });
-
-
-
-/*
-Route::get('/test', function () {
-    return [1, 2, 3];
-});
-*/

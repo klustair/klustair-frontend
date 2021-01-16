@@ -191,3 +191,5 @@ chart.render();
 </script>
 
 @stop
+
+@include('footer')

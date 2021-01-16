@@ -10,6 +10,7 @@
                 <table class="table table-condensed">
                     <thead>
                     <tr>
+                        <th width="50px"></th>
                         <th width="150px">Date</th>
                         <th>title</th>
                         <th>namespaces</th>
@@ -19,6 +20,15 @@
                     <tbody>
                         @foreach( $reports as $report  )
                         <tr>
+                            <td>
+                            @auth
+                                <ul class="list-inline m-0">
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-danger btn-xs btnDeleteToken" data-reportuid="{{ $report->reports_uid}}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash-alt"></i></button>
+                                    </li>
+                                </ul>
+                            @endauth
+                            </td>
                             <td><a href="report/{{ $report->report_uid}}">{{ $report->checktime}}</a></td>
                             <td>{{ $report->title}}</td>
                             <td>{{ $report->namespaces_total }}/{{ $report->namespaces_checked}}</td>
@@ -42,3 +52,16 @@
 </div>
 
 <!--<pre>{{ print_r($reports) }}</pre>-->
+
+@section('js')
+@parent
+<script>
+$(".btnDeleteToken").click(function(){
+    console.log('Delete: '+$(this).data('reportuid'))
+    
+    $.get( "/api/v1/report/delete/"+$(this).data('reportuid'), function( data ) {
+        location.reload();
+    });
+});
+ </script>
+@stop

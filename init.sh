@@ -14,6 +14,9 @@ chown -R www-data:www-data storage/logs
 
 rm -fv storage/framework/views/*.php
 
+echo "======= Wait for Database to come up"
+php artisan klustair:init waitForDB
+
 echo "======= Database Migrations"
 php artisan migrate
 
