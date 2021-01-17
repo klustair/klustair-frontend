@@ -126,7 +126,7 @@
                     <th>Score</th>
                     <th style="width: 40px">CVSS</th>
                     <th style="width: 40px">Fixed</th>
-                    <th style="width: 20px"><input type="checkbox" id="checkAll"></th>
+                    @auth<th style="width: 20px"><input type="checkbox" id="checkAll"></th>@endauth
                 </tr>
                 </thead>
                 <tbody>
@@ -139,10 +139,11 @@
                     @endforeach
                 </tbody>
             </table>
-                <div class="p-2" style="float:right;">
-                    <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Add to Whitelist</button>
-                </div>
-
+            @auth
+            <div class="p-2" style="float:right;">
+                <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Add to Whitelist</button>
+            </div>
+            @endauth
 
             </div>
             <!-- /.card-body -->
