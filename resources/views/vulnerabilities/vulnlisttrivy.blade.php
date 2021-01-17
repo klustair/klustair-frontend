@@ -36,9 +36,11 @@
                 <span class="badge badge-pill badge-success">yes</span>
                 @endif
             </td>
+            @auth
             <td>
                 <input type="checkbox" id="{{ $vulnerabily['vulnerability_id'] }}" class="whitelistItem" name="whitelist" value="{{ $vulnerabily['uid'] }}" @if ($vulnerabily['images_vuln_whitelist_uid'] != "") checked @endif>
             </td>
+            @endauth
         </tr>
         <p>
         @endforeach
