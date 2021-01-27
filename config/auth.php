@@ -1,5 +1,20 @@
 <?php
 
+
+if (env('LDAP', false)) {
+    $provider = [
+        'driver' => 'ldap',
+        #'model' => LdapRecord\Models\ActiveDirectory\User::class,
+        'model' => App\Models\LdapUser::class,
+        'rules' => [],
+    ];
+} else {
+    $provider = [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ];
+}
+
 return [
 
     /*
@@ -66,10 +81,13 @@ return [
     */
 
     'providers' => [
+        'users' => $provider,
+        /*
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        */
 
         // 'users' => [
         //     'driver' => 'database',

@@ -35,6 +35,17 @@ services:
       - AUTH_REGISTER=${AUTH_REGISTER:-false}
       - AUTH_RESET=${AUTH_RESET:-false}
       - AUTH_VERIFY=${AUTH_VERIFY:-false}
+      - LDAP=true
+      - LDAP_LOGGING=true
+      - LDAP_CONNECTION=default
+      - LDAP_HOST=openldap
+      - LDAP_USERNAME="cn=admin,dc=example,dc=org"
+      - LDAP_PASSWORD=adminpassword
+      - LDAP_PORT=1389
+      - LDAP_BASE_DN="ou=users,dc=example,dc=org"
+      - LDAP_TIMEOUT=5
+      - LDAP_SSL=false
+      - LDAP_TLS=false
     ports:
       - 8080:80
       - 8443:443
@@ -124,7 +135,38 @@ services:
       options:
         max-size: 100m
 
+  openldap:
+    image: bitnami/openldap:2-debian-10
+    container_name: openldap
+    #volumes:
+    #  - 'openldap_data:/bitnami/openldap'
+    ports:
+      - '1389:1389'
+      - '1636:1636'
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=adminpassword
+      - LDAP_USERS=user01,user02,klustair
+      - LDAP_PASSWORDS=secret,password2,klustair
+
+  ldapaccountmanager:
+    image: ldapaccountmanager/lam:stable
+    container_name: ldapaccountmanager
+    ports:
+      - '9090:80'
+    environment:
+      - LAM_SKIP_PRECONFIGURE=false
+      - LDAP_BASE_DN=dc=example,dc=org
+      - LDAP_USERS_DN=ou=users,dc=example,dc=org
+      - LDAP_SERVER=ldap://openldap:1389
+      - LDAP_USER=cn=admin,dc=example,dc=org
+      - LAM_DISABLE_TLS_CHECK=true
+      - LDAP_ADMIN_PASSWORD=adminpassword
+
 volumes:
   klustair-db-volume:
     # Set this to 'true' to use an external volume. In which case, it must be created manually with "docker volume create anchore-db-volume"
     external: false
+  openldap_data:
+    # Set this to 'true' to use an external volume. In which case, it must be created manually with "docker volume create anchore-db-volume"
+    driver: local
