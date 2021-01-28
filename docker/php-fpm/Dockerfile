@@ -1,8 +1,10 @@
 FROM php:7.4-fpm-alpine
 
-RUN apk --no-cache add postgresql-dev libzip-dev libxml2-dev libldap2-dev
+RUN apk --no-cache add postgresql-dev libzip-dev libxml2-dev 
 
-RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
+# LDAP related packages
+RUN apk --no-cache add ldb-dev libldap openldap-dev
+
 RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql xml zip ldap
 RUN docker-php-ext-enable pgsql pdo_pgsql xml zip ldap
 
