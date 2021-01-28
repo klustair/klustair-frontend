@@ -41,8 +41,14 @@ class LoginController extends Controller
 
     protected function credentials(Request $request)
     {
+
+        $queryfield = 'email';
+        if (env('LDAP', false)) {
+            $queryfield = env('LDAP_QUERYFIELD', 'uid');
+        }
+
         return [
-            'mail' => $request->email,
+            $queryfield => $request->email,
             'password' => $request->password,
         ];
     }

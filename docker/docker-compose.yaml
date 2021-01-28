@@ -35,17 +35,17 @@ services:
       - AUTH_REGISTER=${AUTH_REGISTER:-false}
       - AUTH_RESET=${AUTH_RESET:-false}
       - AUTH_VERIFY=${AUTH_VERIFY:-false}
-      - LDAP=true
-      - LDAP_LOGGING=true
-      - LDAP_CONNECTION=default
-      - LDAP_HOST=openldap
-      - LDAP_USERNAME="cn=admin,dc=example,dc=org"
-      - LDAP_PASSWORD=adminpassword
-      - LDAP_PORT=1389
-      - LDAP_BASE_DN="ou=users,dc=example,dc=org"
-      - LDAP_TIMEOUT=5
-      - LDAP_SSL=false
-      - LDAP_TLS=false
+      - LDAP=${LDAP:-false}
+      - LDAP_LOGGING=${LDAP_LOGGING:-true}
+      - LDAP_CONNECTION=${LDAP_CONNECTION:-default}
+      - LDAP_HOST=${LDAP_HOST:-openldap}
+      - LDAP_USERNAME=${LDAP_USERNAME:-"cn=admin,dc=example,dc=org"}
+      - LDAP_PASSWORD=${LDAP_PASSWORD:-adminpassword}
+      - LDAP_PORT=${LDAP_PORT:-1389}
+      - LDAP_BASE_DN=${LDAP_BASE_DN:-"ou=users,dc=example,dc=org"}
+      - LDAP_TIMEOUT=${LDAP_TIMEOUT:-5}
+      - LDAP_SSL=${LDAP_SSL:-false}
+      - LDAP_TLS=${LDAP_TLS:-false}
     ports:
       - 8080:80
       - 8443:443
@@ -85,6 +85,17 @@ services:
       - AUTH_REGISTER=${AUTH_REGISTER:-false}
       - AUTH_RESET=${AUTH_RESET:-false}
       - AUTH_VERIFY=${AUTH_VERIFY:-false}
+      - LDAP=${LDAP:-false}
+      - LDAP_LOGGING=${LDAP_LOGGING:-true}
+      - LDAP_CONNECTION=${LDAP_CONNECTION:-default}
+      - LDAP_HOST=${LDAP_HOST:-openldap}
+      - LDAP_USERNAME=${LDAP_USERNAME:-"cn=admin,dc=example,dc=org"}
+      - LDAP_PASSWORD=${LDAP_PASSWORD:-adminpassword}
+      - LDAP_PORT=${LDAP_PORT:-1389}
+      - LDAP_BASE_DN=${LDAP_BASE_DN:-"ou=users,dc=example,dc=org"}
+      - LDAP_TIMEOUT=${LDAP_TIMEOUT:-5}
+      - LDAP_SSL=${LDAP_SSL:-false}
+      - LDAP_TLS=${LDAP_TLS:-false}
     ports:
       - "9000:9000"
     volumes:
@@ -135,6 +146,7 @@ services:
       options:
         max-size: 100m
 
+  # LDAP Development containers
   openldap:
     image: bitnami/openldap:2-debian-10
     container_name: openldap
@@ -144,10 +156,10 @@ services:
       - '1389:1389'
       - '1636:1636'
     environment:
-      - LDAP_ADMIN_USERNAME=admin
-      - LDAP_ADMIN_PASSWORD=adminpassword
-      - LDAP_USERS=user01,user02,klustair
-      - LDAP_PASSWORDS=secret,password2,klustair
+      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME:-admin}
+      - LDAP_ADMIN_PASSWORD=${LDAP_PASSWORD:-adminpassword}
+      - LDAP_USERS=${LDAP_USERS:-klustair,user01,user02}
+      - LDAP_PASSWORDS=${LDAP_PASSWORDS:-klustair,secret,secret}
 
   ldapaccountmanager:
     image: ldapaccountmanager/lam:stable
@@ -159,9 +171,9 @@ services:
       - LDAP_BASE_DN=dc=example,dc=org
       - LDAP_USERS_DN=ou=users,dc=example,dc=org
       - LDAP_SERVER=ldap://openldap:1389
-      - LDAP_USER=cn=admin,dc=example,dc=org
+      - LDAP_USER=${LDAP_USERNAME:-"cn=admin,dc=example,dc=org"}
       - LAM_DISABLE_TLS_CHECK=true
-      - LDAP_ADMIN_PASSWORD=adminpassword
+      - LDAP_ADMIN_PASSWORD=${LDAP_PASSWORD:-adminpassword}
 
 volumes:
   klustair-db-volume:

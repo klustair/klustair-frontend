@@ -1,11 +1,16 @@
 <?php
 
-
-if (env('LDAP', false)) {
+$ldap = env('LDAP', false);
+if ($ldap == 'ActiveDirectory') {
     $provider = [
         'driver' => 'ldap',
-        #'model' => LdapRecord\Models\ActiveDirectory\User::class,
-        'model' => App\Models\LdapUser::class,
+        'model' => LdapRecord\Models\ActiveDirectory\User::class,
+        'rules' => [],
+    ];
+} elseif ($ldap == 'OpenLDAP') {
+    $provider = [
+        'driver' => 'ldap',
+        'model' => LdapRecord\Models\OpenLDAP\User::class,
         'rules' => [],
     ];
 } else {
