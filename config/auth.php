@@ -1,5 +1,25 @@
 <?php
 
+$ldap = env('LDAP', false);
+if ($ldap == 'ActiveDirectory') {
+    $provider = [
+        'driver' => 'ldap',
+        'model' => LdapRecord\Models\ActiveDirectory\User::class,
+        'rules' => [],
+    ];
+} elseif ($ldap == 'OpenLDAP') {
+    $provider = [
+        'driver' => 'ldap',
+        'model' => LdapRecord\Models\OpenLDAP\User::class,
+        'rules' => [],
+    ];
+} else {
+    $provider = [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ];
+}
+
 return [
 
     /*
@@ -66,10 +86,13 @@ return [
     */
 
     'providers' => [
+        'users' => $provider,
+        /*
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        */
 
         // 'users' => [
         //     'driver' => 'database',

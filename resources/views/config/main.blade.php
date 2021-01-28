@@ -43,6 +43,7 @@
             </div>
             <!-- /.card-body -->
         </div>
+        @if(!env('LDAP'))
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Users</h3>
@@ -59,6 +60,7 @@
             </div>
             <!-- /.card-body -->
         </div>
+        @endif
     </div>
 <!-- /.card -->
 </div>

@@ -25,7 +25,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Gate::define('logged-in', function ($user) {
-            return $user->id;
+            $name = false;
+            if (env('LDAP', false)) {
+                $name = $user->getName();
+            } else {
+                $name =  $user->name;
+            }
+            return $name;
         });
     }
 }

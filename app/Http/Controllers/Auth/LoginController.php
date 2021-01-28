@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -36,5 +37,19 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function credentials(Request $request)
+    {
+
+        $queryfield = 'email';
+        if (env('LDAP', false)) {
+            $queryfield = env('LDAP_QUERYFIELD', 'uid');
+        }
+
+        return [
+            $queryfield => $request->email,
+            'password' => $request->password,
+        ];
     }
 }
