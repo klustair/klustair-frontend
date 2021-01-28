@@ -36,6 +36,7 @@ services:
       - AUTH_RESET=${AUTH_RESET:-false}
       - AUTH_VERIFY=${AUTH_VERIFY:-false}
       - LDAP=${LDAP:-false}
+      - LDAP_QUERYFIELD${LDAP_QUERYFIELD:-uid}
       - LDAP_LOGGING=${LDAP_LOGGING:-true}
       - LDAP_CONNECTION=${LDAP_CONNECTION:-default}
       - LDAP_HOST=${LDAP_HOST:-openldap}
@@ -86,6 +87,7 @@ services:
       - AUTH_RESET=${AUTH_RESET:-false}
       - AUTH_VERIFY=${AUTH_VERIFY:-false}
       - LDAP=${LDAP:-false}
+      - LDAP_QUERYFIELD${LDAP_QUERYFIELD:-uid}
       - LDAP_LOGGING=${LDAP_LOGGING:-true}
       - LDAP_CONNECTION=${LDAP_CONNECTION:-default}
       - LDAP_HOST=${LDAP_HOST:-openldap}
