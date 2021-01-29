@@ -87,6 +87,7 @@ services:
       - AUTH_RESET=${AUTH_RESET:-false}
       - AUTH_VERIFY=${AUTH_VERIFY:-false}
       - LDAP=${LDAP:-false}
+      - LDAP_TYPE=${LDAP_TYPE:-OpenLDAP}
       - LDAP_QUERYFIELD${LDAP_QUERYFIELD:-uid}
       - LDAP_LOGGING=${LDAP_LOGGING:-true}
       - LDAP_CONNECTION=${LDAP_CONNECTION:-default}
