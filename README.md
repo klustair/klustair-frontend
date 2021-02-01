@@ -31,19 +31,20 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 ## Configuration
 
 ### Laravel built in authentication
-| ENV VAR       | Type    | default | description                |
-|---------------|---------|---------|----------------------------|
-| AUTH          | Boolean | false   | Enables Authentication     |
-| AUTH_REGISTER | Boolean | false   | Allows public registration |
-| AUTH_RESET    | Boolean | false   | Allows password reset      |
-| AUTH_VERIFY   | Boolean | false   | Enables E-Mail verfication |
+| ENV VAR       | Type    | value             | description                |
+|---------------|---------|-------------------|----------------------------|
+| AUTH          | Boolean | true\|**false**   | Enables Authentication     |
+| AUTH_REGISTER | Boolean | true\|**false**   | Allows public registration |
+| AUTH_RESET    | Boolean | true\|**false**   | Allows password reset      |
+| AUTH_VERIFY   | Boolean | true\|**false**   | Enables E-Mail verfication |
 <br>
 <br>
 
 ### LDAP Authentication
 |                 | Type    | value                                | description                                                               |
 |-----------------|---------|--------------------------------------|---------------------------------------------------------------------------|
-| LDAP            | Mixed   | **false**\|OpenLDAP\|ActiveDirectory | Enables LDAP. Klustair is preconfigured for OpenLDAP and Active Directory |
+| LDAP            | Boolean | true\|**false**                      | Enables LDAP                                                              |
+| LDAP_TYPE       | String  | **OpenLDAP**\|ActiveDirectory        | Preconfigured for OpenLDAP and Active Directory                           |
 | LDAP_QUERYFIELD | String  | **uid**\|mail\|{custom}              | The field Klustair will try to find the User Account                      |
 | LDAP_LOGGING    | Boolean | **true**\|false                      | Enable logging                                                            |
 | LDAP_CONNECTION | String  | **default**                          | Since there is only default, you want to keep this value                  |
