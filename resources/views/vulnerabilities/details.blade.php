@@ -23,6 +23,7 @@
             <!-- /.card-body -->
             </div>
         </div>
+        @if (count($vulnerability['cwe']) > 0)
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Risks (CWE)</h3>
@@ -47,6 +48,7 @@
             <!-- /.card-body -->
             </div>
         </div>
+        @endif
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Affected Packages</h3>
