@@ -20,10 +20,11 @@
                 </div>
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0">
-            <table class="table table-condensed">
+            <div class="card-body table-responsive">
+            <table id="vulnlist" class="table table-condensed">
                 <thead>
                 <tr>
+                    <th style="display:none">Severity</th>
                     <th>CVE</th>
                     <th>Title</th>
                     <th>Package</th>
@@ -53,8 +54,14 @@
 @stop
 
 @section('plugins.Sweetalert2', true)
+@section('plugins.Datatables', true)
 @section('js')
 <script> 
+
+
+$(document).ready(function() {
+    $('#vulnlist').DataTable();
+} );
 
 $("#checkAll").click(function(){
     $('input:checkbox').not(this).prop('checked', this.checked);

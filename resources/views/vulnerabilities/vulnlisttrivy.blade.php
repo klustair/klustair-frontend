@@ -1,6 +1,7 @@
 
         @foreach ($vulnerabilities as $vulnerabily)
         <tr>
+            <td style="display:none">{{$vulnerabily['severity']}}</td>
             <td><a href="vulnerability/{{$vulnerabily['vulnerability_id']}}"><nobr>{{$vulnerabily['vulnerability_id']}}<nobr></a></td>
             <td>
                 <b>
