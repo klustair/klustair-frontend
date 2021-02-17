@@ -2,9 +2,11 @@ FROM php:7.4-apache
 
 RUN apt update && apt install -y libcurl4-openssl-dev pkg-config libssl-dev zip unzip
 
-RUN apt install -y libpq-dev libzip-dev libxml2-dev
-RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql xml zip\
-    && docker-php-ext-enable pgsql pdo_pgsql xml zip
+RUN apt install -y libpq-dev libzip-dev libxml2-dev libldap2-dev
+
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
+RUN docker-php-ext-install -j$(nproc) pgsql pdo_pgsql xml zip ldap
+RUN docker-php-ext-enable pgsql pdo_pgsql xml zip ldap
 
 
 # Get latest Composer

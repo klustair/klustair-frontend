@@ -30,13 +30,32 @@ The Klustair scanner scanns your Kubernetes namespaces for the used images and s
 
 ## Configuration
 
-| ENV VAR       | Type    | default | description                |
-|---------------|---------|---------|----------------------------|
-| AUTH          | Boolean | false   | Enables Authentication     |
-| AUTH_REGISTER | Boolean | false   | Allows public registration |
-| AUTH_RESET    | Boolean | false   | Allows password reset      |
-| AUTH_VERIFY   | Boolean | false   | Enables E-Mail verfication |
+### Laravel built in authentication
+| ENV VAR       | Type    | value             | description                |
+|---------------|---------|-------------------|----------------------------|
+| AUTH          | Boolean | true\|**false**   | Enables Authentication     |
+| AUTH_REGISTER | Boolean | true\|**false**   | Allows public registration |
+| AUTH_RESET    | Boolean | true\|**false**   | Allows password reset      |
+| AUTH_VERIFY   | Boolean | true\|**false**   | Enables E-Mail verfication |
+<br>
+<br>
 
+### LDAP Authentication
+|                 | Type    | value                                | description                                                               |
+|-----------------|---------|--------------------------------------|---------------------------------------------------------------------------|
+| LDAP            | Boolean | true\|**false**                      | Enables LDAP                                                              |
+| LDAP_TYPE       | String  | **OpenLDAP**\|ActiveDirectory        | Preconfigured for OpenLDAP and Active Directory                           |
+| LDAP_QUERYFIELD | String  | **uid**\|mail\|{custom}              | The field Klustair will try to find the User Account                      |
+| LDAP_LOGGING    | Boolean | **true**\|false                      | Enable logging                                                            |
+| LDAP_CONNECTION | String  | **default**                          | Since there is only default, you want to keep this value                  |
+| LDAP_HOST       | String  | **openldap**\|custom                 | Hostname of the LDAP Server (without Protocol ldap://)                    |
+| LDAP_USERNAME   | String  | **"cn=admin,dc=example,dc=org"**     | The DN Klustair uses to connect to LDAP                                   |
+| LDAP_PASSWORD   | String  |                                      | The Password Klustair uses to connect to LDAP                             |
+| LDAP_PORT       | Integer | **1389**\|389                        | LDAP listening port                                                       |
+| LDAP_BASE_DN    | String  | **"ou=users,dc=example,dc=org"**     | DN where the users are located                                            |
+| LDAP_TIMEOUT    | Integer | **5**                                | Query timeout                                                             |
+| LDAP_SSL        | Boolean | true\|**false**                      |                                                                           |
+| LDAP_TLS        | Boolean | true\|**false**                      |                                                                           |
 <br>
 <br>
 
@@ -55,18 +74,18 @@ https://cwe.mitre.org/
 php artisan klustair:user <action> [<email> [<fullname>]]
 ```
 Available actions are : 
- - create 
+ - create [\<email\> [\<fullname\>]]
  - list
- - delete
+ - delete[\<email\>]
  
 ### Manage Tokens
 ```
 php artisan lustair:token <action> [<name> [<email>]]
 ```
 Available actions are : 
-  - create [<name> [<email>]]
+  - create [\<name\> [\<email\>]]
   - list
-  - delete [<name>]
+  - delete [\<name\>]
 
 ### Manage Init actions
 ```
@@ -74,6 +93,17 @@ php artisan lustair:init <action>]
 ```
 Available actions are : 
   - waitForDB
+
+### Test the LDAP Connection
+```
+php artisan ldap:test
+
++------------+------------+----------------------------+-------------------------+---------------+
+| Connection | Successful | Username                   | Message                 | Response Time |
++------------+------------+----------------------------+-------------------------+---------------+
+| default    | ✔ Yes      | cn=admin,dc=example,dc=org | Successfully connected. | 22.27ms       |
++------------+------------+----------------------------+-------------------------+---------------+
+```
 
 <br>
 <br>
