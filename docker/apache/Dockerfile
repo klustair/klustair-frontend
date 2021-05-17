@@ -1,4 +1,4 @@
-FROM php:7.4-apache
+FROM php:7.3.27-apache
 
 RUN apt update && apt install -y libcurl4-openssl-dev pkg-config libssl-dev zip unzip
 
