@@ -1,7 +1,6 @@
 version: '3.3'
 
 services:
-
   klustair-apache:
     container_name: klustair-apache
     build:
@@ -117,8 +116,8 @@ services:
     environment:
       - PHP_FPM_HOST=klustair-php-fpm
     ports:
-      - 8080:80
-      - 8443:443
+      - 8081:80
+      - 8444:443
     working_dir: /var/www
     expose:
       - 8080
@@ -139,6 +138,7 @@ services:
     volumes:
       - klustair-db-volume:/var/lib/postgresql/data
     environment:
+      - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
