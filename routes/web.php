@@ -60,3 +60,11 @@ Route::middleware($middlewares)->group(function () {
 
 
 Route::middleware(['auth'])->get('/config', 'ConfigController@main' );
+
+Route::get('/uuuu', function () {
+    return [1, 2, 3];
+});
+
+Route::middleware(['auth'])->get('/test', function () {
+    return [1, 2, 3];
+});

@@ -37,8 +37,14 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function(){
     Route::post('/config/runner/create', 'ConfigController@apiCreateConfigRunner');
     Route::get('/config/runner/delete/{uid}', 'ConfigController@apiDeleteConfigRunner');
 
+});
+
+// Auth with persona Access Token
+Route::group(['prefix' => 'v1/pac', 'middleware' => ['auth:api']], function(){
     Route::get('/test', function () {
         return [1, 2, 3];
     });
-    
+
+    //Route::post('/report/create/{uid}', 'ReportController@apiCreateReport');
+    //Route::get('/config/runner/get/{uid}', 'ConfigController@apiGetConfigRunner');
 });

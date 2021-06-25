@@ -64,8 +64,9 @@ return [
 
         'api' => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'apitoken',
             'hash' => false,
+            'storage_key' => 'token',
         ],
     ],
 
@@ -88,6 +89,10 @@ return [
 
     'providers' => [
         'users' => $provider,
+        'apitoken' => [
+            'driver' => 'database',
+            'table' => 'personal_access_tokens',
+        ],
         /*
         'users' => [
             'driver' => 'eloquent',
