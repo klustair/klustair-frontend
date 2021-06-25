@@ -53,6 +53,13 @@ class ConfigController extends Controller
         $runner->save();
     }
 
+    public function apiGetConfigRunner($uid){
+        $runner = new ConfigRunner;
+        $runner = ConfigRunner::where('uid', $uid)->first();
+        return $runner;
+
+    }
+
     public function main() 
     {
 

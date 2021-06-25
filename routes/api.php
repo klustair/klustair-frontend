@@ -45,6 +45,6 @@ Route::group(['prefix' => 'v1/pac', 'middleware' => ['auth:api']], function(){
         return [1, 2, 3];
     });
 
+    Route::get('/config/runner/get/{uid}', 'ConfigController@apiGetConfigRunner');
     //Route::post('/report/create/{uid}', 'ReportController@apiCreateReport');
-    //Route::get('/config/runner/get/{uid}', 'ConfigController@apiGetConfigRunner');
 });
