@@ -41,10 +41,18 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function(){
 
 // Auth with persona Access Token
 Route::group(['prefix' => 'v1/pac', 'middleware' => ['auth:api']], function(){
-    Route::get('/test', function () {
-        return [1, 2, 3];
-    });
 
     Route::get('/config/runner/get/{uid}', 'ConfigController@apiGetConfigRunner');
-    //Route::post('/report/create/{uid}', 'ReportController@apiCreateReport');
+    Route::post('/report/create', 'ReportController@apiCreateReport');
+    Route::post('/report/{report_uid}/namespace/create', 'ReportController@apiCreateNamespace');
+    Route::post('/report/{report_uid}/audit/create', 'ReportController@apiCreateAudit');
+    Route::post('/report/{report_uid}/pod/create', 'ReportController@apiCreatePod');
+    Route::post('/report/{report_uid}/container/create', 'ReportController@apiCreateContainer');
+    Route::post('/report/{report_uid}/image/create', 'ReportController@apiCreateImage');
+    Route::post('/report/{report_uid}/vuln/create', 'ReportController@apiCreateVuln');
+    Route::post('/report/{report_uid}/vuln/summary/create', 'ReportController@apiVulnsummary');
+    Route::post('/report/{report_uid}/containerhasimage/create', 'ReportController@apiContainerHasImage');
+    Route::post('/report/{report_uid}/summary/create', 'ReportController@apiReportsSummary');
+
+    Route::post('/report/cleanup', 'ReportController@apiReportsCleanup');
 });
