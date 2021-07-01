@@ -54,8 +54,13 @@ class ConfigController extends Controller
     }
 
     public function apiGetConfigRunner($uid){
-        $runner = new ConfigRunner;
         $runner = ConfigRunner::where('uid', $uid)->first();
+        if (!$runner) {
+            $runner['found'] = false;
+        } else {
+            $runner['found'] = true;
+        }
+        //print_r(gettype($runner));
         return $runner;
 
     }
