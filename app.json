@@ -61,24 +61,10 @@
         "description": "[YOURAPPNAME].herokuapp.com"
       }
     },
-    "stack": "heroku-20",
-    "formation": {
-      "web": {
-        "quantity": 1,
-        "size": "free"
-      }
-    },
     "scripts": {
       "postdeploy": "./init.sh"
     },
-    "addons": [
-      {
-        "plan": "heroku-postgresql:hobby-dev",
-        "options": {
-          "version": "12"
-        }
-      }
-    ],
+    "addons": ["heroku-postgresql:hobby-dev"],
     "buildpacks": [
       {
         "url": "heroku/php"
