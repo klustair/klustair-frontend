@@ -1,0 +1,87 @@
+{
+    "name": "KlustAIR",
+    "description": "Frontend to Kubernetes Trivy and Kubeaudit scanner",
+    "keywords": [
+      "security",
+      "kubernetes"
+    ],
+    "website": "https://www.klustair.com/",
+    "repository": "https://github.com/klustair/klustair-frontend",
+    "logo": "https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/klustair.png",
+    "success_url": "/login",
+    "env": {
+
+      "APP_DEBUG": {
+        "description": "Enables some debugging features and the Laravel debugbar",
+        "value": "false"
+      },
+      "APP_ENV": {
+        "description": "Laravel App Env",
+        "value": "heroku"
+      },
+      "APP_KEY": {
+        "description": "Laravel App Key"
+      },
+      "APP_NAME": {
+        "description": "Application name",
+        "value": "Klustair"
+      },
+      "APP_URL": {
+        "description": "Application URL (https://[YOURAPPNAME].herokuapp.com)"
+      },
+      "AUTH": {
+        "description": "Enable authentication",
+        "value": "false"
+      },
+      "AUTH_REGISTER": {
+        "description": "Enable registration",
+        "value": "true"
+      },
+      "AUTH_RESET": {
+        "description": "Enable password reset",
+        "value": "false"
+      },
+      "AUTH_VERIFY": {
+        "description": "Enable verfication (experimental)",
+        "value": "false"
+      },
+      "DB_CONNECTION": {
+        "description": "DB connection type",
+        "value": "pgsql"
+      },
+      "LDAP": {
+        "description": "Disable LDAP Authentication (visit github README for instructions)",
+        "value": "false"
+      },
+      "LOG_CHANNEL": {
+        "description": "Laravel log channel",
+        "value": "Stack"
+      },
+      "SANCTUM_STATEFUL_DOMAINS": {
+        "description": "[YOURAPPNAME].herokuapp.com"
+      }
+    },
+    "stack": "heroku-20",
+    "formation": {
+      "web": {
+        "quantity": 1,
+        "size": "free"
+      }
+    },
+    "scripts": {
+      "postdeploy": "./init.sh"
+    },
+    "addons": [
+      {
+        "plan": "heroku-postgresql:hobby-dev",
+        "options": {
+          "version": "12"
+        }
+      }
+    ],
+    "buildpacks": [
+      {
+        "url": "heroku/php"
+      }
+    ]
+  }
