@@ -9,6 +9,13 @@
     "repository": "https://github.com/klustair/klustair-frontend",
     "logo": "https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/klustair.png",
     "success_url": "/login",
+    "formation": {
+      "web": {
+        "quantity": 1,
+        "size": "free",
+        "command": "vendor/bin/heroku-php-apache2 public/"
+      }
+    },
     "env": {
 
       "APP_DEBUG": {
