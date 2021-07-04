@@ -20,7 +20,8 @@
         "value": "heroku"
       },
       "APP_KEY": {
-        "description": "Laravel App Key"
+        "description": "Laravel App Key",
+        "generator": "secret"
       },
       "APP_NAME": {
         "description": "Application name",
