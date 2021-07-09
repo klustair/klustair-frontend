@@ -9,13 +9,6 @@
     "repository": "https://github.com/klustair/klustair-frontend",
     "logo": "https://raw.githubusercontent.com/mms-gianni/klustair-frontend/master/docs/img/klustair.png",
     "success_url": "/login",
-    "formation": {
-      "web": {
-        "quantity": 1,
-        "size": "free",
-        "command": "vendor/bin/heroku-php-apache2 public/"
-      }
-    },
     "env": {
 
       "APP_DEBUG": {
@@ -24,7 +17,7 @@
       },
       "APP_ENV": {
         "description": "Laravel App Env",
-        "value": "heroku"
+        "value": "local"
       },
       "APP_KEY": {
         "description": "Laravel App Key",
@@ -35,7 +28,8 @@
         "value": "Klustair"
       },
       "APP_URL": {
-        "description": "Application URL (https://[YOURAPPNAME].herokuapp.com)"
+        "description": "Application URL ",
+        "value": "https://YOURAPPNAME.herokuapp.com"
       },
       "AUTH": {
         "description": "Enable authentication",
@@ -57,16 +51,21 @@
         "description": "DB connection type",
         "value": "pgsql"
       },
+      "DB_USER": {
+        "description": "DB User to run migrations",
+        "value": "CHANGEME_AFTER_INSTALL"
+      },
       "LDAP": {
         "description": "Disable LDAP Authentication (visit github README for instructions)",
         "value": "false"
       },
       "LOG_CHANNEL": {
         "description": "Laravel log channel",
-        "value": "Stack"
+        "value": "stack"
       },
       "SANCTUM_STATEFUL_DOMAINS": {
-        "description": "[YOURAPPNAME].herokuapp.com"
+        "description": "The domain you run the frontend",
+        "value": "YOURAPPNAME.herokuapp.com"
       }
     },
     "scripts": {
