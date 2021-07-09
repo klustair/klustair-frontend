@@ -66,6 +66,10 @@
       "SANCTUM_STATEFUL_DOMAINS": {
         "description": "The domain you run the frontend",
         "value": "YOURAPPNAME.herokuapp.com"
+      },
+      "SESSION_DRIVER": {
+        "description": "Laravel Sessionsdriver",
+        "value": "file"
       }
     },
     "scripts": {
