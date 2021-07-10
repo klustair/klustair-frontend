@@ -27,6 +27,9 @@
         "description": "Application URL ",
         "value": "https://YOURAPPNAME.herokuapp.com"
       },
+      "APP_KEY": {
+        "description": "Random 32 Characters (https://random.justyy.workers.dev/api/random/?cached&n=32&x=7) "
+      },
       "AUTH": {
         "description": "Enable authentication",
         "value": "false"
@@ -53,7 +56,7 @@
       },
       "LOG_CHANNEL": {
         "description": "Laravel log channel",
-        "value": "stack"
+        "value": "stderr"
       },
       "SANCTUM_STATEFUL_DOMAINS": {
         "description": "The domain you run the frontend",
@@ -63,9 +66,6 @@
         "description": "Laravel Sessionsdriver",
         "value": "file"
       }
-    },
-    "scripts": {
-      "postdeploy": "./init.sh"
     },
     "addons": ["heroku-postgresql:hobby-dev"],
     "buildpacks": [
