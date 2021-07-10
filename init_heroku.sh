@@ -1,3 +1,6 @@
+echo "======= Generate Laravel App Key"
+php artisan key:generate
+
 echo "======= Database Migrations"
 php artisan migrate
 
