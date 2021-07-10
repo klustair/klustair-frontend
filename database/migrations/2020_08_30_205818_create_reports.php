@@ -51,12 +51,12 @@ class CreateReports extends Migration
             ALTER TYPE public.k_reports
                 OWNER to getenv('DB_USERNAME');
             SQL;
-        }
 
-        $create_sql[] = <<<SQL
-            ALTER SEQUENCE public.migrations_id_seq
-                OWNER to $dbuser;
-        SQL;
+            $create_sql[] = <<<SQL
+                ALTER SEQUENCE public.migrations_id_seq
+                OWNER to getenv('DB_USERNAME');
+            SQL;
+        }
 
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
