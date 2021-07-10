@@ -31,11 +31,12 @@ class CreateConfigRunner extends Migration
             )
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'postgres');
-        $create_sql[] = <<<SQL
-            ALTER TABLE public.k_config_runner
+        if($dbuser = getenv('DB_USERNAME')){
+            $create_sql[] = <<<SQL
+            ALTER TYPE public.k_config_runner
                 OWNER to $dbuser;
-        SQL;
+            SQL;
+        }
 
         foreach ($create_sql as $sql ) {
             DB::statement($sql);

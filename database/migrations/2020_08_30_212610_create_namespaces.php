@@ -41,6 +41,13 @@ class CreateNamespaces extends Migration
                 OWNER to $dbuser;
         SQL;
 
+        if($dbuser = getenv('DB_USERNAME')){
+            $create_sql[] = <<<SQL
+            ALTER TYPE public.k_namespaces
+                OWNER to $dbuser;
+            SQL;
+        }
+
         $create_sql[] = <<<SQL
             CREATE INDEX IF NOT EXISTS k_namespaces_report_uid_fkey
                 ON public.k_namespaces USING btree

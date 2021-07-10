@@ -46,11 +46,12 @@ class CreateReports extends Migration
                 TABLESPACE pg_default;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'postgres');
-        $create_sql[] = <<<SQL
-            ALTER TABLE public.k_reports
+        if($dbuser = getenv('DB_USERNAME')){
+            $create_sql[] = <<<SQL
+            ALTER TYPE public.k_reports
                 OWNER to $dbuser;
-        SQL;
+            SQL;
+        }
 
         $create_sql[] = <<<SQL
             ALTER SEQUENCE public.migrations_id_seq

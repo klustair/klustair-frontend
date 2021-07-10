@@ -29,11 +29,12 @@ class CreateImagesVulnWhitelist extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'postgres');
-        $create_sql[] = <<<SQL
-            ALTER TABLE public.k_vulnwhitelist
+        if($dbuser = getenv('DB_USERNAME')){
+            $create_sql[] = <<<SQL
+            ALTER TYPE public.k_vulnwhitelist
                 OWNER to $dbuser;
-        SQL;
+            SQL;
+        }
 
         $create_sql[] = <<<SQL
             CREATE INDEX IF NOT EXISTS k_vulnwhitelist_wl_vuln
