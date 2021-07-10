@@ -19,10 +19,6 @@
         "description": "Laravel App Env",
         "value": "local"
       },
-      "APP_KEY": {
-        "description": "Laravel App Key",
-        "generator": "secret"
-      },
       "APP_NAME": {
         "description": "Application name",
         "value": "Klustair"
@@ -50,10 +46,6 @@
       "DB_CONNECTION": {
         "description": "DB connection type",
         "value": "pgsql"
-      },
-      "DB_USER": {
-        "description": "DB User to run migrations",
-        "value": "CHANGEME_AFTER_INSTALL"
       },
       "LDAP": {
         "description": "Disable LDAP Authentication (visit github README for instructions)",

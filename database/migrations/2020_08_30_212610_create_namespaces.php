@@ -41,10 +41,10 @@ class CreateNamespaces extends Migration
                 OWNER to $dbuser;
         SQL;
 
-        if($dbuser = getenv('DB_USERNAME')){
+        if(getenv("DB_USERNAME") !== false){
             $create_sql[] = <<<SQL
             ALTER TYPE public.k_namespaces
-                OWNER to $dbuser;
+                OWNER to getenv('DB_USERNAME');
             SQL;
         }
 

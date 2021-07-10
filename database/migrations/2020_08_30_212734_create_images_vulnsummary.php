@@ -35,10 +35,10 @@ class CreateImagesVulnsummary extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        if($dbuser = getenv('DB_USERNAME')){
+        if(getenv("DB_USERNAME") !== false){
             $create_sql[] = <<<SQL
             ALTER TYPE public.k_vulnsummary
-                OWNER to $dbuser;
+                OWNER to getenv('DB_USERNAME');
             SQL;
         }
 

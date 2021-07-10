@@ -31,10 +31,10 @@ class CreateConfigRunner extends Migration
             )
         SQL;
 
-        if($dbuser = getenv('DB_USERNAME')){
+        if(getenv("DB_USERNAME") !== false){
             $create_sql[] = <<<SQL
             ALTER TYPE public.k_config_runner
-                OWNER to $dbuser;
+                OWNER to getenv('DB_USERNAME');
             SQL;
         }
 
