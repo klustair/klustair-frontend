@@ -4,9 +4,7 @@
     <tr>
         <td style="width: 50px;"></td>
         <th>label</th>
-        <th>kubeaudit</th>
-        <th>namespacesblacklist</th>
-        <th>namespaces</th>
+        <th>uid</th>
         <th>limit_date</th>
         <th>limit_nr</th>
         <th>verbosity</th>
@@ -28,9 +26,7 @@
                 </ul>
             </td>
             <td>{{ $runner->runner_label}}</td>
-            <td>{{ $runner->kubeaudit}}</td>
-            <td>{{ $runner->namespacesblacklist}}</td>
-            <td>{{ $runner->namespaces}}</td>
+            <td>{{ $runner->uid}}</td>
             <td>{{ $runner->limit_date}}</td>
             <td>{{ $runner->limit_nr}}</td>
             <td>{{ $runner->verbosity}}</td>
