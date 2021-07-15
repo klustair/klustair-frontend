@@ -35,20 +35,40 @@ class ConfigController extends Controller
     {
         ConfigRunner::destroy($uid);
     }
-
+    
+    /*
+    public  function apiUpdateConfigRunner($uid, Request $request)
+    {
+        $configRunner = ConfigRunner::find($uid);
+        $configRunner->update($request->all());
+        return $configRunner;
+    }
+    */
+    
     public function apiCreateConfigRunner(Request $request)
     {
+
+        $trivy = false;
+        if ($request->input('trivy') == 'on') {
+            $trivy = true;
+        }
+
+        $verbosity = false;
+        if ($request->input('verbosity') == 'on') {
+            $verbosity = true;
+        }
         
         $runner = new ConfigRunner;
 
         $runner->uid = (string) Str::uuid();
         $runner->runner_label = $request->input('label');
+        $runner->trivy = true;
         $runner->kubeaudit = $request->input('kubeaudit');
         $runner->namespacesblacklist = $request->input('namespacesblacklist');
         $runner->namespaces = $request->input('namespaces');
         $runner->limit_date = $request->input('limit_date');
         $runner->limit_nr = $request->input('limit_nr');
-        $runner->verbosity = $request->input('verbosity');
+        $runner->verbosity = $verbosity;
 
         $runner->save();
     }

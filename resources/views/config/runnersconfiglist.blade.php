@@ -62,6 +62,12 @@
                         <input name="label" type="text" class="form-control" id="formRunnerLabel" placeholder="Enter label">
                     </div>
                     <div class="form-group">
+                        <div class="custom-control custom-switch">
+                        <input name="trivy" type="checkbox" class="custom-control-input" id="formRunnerTrivy">
+                        <label class="custom-control-label" for="formRunnerTrivy">Enable Trivy image scans</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="formRunnerKubeaudit">Kubeaudit</label> (Disable with "none")
                         <input name="kubeaudit" type="text" class="form-control" id="formRunnerKubeaudit" placeholder="Enter kubeaudit checks">
                     </div>
