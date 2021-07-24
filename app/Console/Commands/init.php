@@ -50,6 +50,9 @@ class init extends Command
             case 'createAdmin':
                 $this->createAdmin();
                 break;
+            case 'initAPItoken':
+                $this->initAPItoken();
+                break;
             default:
                 $this->error('Action not found');
                 break;
@@ -81,20 +84,33 @@ class init extends Command
             $this->error("\n No BD Connection! Check your Database and Credentials.");
         }
     }
+
+    private function initAPItoken() {
+        $name = "initial runner Token";
+        $email = "admin@admin.com";
+
+        try {
+            $user = User::where('email', $email)->first();
+            $token = $user->createToken($name);
+            $this->info("Token '${name}' -> '$token->plainTextToken' has been created sucessfull!");
+
+        } catch (\Throwable $e) {
+            $this->error('Something went wrong! Token has not been generated!');
+        }
+    }
+
     private function createAdmin() {
         $name = "admin";
         $email = "admin@admin.com";
         $password = $this->random_str(16);
         $hashed_password = Hash::make($password);
-
-
         try {
             User::updateOrCreate(
                 ['name' => $name], 
                 ['password' => $hashed_password], 
                 ['email' => $email], 
             );
-            $this->info("User '${email}' has been created sucessfull!");
+            $this->info("Admin '${name}' with '$email' has been created sucessfull!");
             $this->comment("Password: ${password}");
 
         } catch (QueryException $e) {
