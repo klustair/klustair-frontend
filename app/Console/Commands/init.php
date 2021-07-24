@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\QueryException;
 
 class init extends Command
 {
@@ -44,6 +47,9 @@ class init extends Command
             case 'waitForDB':
                 $this->waitForDB();
                 break;
+            case 'createAdmin':
+                $this->createAdmin();
+                break;
             default:
                 $this->error('Action not found');
                 break;
@@ -74,5 +80,53 @@ class init extends Command
         } else {
             $this->error("\n No BD Connection! Check your Database and Credentials.");
         }
+    }
+    private function createAdmin() {
+        $name = "admin";
+        $email = "admin@admin.com";
+        $password = $this->random_str(16);
+        $hashed_password = Hash::make($password);
+
+
+        try {
+            User::updateOrCreate(
+                ['name' => $name], 
+                ['password' => $hashed_password], 
+                ['email' => $email], 
+            );
+            $this->info("User '${email}' has been created sucessfull!");
+            $this->comment("Password: ${password}");
+
+        } catch (QueryException $e) {
+            $this->error('Something went wrong! User has not been saved!');
+            $this->line($e->getMessage().PHP_EOL);
+        }
+    }
+
+    /**
+     * Props to Scott Arciszewski
+     * https://stackoverflow.com/questions/4356289/php-random-string-generator 
+     * 
+     * Generate a random string, using a cryptographically secure 
+     * pseudorandom number generator (random_int)
+     * 
+     * @param int $length      How many characters do we want?
+     * @param string $keyspace A string of all possible characters
+     *                         to select from
+     * @return string
+     */
+    private function random_str(
+        int $length = 64,
+        string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ): string {
+        if ($length < 1) {
+            throw new \RangeException("Length must be a positive integer");
+        }
+        $pieces = [];
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $pieces []= $keyspace[random_int(0, $max)];
+        }
+        return implode('', $pieces);
     }
 }
