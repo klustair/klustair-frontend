@@ -29,13 +29,6 @@ class CreateTargetTrivy extends Migration
             )
         SQL;
 
-        if(getenv("DB_USERNAME") !== false){
-            $create_sql[] = <<<SQL
-                ALTER TABLE public.k_target_trivy
-                OWNER to getenv('DB_USERNAME');
-            SQL;
-        }
-
         $create_sql[] = <<<SQL
             CREATE INDEX IF NOT EXISTS k_target_trivy_report_uid_fkey
                 ON public.k_target_trivy USING btree

@@ -23,13 +23,6 @@ class CreateSeverityTypes extends Migration
         END$$;
         SQL;
 
-        if(getenv("DB_USERNAME") !== false){
-            $create_sql[] = <<<SQL
-            ALTER TYPE public.vulnerability_severities
-                OWNER to getenv('DB_USERNAME');
-        SQL;
-        }
-
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }

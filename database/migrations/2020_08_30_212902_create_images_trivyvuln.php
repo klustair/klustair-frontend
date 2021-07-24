@@ -50,13 +50,6 @@ class CreateImagesTrivyvuln extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        if(getenv("DB_USERNAME") !== false){
-            $create_sql[] = <<<SQL
-            ALTER TYPE public.k_vuln_trivy
-                OWNER to getenv('DB_USERNAME');
-            SQL;
-        }
-
         $create_sql[] = <<<SQL
             CREATE INDEX IF NOT EXISTS k_vuln_trivy_report_uid_fkey
                 ON public.k_vuln_trivy USING btree

@@ -41,13 +41,6 @@ class CreatePods extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        if(getenv("DB_USERNAME") !== false){
-            $create_sql[] = <<<SQL
-            ALTER TYPE public.k_pods
-                OWNER to getenv('DB_USERNAME');
-            SQL;
-        }
-
         $create_sql[] = <<<SQL
             CREATE INDEX IF NOT EXISTS k_pods_namespace_uid_fkey
                 ON public.k_pods USING btree
