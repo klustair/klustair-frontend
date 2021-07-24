@@ -22,14 +22,6 @@ class AddReportId extends Migration
                 CACHE 1;
         SQL;
 
-
-        if(getenv("DB_USERNAME") !== false){
-            $create_sql[] = <<<SQL
-                ALTER SEQUENCE public.migrations_id_seq
-                OWNER to getenv('DB_USERNAME');
-            SQL;
-        }
-
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_reports ADD COLUMN IF NOT EXISTS id integer NOT NULL DEFAULT nextval('reports_id_seq'::regclass)
         SQL;
