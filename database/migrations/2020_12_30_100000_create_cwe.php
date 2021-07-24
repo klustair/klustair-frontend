@@ -29,11 +29,12 @@ class CreateCwe extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'postgres');
-        $create_sql[] = <<<SQL
-            ALTER TABLE public.k_cwe
-                OWNER to $dbuser;
-        SQL;
+        if(getenv("DB_USERNAME") !== false){
+            $create_sql[] = <<<SQL
+            ALTER TYPE public.k_cwe
+                OWNER to getenv('DB_USERNAME');
+            SQL;
+        }
 
         $create_sql[] = <<<SQL
             CREATE INDEX IF NOT EXISTS k_cwe_id_fkey

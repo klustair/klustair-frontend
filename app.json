@@ -17,17 +17,18 @@
       },
       "APP_ENV": {
         "description": "Laravel App Env",
-        "value": "heroku"
-      },
-      "APP_KEY": {
-        "description": "Laravel App Key"
+        "value": "local"
       },
       "APP_NAME": {
         "description": "Application name",
         "value": "Klustair"
       },
       "APP_URL": {
-        "description": "Application URL (https://[YOURAPPNAME].herokuapp.com)"
+        "description": "Application URL ",
+        "value": "https://YOURAPPNAME.herokuapp.com"
+      },
+      "APP_KEY": {
+        "description": "Random 32 Characters (https://random.justyy.workers.dev/api/random/?cached&n=32&x=7) "
       },
       "AUTH": {
         "description": "Enable authentication",
@@ -55,14 +56,16 @@
       },
       "LOG_CHANNEL": {
         "description": "Laravel log channel",
-        "value": "Stack"
+        "value": "stderr"
       },
       "SANCTUM_STATEFUL_DOMAINS": {
-        "description": "[YOURAPPNAME].herokuapp.com"
+        "description": "The domain you run the frontend",
+        "value": "YOURAPPNAME.herokuapp.com"
+      },
+      "SESSION_DRIVER": {
+        "description": "Laravel Sessionsdriver",
+        "value": "file"
       }
-    },
-    "scripts": {
-      "postdeploy": "./init.sh"
     },
     "addons": ["heroku-postgresql:hobby-dev"],
     "buildpacks": [

@@ -44,11 +44,12 @@ class CreateAudits extends Migration
             TABLESPACE pg_default;
         SQL;
 
-        $dbuser = env('DB_USERNAME', 'postgres');
-        $create_sql[] = <<<SQL
-            ALTER TABLE public.k_audits
-                OWNER to $dbuser;
-        SQL;
+        if(getenv("DB_USERNAME") !== false){
+            $create_sql[] = <<<SQL
+            ALTER TYPE public.k_audits
+                OWNER to getenv('DB_USERNAME');
+            SQL;
+        }
 
         $create_sql[] = <<<SQL
             CREATE INDEX IF NOT EXISTS k_audits_report_uid_fkey
