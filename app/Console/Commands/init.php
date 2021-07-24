@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Str;
 
 class init extends Command
 {
@@ -15,7 +16,7 @@ class init extends Command
      *
      * @var string
      */
-    protected $signature = 'klustair:init {action} ';
+    protected $signature = 'klustair:init {action} {token?} ';
 
     /**
      * The console command description.
@@ -25,7 +26,9 @@ class init extends Command
     protected $description = 'Run Klustair related init tasks';
 
     protected $help = 'Available actions: 
-    - waitForDB';
+    - waitForDB
+    - createAdmin
+    - initAPItoken [<token>]';
     /**
      * Create a new command instance.
      *
@@ -86,63 +89,73 @@ class init extends Command
     }
 
     private function initAPItoken() {
+
         $name = "initial runner Token";
-        $email = "admin@admin.com";
+        $email = config('klustair.adminEmail', "admin@admin.com");
+
+        if ($this->argument('token')) {
+            $tokenstr = $this->argument('token');
+            $plainTextToken = $tokenstr;
+        } else {
+            $plainTextToken = Str::random(40);
+            $tokenstr = hash('sha256', $plainTextToken);
+        }
+
+        # skip if user not exists
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            $this->error(" You need to create the admin account first ");
+            return;
+        }
 
         try {
             $user = User::where('email', $email)->first();
-            $token = $user->createToken($name);
-            $this->info("Token '${name}' -> '$token->plainTextToken' has been created sucessfull!");
-
+            DB::table('personal_access_tokens')->insertOrIgnore([
+                'tokenable_type' => 'App\Models\User',
+                'tokenable_id' => $user->id,
+                'token' => $tokenstr,
+                'name' => $name,
+                'abilities' => '["*"]',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+            $this->info(" Token '${name}' -> '${plainTextToken}' has been inserted sucessfull! ");
         } catch (\Throwable $e) {
-            $this->error('Something went wrong! Token has not been generated!');
+            $this->error(' Something went wrong! Token has not been generated! ');
+            $this->line($e->getMessage().PHP_EOL);
         }
+        
     }
 
     private function createAdmin() {
-        $name = "admin";
-        $email = "admin@admin.com";
-        $password = $this->random_str(16);
+        $name = config('klustair.adminUser', "admin");
+        $email = config('klustair.adminEmail', "admin@admin.com");
+        $password = config('klustair.adminPassword', Str::random(12));
+        if ($password == "") {
+            $password = Str::random(12);
+        }
         $hashed_password = Hash::make($password);
+
+        # If user already exists, skip
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            $this->info("Admin with email '$email' allready exists");
+            return;
+        }
+
+        $user = new User;
+        $user->name = $name;
+        $user->email = $email;
+        $user->password = $hashed_password;
+
         try {
-            User::updateOrCreate(
-                ['name' => $name], 
-                ['password' => $hashed_password], 
-                ['email' => $email], 
-            );
-            $this->info("Admin '${name}' with '$email' has been created sucessfull!");
+            $user->save();
+            $this->info("Admin '${email}' has been created sucessfull!");
             $this->comment("Password: ${password}");
 
         } catch (QueryException $e) {
-            $this->error('Something went wrong! User has not been saved!');
+            $this->error('Something went wrong! Admin has not been saved!');
             $this->line($e->getMessage().PHP_EOL);
         }
-    }
-
-    /**
-     * Props to Scott Arciszewski
-     * https://stackoverflow.com/questions/4356289/php-random-string-generator 
-     * 
-     * Generate a random string, using a cryptographically secure 
-     * pseudorandom number generator (random_int)
-     * 
-     * @param int $length      How many characters do we want?
-     * @param string $keyspace A string of all possible characters
-     *                         to select from
-     * @return string
-     */
-    private function random_str(
-        int $length = 64,
-        string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    ): string {
-        if ($length < 1) {
-            throw new \RangeException("Length must be a positive integer");
-        }
-        $pieces = [];
-        $max = mb_strlen($keyspace, '8bit') - 1;
-        for ($i = 0; $i < $length; ++$i) {
-            $pieces []= $keyspace[random_int(0, $max)];
-        }
-        return implode('', $pieces);
     }
 }

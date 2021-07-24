@@ -22,5 +22,8 @@ return [
         'verify' => env('AUTH_VERIFY', false),
         
     ],
+    'adminUser' => env('KLUSTAIR_ADMIN_USER', 'admin'),
+    'adminEmail' => env('KLUSTAIR_ADMIN_EMAIL', 'admin@admin.com'),
+    'adminPassword' => env('KLUSTAIR_ADMIN_PASS'),
 
 ];
