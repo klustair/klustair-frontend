@@ -20,5 +20,11 @@ php artisan klustair:init waitForDB
 echo "======= Database Migrations"
 php artisan migrate
 
+echo "======= Create Admin User"
+php artisan klustair:init createAdmin
+
+echo "======= Create Token"
+php artisan klustair:init initAPItoken ${KLUSTAIR_APITOKEN}
+
 echo "======= Import CWE's"
 php artisan klustair:importcwe 4.3
