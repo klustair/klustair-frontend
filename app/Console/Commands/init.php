@@ -65,7 +65,7 @@ class init extends Command
 
     private function waitForDB()
     {
-        $limit = 3;
+        $limit = 20;
         $retry = 0;
         $sleep = 3;
         $check = false;
@@ -75,7 +75,7 @@ class init extends Command
             try {
                 $check = DB::connection()->getPdo();
             } catch (\PDOException $e) {
-                $this->error(' DB Connection Failed ');
+                $this->error(' No DB available yet. Will wait a bit and retry ... ');
             }
             $retry++;
             sleep($sleep);
