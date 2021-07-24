@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class init extends Command
 {
@@ -52,21 +53,26 @@ class init extends Command
 
     private function waitForDB()
     {
-        $host = config('database.connections.pgsql.host');
-        $port = config('database.connections.pgsql.port');
-        $limit = 20;
+        $limit = 3;
         $retry = 0;
         $sleep = 3;
+        $check = false;
+        $this->line(" Waiting for DB Connection\n\n");
 
-        while (!is_resource(@fsockopen($host, $port)) && $limit > $retry) {
-            $this->line(' Waiting for DB Connection');
+        while (!$check && $limit > $retry) {
+            try {
+                $check = DB::connection()->getPdo();
+            } catch (\PDOException $e) {
+                $this->error(' DB Connection Failed ');
+            }
             $retry++;
             sleep($sleep);
         }
-        if (is_resource(@fsockopen($host, $port))){
-            $this->info('DB Connection OK');
+
+        if ($check){
+            $this->info(' DB Connection established');
         } else {
-            $this->error('DB Connection Failed');
+            $this->error("\n No BD Connection! Check your Database and Credentials.");
         }
     }
 }
