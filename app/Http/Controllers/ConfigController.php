@@ -62,7 +62,7 @@ class ConfigController extends Controller
 
         $runner->uid = (string) Str::uuid();
         $runner->runner_label = $request->input('label');
-        $runner->trivy = true;
+        $runner->trivy = $trivy;
         $runner->kubeaudit = $request->input('kubeaudit');
         $runner->namespacesblacklist = $request->input('namespacesblacklist');
         $runner->namespaces = $request->input('namespaces');
