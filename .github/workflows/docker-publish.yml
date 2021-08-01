@@ -57,9 +57,40 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push image
+      - name: Push image ghcr.io/${{ github.repository }}/${{ github.actor }}/${{ IMAGE_NAME }}
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
+
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          docker tag ${IMAGE_NAME}-apache $IMAGE_ID:${VERSION}-apache
+          docker tag ${IMAGE_NAME}-nginx $IMAGE_ID:${VERSION}-nginx
+          docker tag ${IMAGE_NAME}-php-fpm $IMAGE_ID:${VERSION}-php-fpm
+          docker push $IMAGE_ID:${VERSION}-apache
+          docker push $IMAGE_ID:${VERSION}-nginx
+          docker push $IMAGE_ID:${VERSION}-php-fpm
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Push image hub.docker.com/klustair/${{ IMAGE_NAME }}
+        run: |
+          IMAGE_ID=${{ github.repository }}/${{ github.actor }}/${{ IMAGE_NAME }}
 
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
