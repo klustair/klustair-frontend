@@ -17,30 +17,9 @@ env:
   IMAGE_NAME: klustair-frontend
 
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-#  test:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Run tests
-#        run: |
-#          if [ -f docker-compose.test.yml ]; then
-#            docker-compose --file docker-compose.test.yml build
-#            docker-compose --file docker-compose.test.yml run sut
-#          else
-#            docker build . --file docker/apache/Dockerfile
-#            docker build . --file docker/nginx/Dockerfile
-#            docker build . --file docker/php-fpm/Dockerfile
-#          fi
-
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
-    # Ensure test job passes before pushing image.
-#    needs: test
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -57,7 +36,7 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push image ghcr.io/${{ github.repository }}/${{ github.actor }}/${{ IMAGE_NAME }}
+      - name: Push image ghcr.io
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
 
@@ -88,7 +67,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Push image hub.docker.com/klustair/${{ IMAGE_NAME }}
+      - name: Push image hub.docker.com
         run: |
           IMAGE_ID=${{ github.repository }}/${{ github.actor }}/${{ IMAGE_NAME }}
 
