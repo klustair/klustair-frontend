@@ -39,7 +39,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function(){
 
 });
 
-// Auth with persona Access Token
+// Auth with personal Access Token
 Route::group(['prefix' => 'v1/pac', 'middleware' => ['auth:api']], function(){
 
     Route::get('/config/runner/get/{uid}', 'ConfigController@apiGetConfigRunner');
