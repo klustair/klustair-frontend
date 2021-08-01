@@ -27,6 +27,18 @@
         "description": "Application URL ",
         "value": "https://YOURAPPNAME.herokuapp.com"
       },
+      "KLUSTAIR_ADMIN_USER": {
+        "description": "Initial admin user",
+        "value": "Admin"
+      },
+      "KLUSTAIR_ADMIN_EMAIL": {
+        "description": "Laravel App Env",
+        "value": "admin@klustair.com"
+      },
+      "KLUSTAIR_ADMIN_PASS": {
+        "description": "The Admin Password",
+        "generator": "secret"
+      },
       "APP_KEY": {
         "description": "Random 32 Characters (https://random.justyy.workers.dev/api/random/?cached&n=32&x=7) "
       },
