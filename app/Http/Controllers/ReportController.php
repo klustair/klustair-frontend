@@ -141,48 +141,41 @@ class ReportController extends Controller
         return $request;
     }
 
-    public function apiCreateVuln($report_uid, Request $request)
+    public function apiCreateVuln($report_uid, $image_uid, Request $request)
     {
-        foreach ($request->all() as $image_uid => $vulnList) {
+        $target = $request->all();
+        $i = new TargetTrivy;
+        $i->uid         = $target['uid']; 
+        $i->report_uid  = $report_uid; 
+        $i->image_uid   = $image_uid; 
+        $i->target      = $target['Target'];
+        $i->target_type = $target['Type'];
+        $i->save();
+        if (isset($target['Vulnerabilities'])) {
+            foreach ($target['Vulnerabilities'] as $vuln) {
 
-            foreach ($vulnList as $target) {
-                $i = new TargetTrivy;
-                $i->uid         = $target['uid']; 
-                $i->report_uid  = $report_uid; 
-                $i->image_uid   = $image_uid; 
-                $i->target      = $target['Target'];
-                $i->target_type = $target['Type'];
-                $i->save();
-                if (isset($target['Vulnerabilities'])) {
-                    foreach ($target['Vulnerabilities'] as $vuln) {
-
-                        //print_r(@$vuln['SeverityInt'] ?: 0);
-                        $v = new VulnTrivy;
-                        $v->uid                 = $vuln['uid']; 
-                        $v->report_uid          = $report_uid; 
-                        $v->image_uid           = $image_uid; 
-                        $v->target_uid          = $target['uid']; 
-                        $v->vulnerability_id    = @$vuln['VulnerabilityID'] ?: ''; 
-                        $v->pkg_name            = $vuln['PkgName']; 
-                        $v->title               = @$vuln['Title'] ?: ''; 
-                        $v->descr               = @$vuln['Description'] ?: ''; 
-                        $v->installed_version   = @$vuln['InstalledVersion'] ?: ''; 
-                        $v->fixed_version       = @$vuln['FixedVersion'] ?: ''; 
-                        $v->severity_source     = @$vuln['SeveritySource'] ?: ''; 
-                        $v->severity            = @$vuln['SeverityInt'] ?: 0; 
-                        $v->last_modified_date  = @$vuln['LastModifiedDate'] ?: ''; 
-                        $v->published_date      = @$vuln['PublishedDate'] ?: ''; 
-                        $v->links               = json_encode(@$vuln['References'] ?: ''); 
-                        $v->cvss                = json_encode(@$vuln['CVSS'] ?: ''); 
-                        $v->cwe_ids             = json_encode(@$vuln['CweIDs'] ?: ''); 
-                        $v->save();
-                    }
-
-                }
-                
-
+                //print_r(@$vuln['SeverityInt'] ?: 0);
+                $v = new VulnTrivy;
+                $v->uid                 = $vuln['uid']; 
+                $v->report_uid          = $report_uid; 
+                $v->image_uid           = $image_uid; 
+                $v->target_uid          = $target['uid']; 
+                $v->vulnerability_id    = @$vuln['VulnerabilityID'] ?: ''; 
+                $v->pkg_name            = $vuln['PkgName']; 
+                $v->title               = @$vuln['Title'] ?: ''; 
+                $v->descr               = @$vuln['Description'] ?: ''; 
+                $v->installed_version   = @$vuln['InstalledVersion'] ?: ''; 
+                $v->fixed_version       = @$vuln['FixedVersion'] ?: ''; 
+                $v->severity_source     = @$vuln['SeveritySource'] ?: ''; 
+                $v->severity            = @$vuln['SeverityInt'] ?: 0; 
+                $v->last_modified_date  = @$vuln['LastModifiedDate'] ?: ''; 
+                $v->published_date      = @$vuln['PublishedDate'] ?: ''; 
+                $v->links               = json_encode(@$vuln['References'] ?: ''); 
+                $v->cvss                = json_encode(@$vuln['CVSS'] ?: ''); 
+                $v->cwe_ids             = json_encode(@$vuln['CweIDs'] ?: ''); 
+                $v->save();
             }
-                
+
         }
         return $request;
     }
