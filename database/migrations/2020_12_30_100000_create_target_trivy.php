@@ -21,6 +21,7 @@ class CreateTargetTrivy extends Migration
                 target_type character varying COLLATE pg_catalog."default",
                 report_uid character varying COLLATE pg_catalog."default",
                 image_uid character varying COLLATE pg_catalog."default",
+                is_os boolean,
                 CONSTRAINT k_target_trivy_pkey PRIMARY KEY (uid),
                 CONSTRAINT k_target_trivy_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE

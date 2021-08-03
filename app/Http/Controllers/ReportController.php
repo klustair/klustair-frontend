@@ -151,6 +151,7 @@ class ReportController extends Controller
             $i->image_uid   = $image_uid; 
             $i->target      = $target['Target'];
             $i->target_type = $target['Type'];
+            $i->is_os       = filter_var($target['isOS'], FILTER_VALIDATE_BOOLEAN);
             $i->save();
             if (isset($target['Vulnerabilities'])) {
                 foreach ($target['Vulnerabilities'] as $vuln) {
