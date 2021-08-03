@@ -49,8 +49,7 @@ Route::group(['prefix' => 'v1/pac', 'middleware' => ['auth:api']], function(){
     Route::post('/report/{report_uid}/pod/create', 'ReportController@apiCreatePod');
     Route::post('/report/{report_uid}/container/create', 'ReportController@apiCreateContainer');
     Route::post('/report/{report_uid}/image/create', 'ReportController@apiCreateImage');
-    Route::post('/report/{report_uid}/vuln/create', 'ReportController@apiCreateVuln');
-    Route::post('/report/{report_uid}/{image_uid}/vuln/target/create', 'ReportController@apiCreateVuln');
+    Route::post('/report/{report_uid}/{image_uid}/vuln/create', 'ReportController@apiCreateVuln');
     Route::post('/report/{report_uid}/vuln/summary/create', 'ReportController@apiVulnsummary');
     Route::post('/report/{report_uid}/containerhasimage/create', 'ReportController@apiContainerHasImage');
     Route::post('/report/{report_uid}/summary/create', 'ReportController@apiReportsSummary');
