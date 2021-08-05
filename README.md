@@ -6,6 +6,8 @@
 
 The Klustair scanner scanns your Kubernetes namespaces for the used images and scan them with trivy. This frontend displays the result of the scanned namespaces and images in a report.
 
+Demo : https://klustair.herokuapp.com/ 
+
 ### Main Features:
 
 -   The vulnerabilities of an images can be reviewed and whitelisted if they dont apply to any risk.
