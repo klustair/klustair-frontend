@@ -1,0 +1,84 @@
+name: Docker rebuild
+
+on: 
+  schedule:
+    - cron: '15 20 * * 0'
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: klustair
+
+jobs:
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  push:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        versiontag: ["v0.3.3", "v0.4.0", "v0.4.1"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: git checkout tags/${{ matrix.versiontag }}
+
+      - name: Build image ${{ matrix.versiontag }}
+        run: | 
+          docker build . --file docker/apache/Dockerfile --tag ${IMAGE_NAME}-apache
+          docker build . --file docker/nginx/Dockerfile --tag ${IMAGE_NAME}-nginx
+          docker build . --file docker/php-fpm/Dockerfile --tag ${IMAGE_NAME}-php-fpm
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image ghcr.io
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
+
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ matrix.versiontag }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          # [[ "${{ matrix.versiontag }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          docker tag ${IMAGE_NAME}-apache $IMAGE_ID:${VERSION}-apache
+          docker tag ${IMAGE_NAME}-nginx $IMAGE_ID:${VERSION}-nginx
+          docker tag ${IMAGE_NAME}-php-fpm $IMAGE_ID:${VERSION}-php-fpm
+          docker push $IMAGE_ID:${VERSION}-apache
+          docker push $IMAGE_ID:${VERSION}-nginx
+          docker push $IMAGE_ID:${VERSION}-php-fpm
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Push image hub.docker.com
+        run: |
+          IMAGE_ID=klustair/${IMAGE_NAME}
+
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ matrix.versiontag }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          # [[ "${{ matrix.versiontag }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          docker tag ${IMAGE_NAME}-apache $IMAGE_ID:${VERSION}-apache
+          docker tag ${IMAGE_NAME}-nginx $IMAGE_ID:${VERSION}-nginx
+          docker tag ${IMAGE_NAME}-php-fpm $IMAGE_ID:${VERSION}-php-fpm
+          docker push $IMAGE_ID:${VERSION}-apache
+          docker push $IMAGE_ID:${VERSION}-nginx
+          docker push $IMAGE_ID:${VERSION}-php-fpm
