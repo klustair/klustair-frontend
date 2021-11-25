@@ -140,7 +140,7 @@ services:
     depends_on:
       - klustair-php-fpm
 
-  klustair-db:
+  db:
     image: "postgres:12-alpine"
     container_name: klustair-db
     volumes:
