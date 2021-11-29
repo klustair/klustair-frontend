@@ -75,18 +75,6 @@ class ImageController extends Controller
             $data['image']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
             $data['image']['vulnsummary_list'][$v->severity] = $v->total;
         }
-/*
-        $vuln_list_ancore = DB::table('k_vuln_anchore')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_anchore.image_uid')
-            ->leftJoin('k_vulnwhitelist', function ($join) {
-                $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
-                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vuln');
-            })
-            ->where('k_vuln_anchore.image_uid', $image_uid)
-            ->where('k_vuln_anchore.report_uid', $report_uid)
-            ->select('k_vuln_anchore.*', 'k_images.image_b64 as image_b64', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
-            ->get();
-*/
 
         $targets_list = DB::table('k_target_trivy')
             ->where('image_uid', $image_uid)
@@ -134,11 +122,11 @@ class ImageController extends Controller
             }
 
         }
-        /*
+        
         echo "<pre>";
         print_r($data);
         echo "</pre>";
-        */
+        
         return view('image', $data);
     }
 }
