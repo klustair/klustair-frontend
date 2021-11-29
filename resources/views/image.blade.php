@@ -93,7 +93,7 @@
     </div>
 </div>
 
-@if ($image['dockerfile'] != "")
+@if ($image['history'] != "")
 <div class="row">
     <div class="col-12">
         <div class="card collapsed-card">
@@ -106,7 +106,10 @@
             <!-- /.card-body -->
             <div class="card-body table-responsive p-0">
             <pre style="background-color: #e1e1e1">
-                {{ base64_decode($image['dockerfile']) }}
+@foreach (json_decode($image['history']) as $history)
+{{ $history->created_by }}
+{{ Str::replaceArray('\t', ["\n"], $history->created_by) }}
+@endforeach
             </pre>
             </div>
         </div>

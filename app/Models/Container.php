@@ -22,6 +22,8 @@ class Container extends Model
         'pod_uid',
         'name',
         'image',
+        'image_id',
+        'actual',
         'image_pull_policy',
         'security_context',
         'init_container',

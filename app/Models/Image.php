@@ -19,7 +19,6 @@ class Image extends Model
         'uid',
         'image_b64', 
         'report_uid', 
-        'anchore_imageid', 
         'analyzed_at', 
         'created_at', 
         'fulltag', 
@@ -31,7 +30,9 @@ class Image extends Model
         'layer_count', 
         'registry', 
         'repo',
-        'dockerfile'
+        'dockerfile',
+        'config',
+        'history'
     ];
 
     public function report()

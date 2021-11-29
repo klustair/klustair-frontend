@@ -23,7 +23,6 @@ class CreateImages extends Migration
                 image_digest character varying COLLATE pg_catalog."default",
                 fulltag character varying COLLATE pg_catalog."default",
                 arch character varying(15) COLLATE pg_catalog."default",
-                anchore_imageid character varying COLLATE pg_catalog."default",
                 distro character varying COLLATE pg_catalog."default",
                 distro_version character varying COLLATE pg_catalog."default",
                 created_at timestamp without time zone,
@@ -32,6 +31,8 @@ class CreateImages extends Migration
                 repo character varying COLLATE pg_catalog."default",
                 report_uid character varying COLLATE pg_catalog."default",
                 dockerfile text COLLATE pg_catalog."default",
+                config json,
+                history json,
                 CONSTRAINT k_images_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE
                     ON UPDATE NO ACTION

@@ -111,6 +111,8 @@ class ReportController extends Controller
             $c->started             = DB::raw(@$container['started'] ?: false);
             $c->restart_count       = @$container['restartCount'] ?: 0;
             $c->started_at          = @$container['startedAt'] ?: '';
+            $c->image_id            = @$container['imageID'] ?: '';
+            $c->actual              = DB::raw(@$container['actual'] ?: false);
             $c->save();
         }
         return $request;
@@ -123,7 +125,6 @@ class ReportController extends Controller
             $i->uid             = $image['uid']; 
             $i->report_uid      = $report_uid; 
             $i->image_b64       = $image['image_b64'];
-            $i->anchore_imageid = @$image['anchore_imageid'] ?: '';
             $i->analyzed_at     = @$image['analyzed_at'] ?: '01.01.1970';
             $i->created_at      = @$image['created_at'] ?: '01.01.1970';
             $i->fulltag         = $image['fulltag'];
@@ -136,6 +137,8 @@ class ReportController extends Controller
             $i->registry        = @$image['registry'] ?: '';
             $i->repo            = @$image['repo'] ?: '';
             $i->dockerfile      = @$image['dockerfile'] ?: '';
+            $i->config          = @$image['config'] ?: '';
+            $i->history         = @$image['history'] ?: '';
             $i->save();
         }
         return $request;
