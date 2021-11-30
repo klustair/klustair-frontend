@@ -31,6 +31,14 @@ class V050 extends Migration
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_images ADD COLUMN IF NOT EXISTS history json
         SQL;
+        $create_sql[] = <<<SQL
+            ALTER TABLE public.k_images ADD COLUMN IF NOT EXISTS age integer
+        SQL;
+
+        //k_pods
+        $create_sql[] = <<<SQL
+            ALTER TABLE public.k_pods ADD COLUMN IF NOT EXISTS age integer
+        SQL;
 
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
@@ -61,6 +69,14 @@ class V050 extends Migration
         SQL;
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_images DROP COLUMN history;
+        SQL;
+        $create_sql[] = <<<SQL
+            ALTER TABLE public.k_images DROP COLUMN age;
+        SQL;
+
+        //k_pods
+        $create_sql[] = <<<SQL
+            ALTER TABLE public.k_pods DROP COLUMN age;
         SQL;
 
         foreach ($create_sql as $sql ) {

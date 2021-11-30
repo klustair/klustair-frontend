@@ -167,7 +167,7 @@
                           @endif
                           </td>
                           <td>
-                            253d
+                            {{ $pod['age'] }}d
                             @if($container['actual'] != '' && $container['actual'] != true)
                             <i class="fas fa-sync text-danger"></i>
                             @endif

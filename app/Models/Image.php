@@ -32,7 +32,8 @@ class Image extends Model
         'repo',
         'dockerfile',
         'config',
-        'history'
+        'history',
+        'age'
     ];
 
     public function report()

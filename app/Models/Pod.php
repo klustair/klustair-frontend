@@ -21,7 +21,8 @@ class Pod extends Model
         'namespace_uid',
         'podname',
         'kubernetes_pod_uid',
-        'creation_timestamp'
+        'creation_timestamp',
+        'age'
     ];
 
     public function report()

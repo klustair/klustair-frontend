@@ -89,6 +89,7 @@ class ReportController extends Controller
             $p->podname             = $pod['podname'];
             $p->creation_timestamp  = $pod['creation_timestamp'];
             $p->kubernetes_pod_uid  = $pod['kubernetes_pod_uid'];
+            $p->age                 = @$pod['age'] ?: 0;
             $p->save();
         }
         return $request;
@@ -139,6 +140,7 @@ class ReportController extends Controller
             $i->dockerfile      = @$image['dockerfile'] ?: '';
             $i->config          = @$image['config'] ?: '';
             $i->history         = @$image['history'] ?: '';
+            $i->age             = @$image['age'] ?: 0;
             $i->save();
         }
         return $request;

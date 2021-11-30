@@ -24,7 +24,7 @@
                 <table>
                     <tbody>
                     <tr>
-                        <th>Tag :</th>
+                        <th>Tag</th>
                         <td>{{ $image['fulltag'] }}</td>
                     </tr>
 <!--
@@ -43,7 +43,7 @@
                     </tr>
                     <tr>
                         <th>Created at</th>
-                        <td>{{ $image['created_at'] }}</td>
+                        <td><b>{{ $image['age'] }} days </b> ({{ $image['created_at'] }})</td>
                     </tr>
                     <tr>
                         <th>Architecture</th>
