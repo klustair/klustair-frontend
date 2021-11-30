@@ -146,6 +146,7 @@
                           <th></th>
                           <th>Container</th>
                           <th>Image</th>
+                          <th width="60px">UP</th>
                           <th width="460px">Vulnerabilities</th>
                           <th width="50px">NO ACK</th>
                           </tr>
@@ -164,6 +165,12 @@
                           @else
                             {{ $container['image'] }}
                           @endif
+                          </td>
+                          <td>
+                            253d
+                            @if($container['actual'] != '' && $container['actual'] != true)
+                            <i class="fas fa-sync text-danger"></i>
+                            @endif
                           </td>
                           <td>
                           @isset($container['imagedetails'], $container['imagedetails']['vulnsummary'])

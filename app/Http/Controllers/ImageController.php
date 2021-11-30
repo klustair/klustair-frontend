@@ -122,11 +122,11 @@ class ImageController extends Controller
             }
 
         }
-        
+        /*
         echo "<pre>";
         print_r($data);
         echo "</pre>";
-        
+        */
         return view('image', $data);
     }
 }
