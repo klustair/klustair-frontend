@@ -161,7 +161,7 @@
                           <td>{{ $container['name'] }} </td>
                           <td>
                           @if(isset($container['imagedetails']['vulnsummary']))
-                            <a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a>
+                            <a href="/report/{{ $report_data->uid }}/image/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a>
                           @else
                             {{ $container['image'] }}
                           @endif

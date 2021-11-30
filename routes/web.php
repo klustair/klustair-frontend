@@ -37,7 +37,7 @@ Route::middleware($middlewares)->group(function () {
 
     Route::get('/report/{report_uid?}', 'ReportController@overview');
 
-    Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
+    Route::get('report/{report_uid}/image/{image_uid}', 'ImageController@show' );
 
     Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
 

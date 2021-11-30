@@ -42,7 +42,7 @@
                         <td>{{ $image['layer_count'] }}</td>
                     </tr>
                     <tr>
-                        <th>Created at</th>
+                        <th>Build age</th>
                         <td><b>{{ $image['age'] }} days </b> ({{ $image['created_at'] }})</td>
                     </tr>
                     <tr>
