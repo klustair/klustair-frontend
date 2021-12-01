@@ -22,6 +22,7 @@ class CreateContainers extends Migration
                 pod_uid character varying COLLATE pg_catalog."default" NOT NULL,
                 image character varying COLLATE pg_catalog."default",
                 image_pull_policy character varying COLLATE pg_catalog."default",
+                title character varying COLLATE pg_catalog."default",
                 security_context json,
                 init_container boolean,
                 uid character varying,

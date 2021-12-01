@@ -21,6 +21,7 @@ class CreatePods extends Migration
                 namespace_uid character varying COLLATE pg_catalog."default" NOT NULL,
                 uid character varying COLLATE pg_catalog."default" NOT NULL,
                 creation_timestamp date NOT NULL,
+                age integer,
                 kubernetes_pod_uid character varying COLLATE pg_catalog."default",
                 CONSTRAINT k_pods_pkey PRIMARY KEY (report_uid, namespace_uid, uid),
                 CONSTRAINT k_pods_uid_key UNIQUE (uid),

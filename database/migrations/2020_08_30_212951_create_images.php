@@ -33,6 +33,7 @@ class CreateImages extends Migration
                 dockerfile text COLLATE pg_catalog."default",
                 config json,
                 history json,
+                age integer,
                 CONSTRAINT k_images_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE
                     ON UPDATE NO ACTION
@@ -49,6 +50,13 @@ class CreateImages extends Migration
             CREATE INDEX IF NOT EXISTS k_images_report_uid_fkey
                 ON public.k_images USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_images_fulltag
+                ON public.k_images USING btree
+                (fulltag ASC NULLS LAST)
                 TABLESPACE pg_default;
         SQL;
 
