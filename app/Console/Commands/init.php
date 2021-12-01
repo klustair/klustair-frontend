@@ -16,7 +16,7 @@ class init extends Command
      *
      * @var string
      */
-    protected $signature = 'klustair:init {action} {token?} ';
+    protected $signature = 'klustair:init {action?} {token?} ';
 
     /**
      * The console command description.
@@ -57,7 +57,7 @@ class init extends Command
                 $this->initAPItoken();
                 break;
             default:
-                $this->error('Action not found');
+                $this->error('Wrong or no Action defined. Options: waitForDB|createAdmin|initAPItoken');
                 break;
         }
         return 0;
