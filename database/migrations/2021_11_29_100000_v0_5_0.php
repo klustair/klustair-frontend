@@ -23,7 +23,7 @@ class V050 extends Migration
 
         //k_images
         $create_sql[] = <<<SQL
-            ALTER TABLE public.k_images DROP COLUMN anchore_imageid;
+            ALTER TABLE public.k_images DROP COLUMN IF EXISTS anchore_imageid;
         SQL;
         $create_sql[] = <<<SQL
             ALTER TABLE public.k_images ADD COLUMN IF NOT EXISTS config json
