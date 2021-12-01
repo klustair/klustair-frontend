@@ -146,8 +146,9 @@
                           <th></th>
                           <th>Container</th>
                           <th>Image</th>
+                          <th>Build Age</th>
                           <th width="60px">UP</th>
-                          <th width="460px">Vulnerabilities</th>
+                          <th width="430px">Vulnerabilities</th>
                           <th width="50px">NO ACK</th>
                           </tr>
                       </theader>
@@ -167,7 +168,10 @@
                           @endif
                           </td>
                           <td>
-                            {{ $pod['age'] }}d
+                            {{ $container['imagedetails']['age'] }}d
+                          </td>
+                          <td>
+                            {{ $pod['age'] }}d 
                             @if($container['actual'] != '' && $container['actual'] != true)
                             <i class="fas fa-sync text-danger"></i>
                             @endif

@@ -108,7 +108,6 @@
             <pre style="background-color: #e1e1e1">
 @foreach (json_decode($image['history']) as $history)
 {{ $history->created_by }}
-{{ Str::replaceArray('\t', ["\n"], $history->created_by) }}
 @endforeach
             </pre>
             </div>
