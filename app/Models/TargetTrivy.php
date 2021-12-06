@@ -20,7 +20,8 @@ class TargetTrivy extends Model
         'report_uid',
         'image_uid',
         'target',
-        'target_type'
+        'target_type',
+        'is_os'
     ];
 
     public function report()
