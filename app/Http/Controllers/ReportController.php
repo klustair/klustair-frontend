@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Report;
 use App\Models\Nspace;
@@ -35,6 +36,7 @@ class ReportController extends Controller
         $report->uid        = $request->uid; 
         $report->checktime  = date('Y-m-d H:i:s');
         $report->save();
+        Log::info('ReportController::apiCreateReport: ' . $report->uid);
         
         return $report;
     }
@@ -49,6 +51,7 @@ class ReportController extends Controller
             $ns->creation_timestamp         = $namespace['creation_timestamp'];
             $ns->kubernetes_namespace_uid   = $namespace['kubernetes_namespace_uid'];
             $ns->save();
+            Log::debug('ReportController::apiCreateNamespace: ' . $ns->uid);
         }
         return $request;
     }
@@ -74,6 +77,7 @@ class ReportController extends Controller
                 $audit->resource_namespace      = @$a['ResourceNamespace'] ?: '';
                 $audit->resource_api_version    = $a['ResourceApiVersion'];
                 $audit->save();
+                Log::debug('ReportController::apiCreateAudit: ' . $audit->uid);
             }
         }
         return $request;
@@ -90,6 +94,7 @@ class ReportController extends Controller
             $p->creation_timestamp  = $pod['creation_timestamp'];
             $p->kubernetes_pod_uid  = $pod['kubernetes_pod_uid'];
             $p->save();
+            Log::debug('ReportController::apiCreatePod: ' . $p->uid);
         }
         return $request;
     }
@@ -112,6 +117,7 @@ class ReportController extends Controller
             $c->restart_count       = @$container['restartCount'] ?: 0;
             $c->started_at          = @$container['startedAt'] ?: '';
             $c->save();
+            Log::debug('ReportController::apiCreateContainer: ' . $c->uid);
         }
         return $request;
     }
@@ -137,6 +143,7 @@ class ReportController extends Controller
             $i->repo            = @$image['repo'] ?: '';
             $i->dockerfile      = @$image['dockerfile'] ?: '';
             $i->save();
+            Log::debug('ReportController::apiCreateImage: ' . $i->uid);
         }
         return $request;
     }
@@ -153,6 +160,7 @@ class ReportController extends Controller
             $i->target_type = $target['Type'];
             $i->is_os       = filter_var($target['isOS'], FILTER_VALIDATE_BOOLEAN);
             $i->save();
+            Log::debug('ReportController::apiCreateVuln: ' . $i->uid);
             if (isset($target['Vulnerabilities'])) {
                 foreach ($target['Vulnerabilities'] as $vuln) {
 
@@ -177,6 +185,7 @@ class ReportController extends Controller
                     $v->cwe_ids             = json_encode(@$vuln['CweIDs'] ?: ''); 
                     $v->save();
                 }
+                Log::debug('ReportController::apiCreateVuln::vulnerabilities' . count($target['Vulnerabilities']));
 
             }
         }
@@ -197,6 +206,7 @@ class ReportController extends Controller
                 $i->fixed       = $value['fixed'];
                 $i->save();
             }
+            Log::debug('ReportController::apiVulnsummary: ' . count($image));
         }
         return $request;
     }
@@ -209,6 +219,7 @@ class ReportController extends Controller
             $i->report_uid      = $report_uid; 
             $i->image_uid       = $item['image_uid'];;
             $i->save();
+            Log::debug('ReportController::apiContainerHasImage: ' . $i->container_uid . '->' . $i->image_uid);
         }
         return $request;
     }
@@ -230,6 +241,7 @@ class ReportController extends Controller
         $i->pods                = @$request['pods'] ?: 0;
         $i->images              = @$request['images'] ?: 0;
         $i->save();
+        Log::debug('ReportController::apiReportsSummary: ' . $i->uid);
         return $request;
     }
 
