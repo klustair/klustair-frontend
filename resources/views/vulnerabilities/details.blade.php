@@ -85,7 +85,7 @@
                     </tr>
                     @foreach ($images as $image)
                     <tr>
-                        <td><a href="/image/{{ $image['report_uid'] }}/{{ $image['uid'] }}">{{ $image['fulltag'] }}</a></td>
+                        <td><a href="/report/{{ $image['report_uid'] }}/image/{{ $image['uid'] }}">{{ $image['fulltag'] }}</a></td>
                         <td>{{ $image['name'] }}</td>
                     </tr>
                     @endforeach

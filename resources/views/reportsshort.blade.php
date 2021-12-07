@@ -146,7 +146,9 @@
                           <th></th>
                           <th>Container</th>
                           <th>Image</th>
-                          <th width="460px">Vulnerabilities</th>
+                          <th>Build Age</th>
+                          <th width="60px">UP</th>
+                          <th width="430px">Vulnerabilities</th>
                           <th width="50px">NO ACK</th>
                           </tr>
                       </theader>
@@ -160,10 +162,19 @@
                           <td>{{ $container['name'] }} </td>
                           <td>
                           @if(isset($container['imagedetails']['vulnsummary']))
-                            <a href="/image/{{ $report_data->uid }}/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a>
+                            <a href="/report/{{ $report_data->uid }}/image/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a>
                           @else
                             {{ $container['image'] }}
                           @endif
+                          </td>
+                          <td>
+                            {{ $container['imagedetails']['age'] }}d
+                          </td>
+                          <td>
+                            {{ $pod['age'] }}d 
+                            @if($container['actual'] != '' && $container['actual'] != true)
+                            <i class="fas fa-sync text-danger"></i>
+                            @endif
                           </td>
                           <td>
                           @isset($container['imagedetails'], $container['imagedetails']['vulnsummary'])

@@ -14,7 +14,7 @@ class ManageUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'klustair:user {action} {email?} {fullname?}';
+    protected $signature = 'klustair:user {action?} {email?} {fullname?}';
 
     protected $name;
     protected $email;
@@ -63,7 +63,7 @@ class ManageUsers extends Command
                 break;
             
             default:
-                # code...
+                $this->error('Wrong or no Action defined. Options: create|delete|list');
                 break;
         }
         return 0;

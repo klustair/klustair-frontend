@@ -37,7 +37,7 @@ Route::middleware($middlewares)->group(function () {
 
     Route::get('/report/{report_uid?}', 'ReportController@overview');
 
-    Route::get('/image/{report_uid}/{image_uid}', 'ImageController@show' );
+    Route::get('report/{report_uid}/image/{image_uid}', 'ImageController@show' );
 
     Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
 
@@ -45,17 +45,6 @@ Route::middleware($middlewares)->group(function () {
 
     Route::get('/namespace/{report_uid}/{namespace_uid}', 'NamespaceController@show' );
 
-    Route::get('/anchore/images', 'Anchore\ImagesController@list' );
-
-    Route::get('/anchore/feeds', 'Anchore\FeedsController@list' );
-
-    Route::get('/anchore/registries', 'Anchore\RegistriesController@list' );
-
-    Route::get('/anchore/system', 'Anchore\SystemController@list' );
-
-    Route::get('/anchore/policies', 'Anchore\PolicyController@list' );
-
-    Route::get('/anchore/subscriptions', 'Anchore\SubscriptionsController@list' );
 });
 
 

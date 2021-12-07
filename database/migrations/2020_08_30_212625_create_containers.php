@@ -22,6 +22,7 @@ class CreateContainers extends Migration
                 pod_uid character varying COLLATE pg_catalog."default" NOT NULL,
                 image character varying COLLATE pg_catalog."default",
                 image_pull_policy character varying COLLATE pg_catalog."default",
+                title character varying COLLATE pg_catalog."default",
                 security_context json,
                 init_container boolean,
                 uid character varying,
@@ -29,6 +30,8 @@ class CreateContainers extends Migration
                 started boolean,
                 restart_count integer,
                 started_at character varying COLLATE pg_catalog."default",
+                image_id character varying COLLATE pg_catalog."default",
+                actual boolean,
                 CONSTRAINT k_containers_pkey PRIMARY KEY (name, report_uid, namespace_uid, pod_uid),
                 CONSTRAINT k_containers_uid_key UNIQUE (uid),
                 CONSTRAINT k_containers_namespace_uid_fkey FOREIGN KEY (namespace_uid)

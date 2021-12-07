@@ -16,7 +16,7 @@ class ManageTokens extends Command
      *
      * @var string
      */
-    protected $signature = 'klustair:token {action} {name?} {email?}';
+    protected $signature = 'klustair:token {action?} {name?} {email?}';
 
     protected $name;
     protected $email;
@@ -64,7 +64,7 @@ class ManageTokens extends Command
                 break;
             
             default:
-                # code...
+                $this->error('Wrong or no Action defined. Options: create|delete|list');
                 break;
         }
         return 0;

@@ -17,32 +17,44 @@
         @if ($image['layer_count'] != "")
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Pod Checks</h3>
+                <h3 class="card-title">Image</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-3">
                 <table>
                     <tbody>
                     <tr>
-                        <th>Image :</th>
+                        <th>Tag</th>
                         <td>{{ $image['fulltag'] }}</td>
                     </tr>
+<!--
                     <tr>
                         <th>Registy :</th>
                         <td>{{ $image['registry'] }}</td>
                     </tr>
+-->
                     <tr>
                         <th>Distro</th>
-                        <td>{{ $image['distro'] }} {{ $image['distro_version'] }}</td>
+                        <td>{{ $image['distro'] }}:{{ $image['distro_version'] }}</td>
                     </tr>
                     <tr>
-                        <th>Layer Count</th>
+                        <th>Layers</th>
                         <td>{{ $image['layer_count'] }}</td>
                     </tr>
+                    <tr>
+                        <th>Build age</th>
+                        <td><b>{{ $image['age'] }} days </b> ({{ $image['created_at'] }})</td>
+                    </tr>
+                    <tr>
+                        <th>Architecture</th>
+                        <td>{{ $image['arch'] }}</td>
+                    </tr>
+<!--
                     <tr>
                         <th>Size</th>
                         <td>{{ $image['image_size'] }}</td>
                     </tr>
+-->
                     </tbody>
                 </table>
             </div>
@@ -81,7 +93,7 @@
     </div>
 </div>
 
-@if ($image['dockerfile'] != "")
+@if ($image['history'] != "")
 <div class="row">
     <div class="col-12">
         <div class="card collapsed-card">
@@ -94,7 +106,9 @@
             <!-- /.card-body -->
             <div class="card-body table-responsive p-0">
             <pre style="background-color: #e1e1e1">
-                {{ base64_decode($image['dockerfile']) }}
+@foreach (json_decode($image['history']) as $history)
+{{ $history->created_by }}
+@endforeach
             </pre>
             </div>
         </div>

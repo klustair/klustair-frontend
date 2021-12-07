@@ -23,7 +23,6 @@ class CreateImages extends Migration
                 image_digest character varying COLLATE pg_catalog."default",
                 fulltag character varying COLLATE pg_catalog."default",
                 arch character varying(15) COLLATE pg_catalog."default",
-                anchore_imageid character varying COLLATE pg_catalog."default",
                 distro character varying COLLATE pg_catalog."default",
                 distro_version character varying COLLATE pg_catalog."default",
                 created_at timestamp without time zone,
@@ -32,6 +31,9 @@ class CreateImages extends Migration
                 repo character varying COLLATE pg_catalog."default",
                 report_uid character varying COLLATE pg_catalog."default",
                 dockerfile text COLLATE pg_catalog."default",
+                config json,
+                history json,
+                age integer,
                 CONSTRAINT k_images_report_uid_fkey FOREIGN KEY (report_uid)
                     REFERENCES public.k_reports (uid) MATCH SIMPLE
                     ON UPDATE NO ACTION
@@ -48,6 +50,13 @@ class CreateImages extends Migration
             CREATE INDEX IF NOT EXISTS k_images_report_uid_fkey
                 ON public.k_images USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_images_fulltag
+                ON public.k_images USING btree
+                (fulltag ASC NULLS LAST)
                 TABLESPACE pg_default;
         SQL;
 

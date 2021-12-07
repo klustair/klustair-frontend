@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 $menu = [
         [
             'text' => 'reports',
-            'url'  => 'report',
+            'url'  => '/',
             'icon' => 'fas fa-fw fa-book',
         ],
         [
@@ -19,37 +19,6 @@ $menu = [
             'can'=> 'logged-in',
         ],
 ];
-
-if (env('ANCHORE_ENABLED', false) == true) {
-
-    $menu[] = [
-        'text'    => 'Anchore',
-        'icon'    => 'fas fa-fw fa-anchor',
-        'submenu' => [
-            [
-                'text' => 'images',
-                'url'  => '/anchore/images',
-            ],
-            [
-                'text' => 'feeds',
-                'url'  => '/anchore/feeds',
-            ],
-            [
-                'text' => 'registries',
-                'url'  => '/anchore/registries',
-            ],
-            [
-                'text' => 'policies',
-                'url'  => '/anchore/policies',
-            ],
-            [
-                'text' => 'subscriptions',
-                'url'  => '/anchore/subscriptions',
-            ],
-        ],
-    ];
-
-}
 
 if (env('APP_DEBUG', false) == true) {
     $menu[] = [
