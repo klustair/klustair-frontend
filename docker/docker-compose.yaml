@@ -31,9 +31,6 @@ services:
       - SESSION_DRIVER=${SESSION_DRIVER}
       - SESSION_LIFETIME=${SESSION_LIFETIME}
       - ANCHORE_ENABLE=${ANCHORE_ENABLE:-false}
-      - ANCHORE_API_URL=${ANCHORE_API_URL:-http://host.docker.internal:8228}
-      - ANCHORE_CLI_USER=${ANCHORE_CLI_USER:-admin}
-      - ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS:-foobar}
       - AUTH=${AUTH:-false}
       - AUTH_REGISTER=${AUTH_REGISTER:-false}
       - AUTH_RESET=${AUTH_RESET:-false}
@@ -86,9 +83,6 @@ services:
       - SESSION_DRIVER=${SESSION_DRIVER}
       - SESSION_LIFETIME=${SESSION_LIFETIME}
       - ANCHORE_ENABLE=${ANCHORE_ENABLE:-false}
-      - ANCHORE_API_URL=${ANCHORE_API_URL:-http://host.docker.internal:8228}
-      - ANCHORE_CLI_USER=${ANCHORE_CLI_USER:-admin}
-      - ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS:-foobar}
       - AUTH=${AUTH:-false}
       - AUTH_REGISTER=${AUTH_REGISTER:-false}
       - AUTH_RESET=${AUTH_RESET:-false}
