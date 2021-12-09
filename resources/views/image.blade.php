@@ -107,7 +107,9 @@
             <div class="card-body table-responsive p-0">
             <pre style="background-color: #e1e1e1">
 @foreach (json_decode($image['history']) as $history)
+@isset($history->commcreated_byent)
 {{ $history->created_by }}
+@endisset
 @endforeach
             </pre>
             </div>
