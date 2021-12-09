@@ -143,13 +143,12 @@
                     <table class="col-12">
                       <theader>
                           <tr>
-                          <th></th>
-                          <th>Container</th>
-                          <th>Image</th>
-                          <th>Build Age</th>
-                          <th width="60px">UP</th>
-                          <th width="430px">Vulnerabilities</th>
-                          <th width="50px">NO ACK</th>
+                            <th width="35px"></th>
+                            <th>Container</th>
+                            <th>Build Age</th>
+                            <th width="60px">UP</th>
+                            <th width="430px">Vulnerabilities</th>
+                            <th width="50px">NO ACK</th>
                           </tr>
                       </theader>
                       <tbody>
@@ -159,8 +158,8 @@
             @foreach ($pod['containers'] as $container)
                       <tr>
                           <td><img src="/img/distro/{{ $container['imagedetails']['distro'] }}.png" alt="{{ $container['imagedetails']['distro'] }}" class="img-fluid" width="20px"> </td>
-                          <td>{{ $container['name'] }} </td>
-                          <td>
+                          <td><b>{{ $container['name'] }} </b>
+                            <br>
                           @if(isset($container['imagedetails']['vulnsummary']))
                             <a href="/report/{{ $report_data->uid }}/image/{{ $container['imagedetails']['image_uid'] }}">{{ $container['image'] }}</a>
                           @else
