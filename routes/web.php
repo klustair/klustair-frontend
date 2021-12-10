@@ -37,13 +37,14 @@ Route::middleware($middlewares)->group(function () {
 
     Route::get('/report/{report_uid?}', 'ReportController@overview');
 
-    Route::get('report/{report_uid}/image/{image_uid}', 'ImageController@show' );
+    Route::get('/report/{report_uid}/image/{image_uid}', 'ImageController@show' );
 
     Route::get('/vulnerabilities', 'VulnerabilitiesController@list' );
 
     Route::get('/vulnerability/{vuln_uid}', 'VulnerabilitiesController@details' );
 
     Route::get('/namespace/{report_uid}/{namespace_uid}', 'NamespaceController@show' );
+    Route::get('/images', 'ImageController@index' );
 
 });
 

@@ -13,6 +13,11 @@ $menu = [
             'icon' => 'fas fa-fw fa-bug',
         ],
         [
+            'text' => 'images',
+            'url'  => 'images',
+            'icon' => 'fas fa-fw fa-images',
+        ],
+        [
             'text' => 'Configuration',
             'url'  => 'config',
             'icon' => 'fas fa-fw fa-cogs',
