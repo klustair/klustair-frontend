@@ -8,6 +8,7 @@
 
 @section('content')
 @csrf
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -21,7 +22,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
-            <table id="vulnlist" class="table table-condensed">
+            <table id="dyn-vulnlist" class="table table-condensed"  style="width:100%">
                 <thead>
                 <tr>
                     <th style="display:none">Severity</th>
@@ -32,11 +33,10 @@
                     <th>Score</th>
                     <th style="width: 40px">CVSS</th>
                     <th style="width: 40px">Fixed</th>
-                    @auth<th style="width: 20px"><input type="checkbox" id="checkAll"></th>@endauth
+                    <th style="width: 20px">@auth<input type="checkbox" id="checkAll">@endauth</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @include('vulnerabilities.vulnlisttrivy', ['vulnerabilities' => $vulnerabilities])
                 </tbody>
             </table>
             @auth
@@ -60,7 +60,76 @@
 
 
 $(document).ready(function() {
-    $('#vulnlist').DataTable();
+    $('#dyn-vulnlist').DataTable({
+        ordering: false,
+        searching: false,
+        stateSave: true,
+        serverSide: true,
+        ajax: {
+            url: '/api/v1/vulnerabilities',
+            dataSrc: 'data'
+        },
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        columns: [
+            {   data: 'vulnerability_id',
+                orderable: false,
+                render: function ( data, type, row ) {
+                    //console.log(row);
+                    return '<a href="/vulnerability/'+data+'"><nobr>'+data+'</nobr></a>';
+                }
+            },
+            {   data: 'title',
+                orderable: false,
+                render: function ( data, type, row ) {
+                    return '<b>'+data+'</b>';
+                }
+            },
+            {   data: 'pkg_name',
+                orderable: false,
+            },
+            {   data: 'imagecount' },
+            {   data: 'cvss',
+                orderable: false,
+                render: function ( data, type, row ) {
+
+                    if (data.V3Score == null) {
+                        return '';
+                    } else {
+                        return `
+                            <div class="progress progress-xs">
+                                <div class="progress-bar bg-purple" style="width: ${data.V3Vector_base_score*10}%"></div>
+                            </div>
+                            <div class="progress progress-xs">
+                                <div class="progress-bar bg-fuchsia" style="width: ${data.V3Vector_modified_esc*10}%"></div>
+                            </div>
+                            <div class="progress progress-xs">
+                                <div class="progress-bar bg-info" style="width: ${data.V3Vector_modified_isc*10}%"></div>
+                            </div>`;
+                    }
+                }
+            },
+            {   data: 'cvss_base_score',
+                render: function ( data, type, row ) {
+                    return '<span class="badge '+ row.severity +'">'+ data +'</span>';
+                }
+            },
+            {   data: 'fixed_version',
+                render: function ( data, type, row ) {
+                    if (data != "") {
+                        return '<span class="badge badge-pill badge-success">yes</span>';
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {   data: 'vulnerability_id',
+                render: function ( data, type, row ) {
+                    return '<input type="checkbox" id="'+ row.vulnerability_id+'" class="whitelistItem" name="whitelist" value="'+row.uid+'" />';
+                }
+            }
+        ]
+    });
 } );
 
 $("#checkAll").click(function(){
