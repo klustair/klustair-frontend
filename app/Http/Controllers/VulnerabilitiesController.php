@@ -35,6 +35,10 @@ class VulnerabilitiesController extends Controller
             */
         ]);
 
+
+        $vuln_trivy_count = DB::table('k_vuln_trivy')
+        ->count(DB::raw('DISTINCT vulnerability_id'));
+
         $vuln_trivy_list = DB::table('k_vuln_trivy')
             ->leftJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
@@ -92,8 +96,8 @@ class VulnerabilitiesController extends Controller
         $return = array(
             'draw' => intval($request->draw),
             'data' => $data,
-            'recordsTotal' => 80,
-            'recordsFiltered' => 80
+            'recordsTotal' => $vuln_trivy_count,
+            'recordsFiltered' => $vuln_trivy_count
         );
         
         return $return;

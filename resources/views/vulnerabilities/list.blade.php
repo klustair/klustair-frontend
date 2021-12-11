@@ -125,7 +125,11 @@ $(document).ready(function() {
             },
             {   data: 'vulnerability_id',
                 render: function ( data, type, row ) {
-                    return '<input type="checkbox" id="'+ row.vulnerability_id+'" class="whitelistItem" name="whitelist" value="'+row.uid+'" />';
+                    let checkbox = ''
+                    if (row.images_vuln_whitelist_uid) {
+                        checkbox = 'checked'
+                    }
+                    return '<input type="checkbox" id="'+ row.vulnerability_id+'" class="whitelistItem" name="whitelist" value="'+row.uid+'" '+checkbox+'/>';
                 }
             }
         ]
