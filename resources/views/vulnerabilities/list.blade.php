@@ -62,7 +62,7 @@
 $(document).ready(function() {
     $('#dyn-vulnlist').DataTable({
         ordering: false,
-        searching: false,
+        searching: true,
         stateSave: true,
         serverSide: true,
         ajax: {

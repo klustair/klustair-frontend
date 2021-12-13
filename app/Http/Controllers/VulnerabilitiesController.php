@@ -14,7 +14,7 @@ class VulnerabilitiesController extends Controller
      */
     public function apiListVulnerabilities(Request $request)
     {
-
+        $data=array();
 
         $vulnseverity = array(
             "0" => 'bg-danger text-dark',
@@ -35,9 +35,11 @@ class VulnerabilitiesController extends Controller
             */
         ]);
 
+        $search = "%".$request->search['value']."%";
 
         $vuln_trivy_count = DB::table('k_vuln_trivy')
-        ->count(DB::raw('DISTINCT vulnerability_id'));
+            ->where('title', 'LIKE', $search)
+            ->count(DB::raw('DISTINCT vulnerability_id'));
 
         $vuln_trivy_list = DB::table('k_vuln_trivy')
             ->leftJoin('k_vulnwhitelist', function ($join) {
@@ -53,6 +55,9 @@ class VulnerabilitiesController extends Controller
             'k_vuln_trivy.fixed_version',
             'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
             //->where('report_uid', '=', $report_uid)
+        
+            ->where('title', 'LIKE', $search)
+
             ->orderBy('severity', 'ASC')
             ->offset(intval($request->start))
             ->limit(intval($request->length))
