@@ -37,8 +37,25 @@ class VulnerabilitiesController extends Controller
 
         $search = "%".$request->search['value']."%";
 
-        $vuln_trivy_count = DB::table('k_vuln_trivy');
+        $vuln_trivy_count = DB::table('k_vuln_trivy')
+            ->leftJoin('k_vulnwhitelist', function ($join) {
+                $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+            });
+        
         if($search!="%%") $vuln_trivy_count = $vuln_trivy_count->where('title', 'LIKE', $search);
+
+        if ($request->ack && $request->ack == 'true') {
+            $vuln_trivy_count = $vuln_trivy_count->where('k_vulnwhitelist.uid', '!=', null);
+        } elseif ($request->ack && $request->ack == 'false') {
+            $vuln_trivy_count = $vuln_trivy_count->where('k_vulnwhitelist.uid', '=', null);
+        }
+
+        if ($request->fix && $request->fix == 'true') {
+            $vuln_trivy_count = $vuln_trivy_count->where('k_vuln_trivy.fixed_version', '!=', '');
+        } elseif ($request->fix && $request->fix == 'false') {
+            $vuln_trivy_count = $vuln_trivy_count->where('k_vuln_trivy.fixed_version', '=', '');
+        }
+
         $vuln_trivy_count = $vuln_trivy_count->count(DB::raw('DISTINCT vulnerability_id'));
 
         $vuln_trivy_list = DB::table('k_vuln_trivy')
@@ -54,6 +71,19 @@ class VulnerabilitiesController extends Controller
             'k_vuln_trivy.uid',
             'k_vuln_trivy.fixed_version',
             'k_vulnwhitelist.uid as images_vuln_whitelist_uid');
+        
+        if ($request->ack && $request->ack == 'true') {
+            $vuln_trivy_list = $vuln_trivy_list->where('k_vulnwhitelist.uid', '!=', null);
+        } elseif ($request->ack && $request->ack == 'false') {
+            $vuln_trivy_list = $vuln_trivy_list->where('k_vulnwhitelist.uid', '=', null);
+        }
+
+        if ($request->fix && $request->fix == 'true') {
+            $vuln_trivy_list = $vuln_trivy_list->where('k_vuln_trivy.fixed_version', '!=', '');
+        } elseif ($request->fix && $request->fix == 'false') {
+            $vuln_trivy_list = $vuln_trivy_list->where('k_vuln_trivy.fixed_version', '=', '');
+        }
+        
             //->where('report_uid', '=', $report_uid)
         
         if($search!="%%") $vuln_trivy_list = $vuln_trivy_list->where('title', 'LIKE', $search);
