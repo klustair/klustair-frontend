@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateImagesVuln extends Migration
+class V060 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,6 +13,27 @@ class CreateImagesVuln extends Migration
      */
     public function up()
     {
+        /*
+        drop anchore table
+        */
+        $create_sql[] = <<<SQL
+            DROP TABLE IF EXISTS public.k_vuln_anchore;
+        SQL;
+        foreach ($create_sql as $sql ) {
+            DB::statement($sql);
+        }
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        /*
+        recreate anchore table
+        */
         $create_sql[] = <<<SQL
             CREATE TABLE IF NOT EXISTS public.k_vuln_anchore
             (
@@ -55,19 +76,9 @@ class CreateImagesVuln extends Migration
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;
         SQL;
-
+        
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('k_vuln_anchore');
     }
 }
