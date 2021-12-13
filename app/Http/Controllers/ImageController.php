@@ -11,6 +11,7 @@ class ImageController extends Controller
     {
         $image = DB::table('k_images')
             ->where('distro', '!=', 'unknown')
+            ->where('distro', '!=', '')
             ->distinct('fulltag')
             ->get();
 
