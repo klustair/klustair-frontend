@@ -37,9 +37,9 @@ class VulnerabilitiesController extends Controller
 
         $search = "%".$request->search['value']."%";
 
-        $vuln_trivy_count = DB::table('k_vuln_trivy')
-            ->where('title', 'LIKE', $search)
-            ->count(DB::raw('DISTINCT vulnerability_id'));
+        $vuln_trivy_count = DB::table('k_vuln_trivy');
+        if($search!="%%") $vuln_trivy_count = $vuln_trivy_count->where('title', 'LIKE', $search);
+        $vuln_trivy_count = $vuln_trivy_count->count(DB::raw('DISTINCT vulnerability_id'));
 
         $vuln_trivy_list = DB::table('k_vuln_trivy')
             ->leftJoin('k_vulnwhitelist', function ($join) {
@@ -53,12 +53,12 @@ class VulnerabilitiesController extends Controller
             'k_vuln_trivy.severity',
             'k_vuln_trivy.uid',
             'k_vuln_trivy.fixed_version',
-            'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+            'k_vulnwhitelist.uid as images_vuln_whitelist_uid');
             //->where('report_uid', '=', $report_uid)
         
-            ->where('title', 'LIKE', $search)
+        if($search!="%%") $vuln_trivy_list = $vuln_trivy_list->where('title', 'LIKE', $search);
 
-            ->orderBy('severity', 'ASC')
+        $vuln_trivy_list = $vuln_trivy_list->orderBy('severity', 'ASC')
             ->offset(intval($request->start))
             ->limit(intval($request->length))
             ->get();
