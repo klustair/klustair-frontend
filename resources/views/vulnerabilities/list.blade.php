@@ -90,6 +90,7 @@ $(document).ready(function() {
         searching: true,
         stateSave: true,
         serverSide: true,
+        processing: true,
         ajax: {
             url: vulnerabilitiesAPIURL+'?'+vulnerabilitiesQuery,
             dataSrc: 'data'
