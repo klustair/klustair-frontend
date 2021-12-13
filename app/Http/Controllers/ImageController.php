@@ -7,6 +7,22 @@ use Illuminate\Support\Facades\DB;
 
 class ImageController extends Controller
 {
+    public function index()
+    {
+        $image = DB::table('k_images')
+            ->where('distro', '!=', 'unknown')
+            ->distinct('fulltag')
+            ->get();
+
+        $data['images'] = json_decode(json_encode($image), true);
+        /*
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+        */
+        return view('images.index', $data);
+    }
+
     /**
      * Show imagedetailes of an image in specific Report
      *
