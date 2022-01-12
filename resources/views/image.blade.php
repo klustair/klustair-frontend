@@ -107,7 +107,7 @@
             <div class="card-body table-responsive p-0">
             <pre style="background-color: #e1e1e1">
 @foreach (json_decode($image['history']) as $history)
-@isset($history->commcreated_byent)
+@isset($history->created_by)
 {{ $history->created_by }}
 @endisset
 @endforeach
@@ -124,11 +124,13 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Vulnerabilties</h3>
+                <!-- disabled since it is not provided by trivy
                 <div class="card-tools">
                     <span class="badge badge-pill bg-purple">base</span>
-                    <span class="badge badge-pill bg-fuchsia">exploitability</span>
-                    <span class="badge badge-pill badge-info">impact</span>
+                    <span class="badge badge-pill bg-fuchsia">temporal</span>
+                    <span class="badge badge-pill badge-info">environmental</span>
                 </div>
+                -->
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
@@ -139,7 +141,7 @@
                     <th>Title</th>
                     <th>CVE</th>
                     <th>Package</th>
-                    <th>Score</th>
+                    <!-- <th>Score</th>  disabled since it is not provided by trivy -->
                     <th style="width: 40px">CVSS</th>
                     <th style="width: 40px">Fixed</th>
                     @auth<th style="width: 20px"><input type="checkbox" id="checkAll"></th>@endauth

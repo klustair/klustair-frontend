@@ -28,7 +28,7 @@
               <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Namespaces Checked</span>
+                <span class="info-box-text">Namespaces</span>
                 <span class="info-box-number"><h3>{{ $stats['namespaces'] }}</h3></span>
 
               </div>
@@ -42,7 +42,7 @@
               <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Pods Checked</span>
+                <span class="info-box-text">Pods</span>
                 <span class="info-box-number"><h3>{{ $stats['pods'] }}</h3></span>
 <!--
                 <div class="progress">
@@ -63,7 +63,7 @@
               <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Containters Scanned </span>
+                <span class="info-box-text">Containters </span>
                 <span class="info-box-number"><h3>{{ $stats['containers'] }}</h3></span>
 
               </div>
@@ -77,7 +77,7 @@
               <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Images Scanned </span>
+                <span class="info-box-text">Images </span>
                 <span class="info-box-number"><h3>{{ $stats['images'] }}</h3></span>
 
               </div>

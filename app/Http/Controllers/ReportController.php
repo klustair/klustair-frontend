@@ -58,27 +58,25 @@ class ReportController extends Controller
 
     public function apiCreateAudit($report_uid, Request $request)
     {
-        foreach ($request->all() as $namespace_uid => $namespaceAudit) {
-            foreach ($namespaceAudit['auditItems'] as $a) {
-                $audit = new Audit;
-                $audit->uid                     = $a['uid']; 
-                $audit->report_uid              = $report_uid; 
-                $audit->namespace_uid           = $namespace_uid;
-                $audit->audit_type              = $a['audit_type'];
-                $audit->audit_name              = $a['AuditResultName'];
-                $audit->msg                     = $a['msg'];
-                $audit->severity_level          = $a['level'];
-                $audit->audit_time              = $a['time'];
-                $audit->resource_name           = $a['ResourceName'];
-                $audit->capability              = @$a['Capability'] ?: '';
-                $audit->container               = @$a['Container'] ?: '';
-                $audit->missing_annotation      = $a['AuditResultName'];
-                $audit->missing_annotation      = @$a['MissingAnnotation'] ?: '';
-                $audit->resource_namespace      = @$a['ResourceNamespace'] ?: '';
-                $audit->resource_api_version    = $a['ResourceApiVersion'];
-                $audit->save();
-                Log::debug('ReportController::apiCreateAudit: ' . $audit->uid);
-            }
+        foreach ($request->all() as $a) {
+            $audit = new Audit;
+            $audit->uid                     = $a['uid']; 
+            $audit->report_uid              = $report_uid; 
+            $audit->namespace_uid           = $a['namespace_uid'];
+            $audit->audit_type              = $a['audit_type'];
+            $audit->audit_name              = $a['AuditResultName'];
+            $audit->msg                     = $a['msg'];
+            $audit->severity_level          = $a['level'];
+            $audit->audit_time              = $a['time'];
+            $audit->resource_name           = $a['ResourceName'];
+            $audit->capability              = @$a['Capability'] ?: '';
+            $audit->container               = @$a['Container'] ?: '';
+            $audit->missing_annotation      = $a['AuditResultName'];
+            $audit->missing_annotation      = @$a['MissingAnnotation'] ?: '';
+            $audit->resource_namespace      = @$a['ResourceNamespace'] ?: '';
+            $audit->resource_api_version    = $a['ResourceApiVersion'];
+            $audit->save();
+            Log::debug('ReportController::apiCreateAudit: ' . $audit->uid);
         }
         return $request;
     }
@@ -103,6 +101,7 @@ class ReportController extends Controller
     public function apiCreateContainer($report_uid, Request $request)
     {
         foreach ($request->all() as $container) {
+            //Log::debug('ReportController::aaaaaaaa: ' . var_export($container, true));
             $c = new Container;
             $c->uid                 = $container['uid']; 
             $c->report_uid          = $report_uid; 
@@ -112,15 +111,15 @@ class ReportController extends Controller
             $c->image               = $container['image'];
             $c->image_pull_policy   = $container['image_pull_policy'];
             $c->security_context    = $container['security_context'];
-            $c->init_container      = DB::raw($container['init_container']);
-            $c->ready               = DB::raw(@$container['ready'] ?: false);
-            $c->started             = DB::raw(@$container['started'] ?: false);
+            $c->init_container      = @$container['init_container'] ?: false;
+            $c->ready               = @$container['ready'] ?: false;
+            $c->started             = @$container['started'] ?: false;
             $c->restart_count       = @$container['restartCount'] ?: 0;
             $c->started_at          = @$container['startedAt'] ?: '';
             $c->image_id            = @$container['imageID'] ?: '';
-            $c->actual              = DB::raw(@$container['actual'] ?: false);
+            $c->actual              = @$container['actual'] ?: false;
             $c->save();
-            Log::debug('ReportController::apiCreateContainer: ' . $c->uid);
+            Log::debug('ReportController::apiCreateContainer: ' . $c->name);
         }
         return $request;
     }
@@ -128,6 +127,7 @@ class ReportController extends Controller
     public function apiCreateImage($report_uid, Request $request)
     {
         foreach ($request->all() as $image) {
+            Log::debug('apiCreateImage::image: ' . var_export($image, true));
             $i = new Image;
             $i->uid             = $image['uid']; 
             $i->report_uid      = $report_uid; 
@@ -145,10 +145,25 @@ class ReportController extends Controller
             $i->repo            = @$image['repo'] ?: '';
             $i->dockerfile      = @$image['dockerfile'] ?: '';
             $i->config          = @$image['config'] ?: '';
-            $i->history         = @$image['history'] ?: '';
+            //$i->history         = @$image['history'] ?: '';
+            $i->history         = json_encode(@$image['history'] ?: ''); 
             $i->age             = @$image['age'] ?: 0;
             $i->save();
             Log::debug('ReportController::apiCreateImage: ' . $i->uid);
+
+
+            foreach ($image['summary']['severity'] as $severity => $value) {
+                $v = new Vulnsummary;
+                $v->uid         = Str::uuid();
+                $v->report_uid  = $report_uid; 
+                $v->image_uid   = $image['uid'];
+                $v->severity    = $severity;
+                $v->total       = $value['total'];
+                $v->fixed       = $value['fixed'];
+                $v->save();
+                Log::debug('ReportController::apiCreateImage::Vulnsummary: ' . $severity);
+            }
+
         }
         return $request;
     }
@@ -156,7 +171,7 @@ class ReportController extends Controller
     public function apiCreateVuln($report_uid, $image_uid, Request $request)
     {
         foreach ($request->all() as $target) {
-
+            Log::debug('apiCreateVuln::apiCreateVuln: ' . var_export($target, true));
             $i = new TargetTrivy;
             $i->uid         = $target['uid']; 
             $i->report_uid  = $report_uid; 
@@ -190,7 +205,7 @@ class ReportController extends Controller
                     $v->cwe_ids             = json_encode(@$vuln['CweIDs'] ?: ''); 
                     $v->save();
                 }
-                Log::debug('ReportController::apiCreateVuln::vulnerabilities' . count($target['Vulnerabilities']));
+                Log::debug('ReportController::apiCreateVuln::vulnerabilities : ' . count($target['Vulnerabilities']));
 
             }
         }
@@ -246,30 +261,31 @@ class ReportController extends Controller
         $i->pods                = @$request['pods'] ?: 0;
         $i->images              = @$request['images'] ?: 0;
         $i->save();
-        Log::debug('ReportController::apiReportsSummary: ' . $i->uid);
+        Log::debug('ReportController::apiReportsSummary: ' . $request);
         return $request;
     }
 
     public function apiReportsCleanup(Request $request)
     {
-        $return['limitNr'] = false;
-        $return['limitDate'] = false;
+        Log::debug('ReportController::apiReportsCleanup: ' . $request);
+        $return['limit_nr'] = false;
+        $return['limit_date'] = false;
 
-        if ($request['limitNr'] != false) {
-            $limitNr = (int)$request['limitNr'];
+        if ($request['limit_nr'] != false) {
+            $limitNr = (int)$request['limit_nr'];
             $result = DB::table('k_reports')
                 ->whereRaw("uid NOT IN (select uid from k_reports ORDER BY checktime DESC LIMIT $limitNr)")
                 ->delete();
-                $return['limitNr'] = $result;
+                $return['limit_nr'] = $result;
         } 
 
-        if ($request['limitDate'] != false) {
-            $limitDate = (int)$request['limitDate'];
+        if ($request['limit_date'] != false) {
+            $limitDate = (int)$request['limit_date'];
             $date = date("Y-m-d H:i", strtotime("-$limitDate day"));
             $result = DB::table('k_reports')
                 ->where('checktime', '<', "$date")
                 ->delete();
-                $return['limitDate'] = $result;
+                $return['limit_date'] = $result;
         } 
         return $return;
         

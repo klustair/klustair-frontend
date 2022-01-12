@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+<!--<pre>{{ print_r($vulnerability) }}</pre>-->
 <div class="row">
     <div class="col-8">
         <div class="card">
@@ -127,12 +128,13 @@
             <a href="#" class="small-box-footer">{{ Str::upper($vulnseverity[$vulnerability['severity']]['name'])}} </a>
         </div>
 
-
+        <!-- disabled since it is not provided by trivy
         <div class="card">
             <div class="card-body table-responsive p-0">
                 <div id="chart"></div>
             </div>
         </div>
+        -->
 
         <div class="card">
             <div class="card-header">

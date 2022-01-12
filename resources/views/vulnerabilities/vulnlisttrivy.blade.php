@@ -14,6 +14,7 @@
             <td>{{$vulnerabily['pkg_name']}}</td>
             <td>{{$vulnerabily['imagecount']}}</td>
             <td>
+                <pre>{{print_r($vulnerabily)}}</pre>
                 @isset ($vulnerabily['cvss']['V3Score'])
                 <div class="progress progress-xs">
                     <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['V3Vector_base_score']*10}}%"></div>
