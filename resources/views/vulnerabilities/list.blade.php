@@ -14,11 +14,13 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">All</h3>
+                <!-- removed since it is not supperted by Trivy 
                 <div class="card-tools">
                     <span class="badge badge-pill bg-purple">base</span>
                     <span class="badge badge-pill bg-fuchsia">exploitability</span>
                     <span class="badge badge-pill badge-info">impact</span>
                 </div>
+                -->
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
@@ -54,7 +56,7 @@
                     <th>Package</th>
                     <th>IMG</th>
                     <th>Score</th>
-                    <th style="width: 40px">CVSS</th>
+                    <!--<th style="width: 40px">CVSS</th> removed since it is not supported by Trivy  -->
                     <th style="width: 40px">Fixed</th>
                     <th style="width: 20px">@auth<input type="checkbox" id="checkAll">@endauth</th>
                 </tr>
@@ -115,6 +117,7 @@ $(document).ready(function() {
                 orderable: false,
             },
             {   data: 'imagecount' },
+            /* disabled, since it is not supperted by Trivy
             {   data: 'cvss',
                 orderable: false,
                 render: function ( data, type, row ) {
@@ -135,6 +138,7 @@ $(document).ready(function() {
                     }
                 }
             },
+            */
             {   data: 'cvss_base_score',
                 render: function ( data, type, row ) {
                     return '<span class="badge '+ row.severity +'">'+ data +'</span>';

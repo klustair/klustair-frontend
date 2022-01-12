@@ -13,6 +13,7 @@
             </td>
             <td>{{$vulnerabily['pkg_name']}}</td>
             <td>{{$vulnerabily['imagecount']}}</td>
+            <!-- Removed since it is not suppoerted by Trivy 
             <td>
                 <pre>{{print_r($vulnerabily)}}</pre>
                 @isset ($vulnerabily['cvss']['V3Score'])
@@ -32,6 +33,7 @@
                 </div>
                 @endif
             </td>
+            -->
             <td><span class="badge {{$vulnseverity[$vulnerabily['severity']]}}">{{$vulnerabily['cvss_base_score']}}</span></td>
             <td>
                 @if ($vulnerabily['fixed_version'] != "")

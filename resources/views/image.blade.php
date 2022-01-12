@@ -141,8 +141,8 @@
                     <th>Title</th>
                     <th>CVE</th>
                     <th>Package</th>
-                    <!-- <th>Score</th>  disabled since it is not provided by trivy -->
-                    <th style="width: 40px">CVSS</th>
+                    <th>Score</th>
+                    <!-- <th style="width: 40px">CVSS</th>  disabled since it is not provided by trivy -->
                     <th style="width: 40px">Fixed</th>
                     @auth<th style="width: 20px"><input type="checkbox" id="checkAll"></th>@endauth
                 </tr>
