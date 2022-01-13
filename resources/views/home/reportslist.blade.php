@@ -12,8 +12,8 @@
                     <tr>
                         <th width="50px"></th>
                         <th width="150px">Date</th>
-                        <th>title</th>
-                        <th>namespaces</th>
+                        <th>Title</th>
+                        <th>Namespaces</th>
                         <th width="430px">Vulnerabilities</th>
                     </tr>
                     </thead>
