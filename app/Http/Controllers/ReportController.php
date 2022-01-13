@@ -144,7 +144,8 @@ class ReportController extends Controller
             $i->registry        = @$image['registry'] ?: '';
             $i->repo            = @$image['repo'] ?: '';
             $i->dockerfile      = @$image['dockerfile'] ?: '';
-            $i->config          = @$image['config'] ?: '';
+            //$i->config          = @$image['config'] ?: '';
+            $i->config          = json_encode(@$image['config'] ?: ''); 
             //$i->history         = @$image['history'] ?: '';
             $i->history         = json_encode(@$image['history'] ?: ''); 
             $i->age             = @$image['age'] ?: 0;
@@ -371,65 +372,66 @@ class ReportController extends Controller
             foreach ($pods_list as $p) {
                 $data['stats']['pods']++;
                 $namespaces[$n->uid]['pods'][$p->uid] = json_decode(json_encode($p), true);
-                $containers_list = DB::table('k_containers')
-                    ->where('report_uid', $report_uid)
-                    ->where('namespace_uid', $n->uid)
-                    ->where('pod_uid', $p->uid)
+            }
+
+            $containers_list = DB::table('k_containers')
+                ->where('report_uid', $report_uid)
+                ->where('namespace_uid', $n->uid)
+                ->distinct('name', 'image')
+                ->get();
+            
+            foreach ($containers_list as $c) {
+                $data['stats']['containers']++;
+                $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid] = json_decode(json_encode($c), true);
+                
+                $images_list = DB::table('k_container_has_images')
+                    ->join('k_images', 'k_container_has_images.image_uid', '=', 'k_images.uid')
+                    ->where('k_container_has_images.container_uid', $c->uid)
+                    ->where('k_container_has_images.report_uid', $report_uid)
                     ->get();
                 
-                foreach ($containers_list as $c) {
-                    $data['stats']['containers']++;
-                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid] = json_decode(json_encode($c), true);
-                    
-                    $images_list = DB::table('k_container_has_images')
-                        ->join('k_images', 'k_container_has_images.image_uid', '=', 'k_images.uid')
-                        ->where('k_container_has_images.container_uid', $c->uid)
-                        ->where('k_container_has_images.report_uid', $report_uid)
+                foreach ($images_list as $i) {
+                    $data['stats']['images']++;
+                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']= json_decode(json_encode($i), true);
+
+                    $vulnsummary_list = DB::table('k_vulnsummary')
+                        ->where('image_uid', $i->uid)
+                        ->where('report_uid', $report_uid)
                         ->get();
-                    
-                    foreach ($images_list as $i) {
-                        $data['stats']['images']++;
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']= json_decode(json_encode($i), true);
-    
-                        $vulnsummary_list = DB::table('k_vulnsummary')
-                            ->where('image_uid', $i->uid)
-                            ->where('report_uid', $report_uid)
-                            ->get();
 
-                        $os = DB::table('k_target_trivy')
-                            ->where('image_uid', $i->uid)
-                            ->where('report_uid', $report_uid)
-                            ->select('k_target_trivy.target_type as distro')
-                            ->first();
+                    $os = DB::table('k_target_trivy')
+                        ->where('image_uid', $i->uid)
+                        ->where('report_uid', $report_uid)
+                        ->select('k_target_trivy.target_type as distro')
+                        ->first();
 
-                        if ($os) {
-                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = $os->distro;
-                        } else {
-                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = "unknown";
-                        }
-
-                        $vuln_ack_count = DB::table('k_vuln_trivy')
-                            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
-                            ->leftJoin('k_vulnwhitelist', function ($join) {
-                                $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
-                                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
-                            })
-                            ->where('k_vuln_trivy.image_uid', $i->uid)
-                            ->where('k_vuln_trivy.report_uid', $report_uid)
-                            ->where('k_vulnwhitelist.uid', null)
-                            ->distinct('k_vuln_trivy.uid')
-                            ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
-                            //->toSql();
-                            ->count();
-                        
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vuln_ack_count'] = $vuln_ack_count;
-                        
-                        foreach ($vulnsummary_list as $v) {
-                            $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
-                        }
+                    if ($os) {
+                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = $os->distro;
+                    } else {
+                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = "unknown";
                     }
+
+                    $vuln_ack_count = DB::table('k_vuln_trivy')
+                        ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                        ->leftJoin('k_vulnwhitelist', function ($join) {
+                            $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                                    ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+                        })
+                        ->where('k_vuln_trivy.image_uid', $i->uid)
+                        ->where('k_vuln_trivy.report_uid', $report_uid)
+                        ->where('k_vulnwhitelist.uid', null)
+                        ->distinct('k_vuln_trivy.uid')
+                        ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+                        //->toSql();
+                        ->count();
                     
+                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vuln_ack_count'] = $vuln_ack_count;
+                    
+                    foreach ($vulnsummary_list as $v) {
+                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+                    }
                 }
+            
             }
         }
     
