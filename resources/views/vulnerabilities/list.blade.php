@@ -32,7 +32,7 @@
                         <select class="form-control" id="ack">
                             <option></option>
                             <option value="true">Acknowledged</option>
-                            <option value="false">not Acknwoledged</option>
+                            <option value="false">not Acknowledged</option>
                         </select>
                     </div>
                 </div>
