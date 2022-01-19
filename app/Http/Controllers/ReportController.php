@@ -131,7 +131,7 @@ class ReportController extends Controller
             $i = new Image;
             $i->uid             = $image['uid']; 
             $i->report_uid      = $report_uid; 
-            $i->image_b64       = $image['image_b64'];
+            $i->image_b64       = base64_encode($image['fulltag']);
             $i->analyzed_at     = @$image['analyzed_at'] ?: '01.01.1970';
             $i->created_at      = @$image['created_at'] ?: '01.01.1970';
             $i->fulltag         = $image['fulltag'];
@@ -144,9 +144,7 @@ class ReportController extends Controller
             $i->registry        = @$image['registry'] ?: '';
             $i->repo            = @$image['repo'] ?: '';
             $i->dockerfile      = @$image['dockerfile'] ?: '';
-            //$i->config          = @$image['config'] ?: '';
             $i->config          = json_encode(@$image['config'] ?: ''); 
-            //$i->history         = @$image['history'] ?: '';
             $i->history         = json_encode(@$image['history'] ?: ''); 
             $i->age             = @$image['age'] ?: 0;
             $i->save();
@@ -212,7 +210,8 @@ class ReportController extends Controller
         }
         return $request;
     }
-
+    
+    // TODO : Not used anymore since data is inserted with image 
     public function apiVulnsummary($report_uid, Request $request)
     {
         foreach ($request->all() as $image_uid => $image) {

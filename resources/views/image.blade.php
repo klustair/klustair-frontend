@@ -341,7 +341,7 @@ $('.swalDefaultSuccess').click(function() {
     });
 
     // Encode and Stringify fields to avoid hitting the POST Max 
-    // field setting on images woth more than 500 vulnerabilities
+    // field setting on images with more than 500 vulnerabilities
     var encodedString = btoa(JSON.stringify(vuln_uid_list));
 
     var data = {
