@@ -159,7 +159,7 @@
             </table>
             @auth
             <div class="p-2" style="float:right;">
-                <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Add to Whitelist</button>
+                <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Acknowledge</button>
             </div>
             @endauth
 
@@ -352,7 +352,7 @@ $('.swalDefaultSuccess').click(function() {
     $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageb64'), data, function( data ) {
         Toast.fire({
             icon: 'success',
-            title: 'Updated Whitelist'
+            title: 'Acknowledged'
         })
     })
 });

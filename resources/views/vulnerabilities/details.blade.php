@@ -112,7 +112,7 @@
     <div class="col-4">
     <!-- not Working now
         <div class="pb-3">
-            <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess">Add to Whitelist</button>
+            <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess">Acknowledge</button>
         </div>
     -->
         <!-- small card -->
