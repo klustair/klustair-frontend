@@ -127,7 +127,7 @@ class ReportController extends Controller
     public function apiCreateImage($report_uid, Request $request)
     {
         foreach ($request->all() as $image) {
-            Log::debug('apiCreateImage::image: ' . var_export($image, true));
+            //Log::debug('apiCreateImage::image: ' . var_export($image, true));
             $i = new Image;
             $i->uid             = $image['uid']; 
             $i->report_uid      = $report_uid; 
@@ -172,7 +172,7 @@ class ReportController extends Controller
     public function apiCreateVuln($report_uid, $image_uid, Request $request)
     {
         foreach ($request->all() as $target) {
-            Log::debug('apiCreateVuln::apiCreateVuln: ' . var_export($target, true));
+            //Log::debug('apiCreateVuln::apiCreateVuln: ' . var_export($target, true));
             $i = new TargetTrivy;
             $i->uid         = $target['uid']; 
             $i->report_uid  = $report_uid; 
@@ -206,7 +206,7 @@ class ReportController extends Controller
                     $v->cwe_ids             = json_encode(@$vuln['CweIDs'] ?: ''); 
                     $v->save();
                 }
-                Log::debug('ReportController::apiCreateVuln::vulnerabilities : ' . count($target['Vulnerabilities']));
+                //Log::debug('ReportController::apiCreateVuln::vulnerabilities : ' . count($target['Vulnerabilities']));
 
             }
         }
@@ -227,7 +227,7 @@ class ReportController extends Controller
                 $i->fixed       = $value['fixed'];
                 $i->save();
             }
-            Log::debug('ReportController::apiVulnsummary: ' . count($image));
+            Log::debug('ReportController::apiVulnsummary::count ' . count($image));
         }
         return $request;
     }
