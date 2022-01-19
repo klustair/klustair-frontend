@@ -138,6 +138,30 @@ class VulnerabilitiesController extends Controller
         return $return;
     }
 
+    public function apiVulnwhitelistBulk (Request $request) 
+    {
+        $postdata = $request->post();
+        $insertdata = array();
+        $deletedata = array();
+
+        $now = date(DATE_ATOM);
+        if (isset($postdata['vuln_list'])) {
+            $vulnlist = json_decode(base64_decode($postdata['vuln_list']), true);
+            foreach ($vulnlist as $vuln) {
+                
+                if (isset($vuln['state']) && $vuln['state']=='true') {
+                    $insertdata[] = ['uid'=>uniqid('', true), 'wl_vuln'=> $vuln['vuln'], 'whitelisttime'=>$now ];
+                } elseif (isset($vuln['state']) && $vuln['state']=='false') {
+                    $deletedata[] = ['wl_vuln'=> $vuln['vuln']];
+                }
+            }
+            DB::table('k_vulnwhitelist')->whereIn('wl_vuln', $deletedata)->delete();
+            DB::table('k_vulnwhitelist')->insert($insertdata);
+        }
+        return ['success'=>'true', 'vuln_list'=>$vulnlist];
+
+    }
+
     /**
      * Whitelist a list of vulnerabilities
      *

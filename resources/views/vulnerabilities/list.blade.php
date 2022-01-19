@@ -195,7 +195,7 @@ const Toast = Swal.mixin({
     timer: 3000
 });
 
-$('.swalDefaultSuccess').click(function() {
+$('#UpdateWhitelist').click(function() {
     vuln_uid_list = []
 
     $('.whitelistItem').each(function( index ) {
@@ -204,9 +204,7 @@ $('.swalDefaultSuccess').click(function() {
             'vuln' : $(this).attr('id'),
             'state' :  $(this).prop('checked')
         }
-        if ($(this).prop('checked') == true) {
-            vuln_uid_list.push(vuln)
-        }
+        vuln_uid_list.push(vuln)
     });
 
     // Encode and Stringify fields to avoid hitting the POST Max 
@@ -218,7 +216,7 @@ $('.swalDefaultSuccess').click(function() {
         vuln_list: encodedString
     }
     console.log(data)
-    $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageb64'), data, function( data ) {
+    $.post( '/api/v1/vulnwhitelist/bulkupdate', data, function( data ) {
         Toast.fire({
             icon: 'success',
             title: 'Acknowledged'
