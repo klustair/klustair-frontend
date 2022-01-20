@@ -246,6 +246,67 @@ class ReportController extends Controller
 
     public function apiReportsSummary($report_uid, Request $request)
     {
+        // Update per image summary
+        $images = DB::table('k_images')
+            ->where('report_uid', $report_uid)
+            ->get();
+        
+        $severityStr = array(
+            'Critical',
+            'High',
+            'Medium',
+            'Low',
+            'Unknown', 
+        );
+
+        foreach ($images as $image) {
+
+            for ($i = 0; $i < 5; $i++) {
+                $severity = $i;
+                /*
+                $total = DB::table('k_vuln_trivy')
+                    ->where('report_uid', $report_uid)
+                    ->where('image_uid', $image->uid)
+                    ->where('severity', $severity)
+                    ->count();
+                $fixed = DB::table('k_vuln_trivy')
+                    ->where('report_uid', $report_uid)
+                    ->where('image_uid', $image->uid)
+                    ->where('severity', $severity)
+                    ->where('fixed', 1)
+                    ->count();
+                */
+                $vuln_ack_count = DB::table('k_vuln_trivy')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                ->leftJoin('k_vulnwhitelist', function ($join) {
+                    $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                         ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+                })
+                ->where('k_vuln_trivy.image_uid', $image->uid)
+                ->where('k_vuln_trivy.report_uid', $report_uid)
+                ->where('severity', $severity)
+                //->where('k_vulnwhitelist.uid', null) // to get only the vulns that are not whitelisted
+                ->whereNotNull('k_vulnwhitelist.uid')
+                ->distinct('k_vuln_trivy.uid')
+                ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+                //->toSql();
+                ->count();
+
+                Vulnsummary::where('report_uid', $report_uid)
+                    ->where('image_uid', $image->uid)
+                    ->where('severity', $severityStr[$severity])
+                    ->update(['acknowledged' => $vuln_ack_count]);
+            }
+        }
+
+        $acknowledged_sum = DB::table('k_vuln_trivy')
+            ->rightJoin('k_vulnwhitelist', function ($join) {
+                $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+            })
+            ->distinct('k_vulnwhitelist.uid')
+            ->where('report_uid', $report_uid)
+            ->count();
+
         $i = new ReportsSummaries;
         $i->uid                 = Str::uuid();
         $i->report_uid          = $report_uid; 
@@ -258,6 +319,7 @@ class ReportController extends Controller
         $i->vuln_low            = @$request['vuln_low'] ?: 0;
         $i->vuln_unknown        = @$request['vuln_unknown'] ?: 0;
         $i->vuln_fixed          = @$request['vuln_fixed'] ?: 0;
+        $i->vuln_acknowledged   = $acknowledged_sum;
         $i->pods                = @$request['pods'] ?: 0;
         $i->images              = @$request['images'] ?: 0;
         $i->save();

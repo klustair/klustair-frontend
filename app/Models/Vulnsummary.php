@@ -21,7 +21,8 @@ class Vulnsummary extends Model
         'image_uid',
         'fixed',
         'total',
-        'severity'
+        'severity',
+        'acknowledged',
     ];
 
     public function report()

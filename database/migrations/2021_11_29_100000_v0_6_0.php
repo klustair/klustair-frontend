@@ -13,12 +13,23 @@ class V060 extends Migration
      */
     public function up()
     {
-        /*
-        drop anchore table
-        */
+
+
+        // add vuln_acknowledged to k_reports_summaries
+        $create_sql[] = <<<SQL
+            ALTER TABLE public.k_vulnsummary ADD COLUMN IF NOT EXISTS acknowledged integer
+        SQL;
+
+        // add vuln_acknowledged to k_reports_summaries
+        $create_sql[] = <<<SQL
+            ALTER TABLE public.k_reports_summaries ADD COLUMN IF NOT EXISTS vuln_acknowledged integer
+        SQL;
+
+        //drop anchore table
         $create_sql[] = <<<SQL
             DROP TABLE IF EXISTS public.k_vuln_anchore;
         SQL;
+
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }
