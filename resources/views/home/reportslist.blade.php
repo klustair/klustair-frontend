@@ -14,11 +14,13 @@
                         <th width="150px">Date</th>
                         <th>Title</th>
                         <th width="120px">Namespaces</th>
-                        <th width="475px">Vulnerabilities</th>
+                        <th width="390px">Vulnerabilities</th>
+                        <th width="75px">No Ack</th>
                     </tr>
                     </thead>
                     <tbody>
                         @foreach( $reports as $report  )
+                        <!-- {{ $vuln_noack = $report->vuln_total - $report->vuln_acknowledged }} -->
                         <tr>
                             <td>
                             @auth
@@ -38,7 +40,13 @@
                                 <div style="width: 65px" class="float-left p-1 m-1 text-center bg-info rounded">{{ $report->vuln_medium}}</div>
                                 <div style="width: 65px" class="float-left p-1 m-1 text-center bg-secondary rounded">{{ $report->vuln_low}}</div>
                                 <div style="width: 65px" class="float-left p-1 m-1 text-center bg-light rounded">{{ $report->vuln_unknown}}</div>
-                                <div style="width: 65px" class="float-left p-1 m-1 text-center bg-success rounded">{{ $report->vuln_acknowledged}}</div>
+                            </td>
+                            <td>
+                                @if ($vuln_noack > 0)
+                                <div style="width: 65px" class="float-left p-1 m-1 text-center bg-danger rounded">{{ $vuln_noack }}</div>
+                                @else
+                                <div style="width: 65px" class="float-left p-1 m-1 text-center bg-success rounded">{{ $vuln_noack }}</div>
+                                @endif
                             </td>
                         </tr>
                         <p>
