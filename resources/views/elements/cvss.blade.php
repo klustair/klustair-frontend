@@ -1,52 +1,52 @@
-@isset ($vuln_cvss['V3Vector_metrics'])
+@isset ($vuln_cvss['v3']['metrics'])
 <h4>Exploitability Metrics</h4>
 <div class="cvss-vector">
     <span class="cvss-title">Attack Vector</span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['AV'] == 'N') bg-info @endif">Network</span>
-    <span class="cvss-item @if($vuln_cvss['V3Vector_metrics']['AV'] == 'A') bg-info @endif">Adjacent Network</span>
-    <span class="cvss-item @if($vuln_cvss['V3Vector_metrics']['AV'] == 'L') bg-info @endif">Local</span>
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['AV'] == 'P') bg-info @endif">Physical</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['AV'] == 'N') bg-info @endif">Network</span>
+    <span class="cvss-item @if($vuln_cvss['v3']['metrics']['AV'] == 'A') bg-info @endif">Adjacent Network</span>
+    <span class="cvss-item @if($vuln_cvss['v3']['metrics']['AV'] == 'L') bg-info @endif">Local</span>
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['AV'] == 'P') bg-info @endif">Physical</span>
 </div>
 <div class="cvss-vector">
     <span class="cvss-title">Attack Complexity</span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['AC'] == 'L') bg-danger @endif">Low</span>
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['AC'] == 'H') bg-warning @endif">High</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['AC'] == 'L') bg-danger @endif">Low</span>
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['AC'] == 'H') bg-warning @endif">High</span>
 </div>
 <div class="cvss-vector">
     <span class="cvss-title">Privileges Required</span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['PR'] == 'N') bg-danger @endif">None</span>
-    <span class="cvss-item @if($vuln_cvss['V3Vector_metrics']['PR'] == 'L') bg-warning @endif">Low</span>
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['PR'] == 'H') bg-info @endif">High</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['PR'] == 'N') bg-danger @endif">None</span>
+    <span class="cvss-item @if($vuln_cvss['v3']['metrics']['PR'] == 'L') bg-warning @endif">Low</span>
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['PR'] == 'H') bg-info @endif">High</span>
 </div>
 <div class="cvss-vector">
     <span class="cvss-title">User Interaction</span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['UI'] == 'N') bg-danger @endif">None</span>
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['UI'] == 'R') bg-warning @endif">Required</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['UI'] == 'N') bg-danger @endif">None</span>
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['UI'] == 'R') bg-warning @endif">Required</span>
 </div>
 <div class="cvss-vector last">
     <span class="cvss-title">Scope</span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['S'] == 'U') bg-info @endif">Unchanged</span>
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['S'] == 'C') bg-info @endif">Changed</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['S'] == 'U') bg-info @endif">Unchanged</span>
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['S'] == 'C') bg-info @endif">Changed</span>
 </div>
 
 <h4>Impact Metrics</h4>
 <div class="cvss-vector">
     <span class="cvss-title">Confidentiality Impact </span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['C'] == 'N') bg-info @endif">None</span>
-    <span class="cvss-item @if($vuln_cvss['V3Vector_metrics']['C'] == 'L') bg-warning @endif">Low</span>
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['C'] == 'H') bg-danger @endif">High</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['C'] == 'N') bg-info @endif">None</span>
+    <span class="cvss-item @if($vuln_cvss['v3']['metrics']['C'] == 'L') bg-warning @endif">Low</span>
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['C'] == 'H') bg-danger @endif">High</span>
 </div>
 <div class="cvss-vector">
     <span class="cvss-title">Integrity Impact</span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['I'] == 'N') bg-info @endif">None</span>
-    <span class="cvss-item  @if($vuln_cvss['V3Vector_metrics']['I'] == 'L') bg-warning @endif">Low</span>
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['I'] == 'H') bg-danger @endif">High</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['I'] == 'N') bg-info @endif">None</span>
+    <span class="cvss-item  @if($vuln_cvss['v3']['metrics']['I'] == 'L') bg-warning @endif">Low</span>
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['I'] == 'H') bg-danger @endif">High</span>
 </div>
 <div class="cvss-vector">
     <span class="cvss-title">Availability Impact</span>
-    <span class="cvss-item first @if($vuln_cvss['V3Vector_metrics']['A'] == 'N') bg-info @endif">None</span>
-    <span class="cvss-item @if($vuln_cvss['V3Vector_metrics']['A'] == 'L') bg-warning @endif">Low</span> 
-    <span class="cvss-item last @if($vuln_cvss['V3Vector_metrics']['A'] == 'H') bg-danger @endif">High</span>
+    <span class="cvss-item first @if($vuln_cvss['v3']['metrics']['A'] == 'N') bg-info @endif">None</span>
+    <span class="cvss-item @if($vuln_cvss['v3']['metrics']['A'] == 'L') bg-warning @endif">Low</span> 
+    <span class="cvss-item last @if($vuln_cvss['v3']['metrics']['A'] == 'H') bg-danger @endif">High</span>
 </div>
 @endisset
 

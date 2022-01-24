@@ -5,24 +5,26 @@
             <td><b>{{$vulnerabily['title']}}</b></td>
             <td><nobr><a href="/vulnerability/{{ $vulnerabily['vulnerability_id'] }}">{{$vulnerabily['vulnerability_id']}}</a><nobr></td>
             <td>{{$vulnerabily['pkg_name']}}</td>
+            <!-- disabled since trivy is not providing the data 
             <td>
-                @isset ($vulnerabily['cvss']['V3Score'])
+                @isset ($vulnerabily['cvss']['v3']['scores']['base'])
                 <div class="progress progress-xs">
-                    <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['V3Vector_base_score']*10}}%"></div>
+                    <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['v3']['scores']['base']*10}}%"></div>
                 </div>
                 <div class="progress progress-xs">
-                    <div class="progress-bar bg-fuchsia" style="width: {{ $vulnerabily['cvss']['V3Vector_modified_esc']*10}}%"></div>
+                    <div class="progress-bar bg-fuchsia" style="width: {{ $vulnerabily['cvss']['v3']['scores']['temporal']*10}}%"></div>
                 </div>
                 <div class="progress progress-xs">
-                    <div class="progress-bar bg-info" style="width: {{ $vulnerabily['cvss']['V3Vector_modified_isc']*10}}%"></div>
+                    <div class="progress-bar bg-info" style="width: {{ $vulnerabily['cvss']['v3']['scores']['environmental']*10}}%"></div>
                 </div>
                 @endisset
-                @if (@isset ($vulnerabily['cvss']['V2Score']) && !@isset ($vulnerabily['cvss']['V3Score']))
+                @if (@isset ($vulnerabily['cvss']['V2Score']) && !@isset ($vulnerabily['cvss']['v3']['scores']['base']))
                 <div class="progress progress-xs">
-                    <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['V2Vector_base_score']*10}}%"></div>
+                    <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['v2']['scores']['base']*10}}%"></div>
                 </div>
                 @endif
             </td>
+            -->
             <td><span class="badge {{$vulnseverity[$vulnerabily['severity']]}}">{{$vulnerabily['cvss_base_score']}}</span></td>
             <td>
                 @if ($vulnerabily['fixed_version'] != "")

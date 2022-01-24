@@ -20,6 +20,7 @@ class CreateImagesVulnsummary extends Migration
                 severity vulnerability_severities,
                 total integer,
                 fixed integer,
+                acknowledged integer,
                 report_uid character varying COLLATE pg_catalog."default",
                 image_uid character varying COLLATE pg_catalog."default",
                 CONSTRAINT k_images_vulnsummary_pkey PRIMARY KEY (uid),

@@ -13,7 +13,9 @@
             </td>
             <td>{{$vulnerabily['pkg_name']}}</td>
             <td>{{$vulnerabily['imagecount']}}</td>
+            <!-- Removed since it is not suppoerted by Trivy 
             <td>
+                <pre>{{print_r($vulnerabily)}}</pre>
                 @isset ($vulnerabily['cvss']['V3Score'])
                 <div class="progress progress-xs">
                     <div class="progress-bar bg-purple" style="width: {{ $vulnerabily['cvss']['V3Vector_base_score']*10}}%"></div>
@@ -31,6 +33,7 @@
                 </div>
                 @endif
             </td>
+            -->
             <td><span class="badge {{$vulnseverity[$vulnerabily['severity']]}}">{{$vulnerabily['cvss_base_score']}}</span></td>
             <td>
                 @if ($vulnerabily['fixed_version'] != "")

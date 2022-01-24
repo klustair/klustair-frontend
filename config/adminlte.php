@@ -3,17 +3,17 @@ use Illuminate\Support\Facades\Auth;
 
 $menu = [
         [
-            'text' => 'reports',
+            'text' => 'Reports',
             'url'  => '/',
             'icon' => 'fas fa-fw fa-book',
         ],
         [
-            'text' => 'vulnerabilities',
+            'text' => 'Vulnerabilities',
             'url'  => 'vulnerabilities',
             'icon' => 'fas fa-fw fa-bug',
         ],
         [
-            'text' => 'images',
+            'text' => 'Images',
             'url'  => 'images',
             'icon' => 'fas fa-fw fa-images',
         ],
@@ -27,7 +27,7 @@ $menu = [
 
 if (env('APP_DEBUG', false) == true) {
     $menu[] = [
-        'text'        => 'debug',
+        'text'        => 'Debug',
         'url'         => 'lists',
         'icon'        => 'far fa-fw fa-file',
     ];

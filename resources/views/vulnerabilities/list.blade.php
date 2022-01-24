@@ -14,11 +14,13 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">All</h3>
+                <!-- removed since it is not supperted by Trivy 
                 <div class="card-tools">
                     <span class="badge badge-pill bg-purple">base</span>
                     <span class="badge badge-pill bg-fuchsia">exploitability</span>
                     <span class="badge badge-pill badge-info">impact</span>
                 </div>
+                -->
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
@@ -30,7 +32,7 @@
                         <select class="form-control" id="ack">
                             <option></option>
                             <option value="true">Acknowledged</option>
-                            <option value="false">not Acknwoledged</option>
+                            <option value="false">not Acknowledged</option>
                         </select>
                     </div>
                 </div>
@@ -54,7 +56,7 @@
                     <th>Package</th>
                     <th>IMG</th>
                     <th>Score</th>
-                    <th style="width: 40px">CVSS</th>
+                    <!--<th style="width: 40px">CVSS</th> removed since it is not supported by Trivy  -->
                     <th style="width: 40px">Fixed</th>
                     <th style="width: 20px">@auth<input type="checkbox" id="checkAll">@endauth</th>
                 </tr>
@@ -64,7 +66,7 @@
             </table>
             @auth
             <div class="p-2" style="float:right;">
-                <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Add to Whitelist</button>
+                <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Acknowledge</button>
             </div>
             @endauth
             </div>
@@ -115,6 +117,7 @@ $(document).ready(function() {
                 orderable: false,
             },
             {   data: 'imagecount' },
+            /* disabled, since it is not supperted by Trivy
             {   data: 'cvss',
                 orderable: false,
                 render: function ( data, type, row ) {
@@ -135,6 +138,7 @@ $(document).ready(function() {
                     }
                 }
             },
+            */
             {   data: 'cvss_base_score',
                 render: function ( data, type, row ) {
                     return '<span class="badge '+ row.severity +'">'+ data +'</span>';
@@ -191,7 +195,7 @@ const Toast = Swal.mixin({
     timer: 3000
 });
 
-$('.swalDefaultSuccess').click(function() {
+$('#UpdateWhitelist').click(function() {
     vuln_uid_list = []
 
     $('.whitelistItem').each(function( index ) {
@@ -200,9 +204,7 @@ $('.swalDefaultSuccess').click(function() {
             'vuln' : $(this).attr('id'),
             'state' :  $(this).prop('checked')
         }
-        if ($(this).prop('checked') == true) {
-            vuln_uid_list.push(vuln)
-        }
+        vuln_uid_list.push(vuln)
     });
 
     // Encode and Stringify fields to avoid hitting the POST Max 
@@ -214,10 +216,10 @@ $('.swalDefaultSuccess').click(function() {
         vuln_list: encodedString
     }
     console.log(data)
-    $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageb64'), data, function( data ) {
+    $.post( '/api/v1/vulnwhitelist/bulkupdate', data, function( data ) {
         Toast.fire({
             icon: 'success',
-            title: 'Updated Whitelist'
+            title: 'Acknowledged'
         })
     })
 });

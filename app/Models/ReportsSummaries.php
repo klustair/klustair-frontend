@@ -27,6 +27,7 @@ class ReportsSummaries extends Model
         'vuln_low',
         'vuln_unknown',
         'vuln_fixed',
+        'vuln_acknowledged',
         'pods',
         'images'
     ];

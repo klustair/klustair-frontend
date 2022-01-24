@@ -122,15 +122,16 @@ class ImageController extends Controller
 
                 $vulnerability['cvss'] = json_decode($vulnerability['cvss'], true);
 
+                /*
                 if ($vulnerability['cvss'] != ''){
                     $vulnerability['cvss'] = current($vulnerability['cvss']);
-
                 }
+                */
 
-                if (isset($vulnerability['cvss']['V3Vector_base_score'])) {
-                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V3Vector_base_score'];
-                } elseif (isset($vulnerability['cvss']['V2Vector_base_score']) && !isset($vulnerability['cvss']['V3Vector_base_score']) ) {
-                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V2Vector_base_score'];
+                if ($vulnerability['cvss']['version'] >= 3) {
+                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v3']['scores']['base'];
+                } elseif ($vulnerability['cvss']['version'] == 2) {
+                    $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v2']['scores']['base'];
                 } else {
                     $vulnerability['cvss_base_score'] = '?';
                 }

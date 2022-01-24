@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+<!--<pre>{{ print_r($vulnerability) }}</pre>-->
 <div class="row">
     <div class="col-8">
         <div class="card">
@@ -111,7 +112,7 @@
     <div class="col-4">
     <!-- not Working now
         <div class="pb-3">
-            <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess">Add to Whitelist</button>
+            <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess">Acknowledge</button>
         </div>
     -->
         <!-- small card -->
@@ -127,12 +128,13 @@
             <a href="#" class="small-box-footer">{{ Str::upper($vulnseverity[$vulnerability['severity']]['name'])}} </a>
         </div>
 
-
+        <!-- disabled since it is not provided by trivy
         <div class="card">
             <div class="card-body table-responsive p-0">
                 <div id="chart"></div>
             </div>
         </div>
+        -->
 
         <div class="card">
             <div class="card-header">

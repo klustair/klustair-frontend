@@ -107,7 +107,7 @@
             <div class="card-body table-responsive p-0">
             <pre style="background-color: #e1e1e1">
 @foreach (json_decode($image['history']) as $history)
-@isset($history->commcreated_byent)
+@isset($history->created_by)
 {{ $history->created_by }}
 @endisset
 @endforeach
@@ -124,11 +124,13 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Vulnerabilties</h3>
+                <!-- disabled since it is not provided by trivy
                 <div class="card-tools">
                     <span class="badge badge-pill bg-purple">base</span>
-                    <span class="badge badge-pill bg-fuchsia">exploitability</span>
-                    <span class="badge badge-pill badge-info">impact</span>
+                    <span class="badge badge-pill bg-fuchsia">temporal</span>
+                    <span class="badge badge-pill badge-info">environmental</span>
                 </div>
+                -->
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
@@ -140,7 +142,7 @@
                     <th>CVE</th>
                     <th>Package</th>
                     <th>Score</th>
-                    <th style="width: 40px">CVSS</th>
+                    <!-- <th style="width: 40px">CVSS</th>  disabled since it is not provided by trivy -->
                     <th style="width: 40px">Fixed</th>
                     @auth<th style="width: 20px"><input type="checkbox" id="checkAll"></th>@endauth
                 </tr>
@@ -157,7 +159,7 @@
             </table>
             @auth
             <div class="p-2" style="float:right;">
-                <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Add to Whitelist</button>
+                <button type="button" id="UpdateWhitelist" class="btn btn-block bg-gradient-success swalDefaultSuccess" style="width:200px;">Acknowledge</button>
             </div>
             @endauth
 
@@ -339,7 +341,7 @@ $('.swalDefaultSuccess').click(function() {
     });
 
     // Encode and Stringify fields to avoid hitting the POST Max 
-    // field setting on images woth more than 500 vulnerabilities
+    // field setting on images with more than 500 vulnerabilities
     var encodedString = btoa(JSON.stringify(vuln_uid_list));
 
     var data = {
@@ -350,7 +352,7 @@ $('.swalDefaultSuccess').click(function() {
     $.post( '/api/v1/vulnwhitelist/update/'+$('#image').data('imageb64'), data, function( data ) {
         Toast.fire({
             icon: 'success',
-            title: 'Updated Whitelist'
+            title: 'Acknowledged'
         })
     })
 });

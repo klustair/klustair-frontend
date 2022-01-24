@@ -27,6 +27,7 @@ class CreateReportsSummaries extends Migration
                 vuln_low integer,
                 vuln_unknown integer,
                 vuln_fixed integer,
+                vuln_acknowledged integer,
                 pods integer,
                 images integer,
                 CONSTRAINT k_reports_summaries_pkey PRIMARY KEY (uid),

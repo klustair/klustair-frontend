@@ -22,6 +22,7 @@ if (config('klustair.auth.enabled')) {
 # Optional auth routes 
 Route::group(['prefix' => 'v1', 'middleware' => $middlewares], function(){
     Route::post('/vulnwhitelist/update/{wl_image_b64}', 'VulnerabilitiesController@apiVulnwhitelist');
+    Route::post('/vulnwhitelist/bulkupdate', 'VulnerabilitiesController@apiVulnwhitelistBulk');
 
     Route::get('/vulnerabilities', 'VulnerabilitiesController@apiListVulnerabilities');
 });

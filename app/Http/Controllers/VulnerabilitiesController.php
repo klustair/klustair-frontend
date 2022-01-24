@@ -97,16 +97,16 @@ class VulnerabilitiesController extends Controller
             $vulnerability =  json_decode(json_encode($vu), true);
 
             $vulnerability['cvss'] = json_decode($vulnerability['cvss'], true);
-
+            /*
             if ($vulnerability['cvss'] != ''){
                 $vulnerability['cvss'] = current($vulnerability['cvss']);
-
             }
+            */
 
-            if (isset($vulnerability['cvss']['V3Vector_base_score'])) {
-                $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V3Vector_base_score'];
-            } elseif (isset($vulnerability['cvss']['V2Vector_base_score']) && !isset($vulnerability['cvss']['V3Vector_base_score']) ) {
-                $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V2Vector_base_score'];
+            if ($vulnerability['cvss']['version'] >= 3) {
+                $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v3']['scores']['base'];
+            } elseif ($vulnerability['cvss']['version'] == 2) {
+                $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v2']['scores']['base'];
             } else {
                 $vulnerability['cvss_base_score'] = '?';
             }
@@ -136,6 +136,30 @@ class VulnerabilitiesController extends Controller
         );
         
         return $return;
+    }
+
+    public function apiVulnwhitelistBulk (Request $request) 
+    {
+        $postdata = $request->post();
+        $insertdata = array();
+        $deletedata = array();
+
+        $now = date(DATE_ATOM);
+        if (isset($postdata['vuln_list'])) {
+            $vulnlist = json_decode(base64_decode($postdata['vuln_list']), true);
+            foreach ($vulnlist as $vuln) {
+                
+                if (isset($vuln['state']) && $vuln['state']=='true') {
+                    $insertdata[] = ['uid'=>uniqid('', true), 'wl_vuln'=> $vuln['vuln'], 'whitelisttime'=>$now ];
+                } elseif (isset($vuln['state']) && $vuln['state']=='false') {
+                    $deletedata[] = ['wl_vuln'=> $vuln['vuln']];
+                }
+            }
+            DB::table('k_vulnwhitelist')->whereIn('wl_vuln', $deletedata)->delete();
+            DB::table('k_vulnwhitelist')->insert($insertdata);
+        }
+        return ['success'=>'true', 'vuln_list'=>$vulnlist];
+
     }
 
     /**
@@ -246,14 +270,16 @@ class VulnerabilitiesController extends Controller
 
         $vulnerability['cvss'] = json_decode($vulnerability['cvss'], true);
 
+        /*
         if ($vulnerability['cvss'] != ''){
             $vulnerability['cvss'] = current($vulnerability['cvss']);
         }
+        */
 
-        if (isset($vulnerability['cvss']['V3Vector_base_score'])) {
-            $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V3Vector_base_score'];
-        } elseif (isset($vulnerability['cvss']['V2Vector_base_score']) && !isset($vulnerability['cvss']['V3Vector_base_score']) ) {
-            $vulnerability['cvss_base_score'] = $vulnerability['cvss']['V2Vector_base_score'];
+        if ($vulnerability['cvss']['version'] >= 3) {
+            $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v3']['scores']['base'];
+        } elseif ($vulnerability['cvss']['version'] == 2) {
+            $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v2']['scores']['base'];
         } else {
             $vulnerability['cvss_base_score'] = '?';
         }
