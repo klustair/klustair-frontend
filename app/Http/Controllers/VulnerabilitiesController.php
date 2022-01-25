@@ -103,9 +103,9 @@ class VulnerabilitiesController extends Controller
             }
             */
 
-            if ($vulnerability['cvss']['version'] >= 3) {
+            if (isset($vulnerability['cvss']['version']) && $vulnerability['cvss']['version'] >= 3) {
                 $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v3']['scores']['base'];
-            } elseif ($vulnerability['cvss']['version'] == 2) {
+            } elseif (isset($vulnerability['cvss']['version']) && $vulnerability['cvss']['version'] == 2) {
                 $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v2']['scores']['base'];
             } else {
                 $vulnerability['cvss_base_score'] = '?';
@@ -276,9 +276,9 @@ class VulnerabilitiesController extends Controller
         }
         */
 
-        if ($vulnerability['cvss']['version'] >= 3) {
+        if (isset($vulnerability['cvss']['version']) && $vulnerability['cvss']['version'] >= 3) {
             $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v3']['scores']['base'];
-        } elseif ($vulnerability['cvss']['version'] == 2) {
+        } elseif (isset($vulnerability['cvss']['version']) && $vulnerability['cvss']['version'] == 2) {
             $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v2']['scores']['base'];
         } else {
             $vulnerability['cvss_base_score'] = '?';
