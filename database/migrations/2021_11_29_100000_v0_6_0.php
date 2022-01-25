@@ -30,6 +30,14 @@ class V060 extends Migration
             DROP TABLE IF EXISTS public.k_vuln_anchore;
         SQL;
 
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_vuln_trivy_severity_vulnerability_id
+                ON public.k_vuln_trivy USING btree
+                (severity ASC NULLS LAST,
+                vulnerability_id ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }
@@ -86,6 +94,10 @@ class V060 extends Migration
                 ON public.k_vuln_anchore USING btree
                 (report_uid COLLATE pg_catalog."default" ASC NULLS LAST)
                 TABLESPACE pg_default;
+        SQL;
+
+        $create_sql[] = <<<SQL
+            DROP INDEX IF  EXISTS k_vuln_trivy_severity_vulnerability_id;
         SQL;
         
         foreach ($create_sql as $sql ) {

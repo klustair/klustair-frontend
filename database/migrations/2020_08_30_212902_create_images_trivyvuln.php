@@ -77,6 +77,14 @@ class CreateImagesTrivyvuln extends Migration
                 (severity ASC NULLS LAST)
                 TABLESPACE pg_default;
         SQL;
+
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_vuln_trivy_severity_vulnerability_id
+                ON public.k_vuln_trivy USING btree
+                (severity ASC NULLS LAST,
+                vulnerability_id ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
         
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
