@@ -13,6 +13,10 @@ COPY docker/nginx/config/etc/nginx/templates /etc/nginx/templates
 
 COPY docker/nginx/config/etc/ssl /etc/ssl
 
+RUN chown 82: /etc/nginx/conf.d /var/www
+
+USER 82
+
 WORKDIR /var/www/
 
 RUN npm install
