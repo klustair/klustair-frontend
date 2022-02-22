@@ -11,6 +11,7 @@ RUN docker-php-ext-enable pgsql pdo_pgsql xml zip ldap
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN chown -R www-data:www-data /var/www
 
 USER www-data
 COPY --chown=www-data:www-data . /var/www/
