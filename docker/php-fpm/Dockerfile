@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 RUN apk --no-cache add postgresql-dev libzip-dev libxml2-dev 
 
@@ -12,7 +12,8 @@ RUN docker-php-ext-enable pgsql pdo_pgsql xml zip ldap
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY . /var/www/
+USER www-data
+COPY --chown=www-data:www-data . /var/www/
 
 WORKDIR /var/www/
 

@@ -1,4 +1,4 @@
-FROM php:8.0-apache
+FROM php:8.1-apache
 
 RUN apt update && apt install -y libcurl4-openssl-dev pkg-config libssl-dev zip unzip
 
@@ -36,12 +36,11 @@ RUN chown -R www-data: /var/www/storage
 
 COPY docker/apache/config/etc/apache2/sites-available/* /etc/apache2/sites-available/
 COPY docker/apache/startup.sh /startup.sh
+RUN chmod +x /startup.sh
 
 USER www-data
 
 #RUN composer install
 #RUN npm install
-
-RUN chmod +x /startup.sh
 
 CMD ["/startup.sh"]
