@@ -32,7 +32,7 @@ WORKDIR /var/www/
 COPY . /var/www/
 
 RUN rm -rf /var/www/storage/sessions/* /var/www/storage/views/* /var/www/storage/logs/* 
-RUN chown -R www-data: /var/www/storage
+RUN chown -R www-data:www-data /var/www
 
 COPY docker/apache/config/etc/apache2/sites-available/* /etc/apache2/sites-available/
 COPY docker/apache/startup.sh /startup.sh
