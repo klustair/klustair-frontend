@@ -37,8 +37,6 @@ RUN chown -R www-data: /var/www/storage
 COPY docker/apache/config/etc/apache2/sites-available/* /etc/apache2/sites-available/
 COPY docker/apache/startup.sh /startup.sh
 
-USER www-data
-
 #RUN composer install
 #RUN npm install
 
