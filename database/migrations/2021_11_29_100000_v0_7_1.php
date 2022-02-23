@@ -25,6 +25,15 @@ class V071 extends Migration
             ALTER TABLE public.k_reports_summaries ADD COLUMN IF NOT EXISTS vuln_not_acknowledged integer
         SQL;
 
+        $create_sql[] = <<<SQL
+            CREATE INDEX IF NOT EXISTS k_vuln_trivy_severity_fixed_vulnerability_id
+                ON public.k_vuln_trivy USING btree
+                (severity ASC NULLS LAST,
+                fixed_version COLLATE pg_catalog."default" ASC NULLS LAST,
+                vulnerability_id COLLATE pg_catalog."default" ASC NULLS LAST)
+                TABLESPACE pg_default;
+        SQL;
+
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }
@@ -49,6 +58,10 @@ class V071 extends Migration
             DROP INDEX IF EXISTS k_vuln_trivy_severity_vulnerability_id;
         SQL;
         
+        $create_sql[] = <<<SQL
+            DROP INDEX IF EXISTS k_vuln_trivy_severity_fixed_vulnerability_id;
+        SQL;
+
         foreach ($create_sql as $sql ) {
             DB::statement($sql);
         }
