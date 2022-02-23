@@ -300,28 +300,45 @@ class ReportController extends Controller
         }
 
         $acknowledged_sum = DB::table('k_vuln_trivy')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
             ->rightJoin('k_vulnwhitelist', function ($join) {
-                $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+                $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                     ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
+            ->where('k_vuln_trivy.report_uid', $report_uid)
             ->distinct('k_vulnwhitelist.uid')
-            ->where('report_uid', $report_uid)
+            ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+            ->count();
+        
+        $not_acknowledged_sum = DB::table('k_vuln_trivy')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+            ->leftJoin('k_vulnwhitelist', function ($join) {
+                $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
+                     ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
+            })
+            ->where('k_vuln_trivy.report_uid', $report_uid)
+            ->where('k_vulnwhitelist.uid', null)
+            ->distinct('k_vulnwhitelist.uid')
+            ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+            //->toSql();
             ->count();
 
         $i = new ReportsSummaries;
-        $i->uid                 = Str::uuid();
-        $i->report_uid          = $report_uid; 
-        $i->namespaces_checked  = @$request['namespaces_checked'] ?: 0;
-        $i->namespaces_total    = @$request['namespaces_total'] ?: 0;
-        $i->vuln_total          = @$request['vuln_total'] ?: 0;
-        $i->vuln_critical       = @$request['vuln_critical'] ?: 0;
-        $i->vuln_medium         = @$request['vuln_medium'] ?: 0;
-        $i->vuln_high           = @$request['vuln_high'] ?: 0;
-        $i->vuln_low            = @$request['vuln_low'] ?: 0;
-        $i->vuln_unknown        = @$request['vuln_unknown'] ?: 0;
-        $i->vuln_fixed          = @$request['vuln_fixed'] ?: 0;
-        $i->vuln_acknowledged   = $acknowledged_sum;
-        $i->pods                = @$request['pods'] ?: 0;
-        $i->images              = @$request['images'] ?: 0;
+        $i->uid                   = Str::uuid();
+        $i->report_uid            = $report_uid; 
+        $i->namespaces_checked    = @$request['namespaces_checked'] ?: 0;
+        $i->namespaces_total      = @$request['namespaces_total'] ?: 0;
+        $i->vuln_total            = @$request['vuln_total'] ?: 0;
+        $i->vuln_critical         = @$request['vuln_critical'] ?: 0;
+        $i->vuln_medium           = @$request['vuln_medium'] ?: 0;
+        $i->vuln_high             = @$request['vuln_high'] ?: 0;
+        $i->vuln_low              = @$request['vuln_low'] ?: 0;
+        $i->vuln_unknown          = @$request['vuln_unknown'] ?: 0;
+        $i->vuln_fixed            = @$request['vuln_fixed'] ?: 0;
+        $i->vuln_acknowledged     = $acknowledged_sum;
+        $i->vuln_not_acknowledged = $not_acknowledged_sum;
+        $i->pods                  = @$request['pods'] ?: 0;
+        $i->images                = @$request['images'] ?: 0;
         $i->save();
         Log::debug('ReportController::apiReportsSummary: ' . $request);
         return $request;
@@ -472,6 +489,7 @@ class ReportController extends Controller
                         $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = "unknown";
                     }
 
+                    // Count the vulnerabilities without ack per image
                     $vuln_ack_count = DB::table('k_vuln_trivy')
                         ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
                         ->leftJoin('k_vulnwhitelist', function ($join) {
