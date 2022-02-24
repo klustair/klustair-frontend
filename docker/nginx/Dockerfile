@@ -21,4 +21,4 @@ WORKDIR /var/www/
 RUN npm install
 
 #CMD ["nginx", "-g", "daemon off;"]
-EXPOSE 80 443
+EXPOSE 8080 8443

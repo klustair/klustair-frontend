@@ -118,12 +118,12 @@ services:
     environment:
       - PHP_FPM_HOST=klustair-php-fpm
     ports:
-      - 8081:80
-      - 8444:443
+      - 8081:8080
+      - 8444:8443
     working_dir: /var/www
     expose:
-      - 8080
-      - 8443
+      - 8081
+      - 8444
     volumes:
       - ../:/var/www
       - ./nginx/config/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
