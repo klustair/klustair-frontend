@@ -42,10 +42,10 @@
                                 <div style="width: 65px" class="float-left p-1 m-1 text-center bg-light rounded">{{ $report->vuln_unknown}}</div>
                             </td>
                             <td>
-                                @if ($vuln_noack > 0)
-                                <div style="width: 65px" class="float-left p-1 m-1 text-center bg-danger rounded">{{ $vuln_noack }}</div>
+                                @if ($report->vuln_not_acknowledged > 0)
+                                <div style="width: 65px" class="float-left p-1 m-1 text-center bg-danger rounded">{{ $report->vuln_not_acknowledged }}</div>
                                 @else
-                                <div style="width: 65px" class="float-left p-1 m-1 text-center bg-success rounded">{{ $vuln_noack }}</div>
+                                <div style="width: 65px" class="float-left p-1 m-1 text-center bg-success rounded">{{ $report->vuln_not_acknowledged }}</div>
                                 @endif
                             </td>
                         </tr>

@@ -47,7 +47,7 @@ class HomeController extends Controller
             ->distinct('vulnerability_id')
             ->count();
     
-
+        echo("<pre>" . print_r($data) . "</pre>");
         return view('home', $data);
     }
 }

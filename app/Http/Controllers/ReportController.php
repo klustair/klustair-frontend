@@ -306,8 +306,8 @@ class ReportController extends Controller
                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
             ->where('k_vuln_trivy.report_uid', $report_uid)
-            ->distinct('k_vulnwhitelist.uid')
-            ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+            //->distinct('k_vulnwhitelist.uid')
+            ->select('k_vuln_trivy.uid as vuln_trivy_uid')
             ->count();
         
         $not_acknowledged_sum = DB::table('k_vuln_trivy')
@@ -318,8 +318,8 @@ class ReportController extends Controller
             })
             ->where('k_vuln_trivy.report_uid', $report_uid)
             ->where('k_vulnwhitelist.uid', null)
-            ->distinct('k_vulnwhitelist.uid')
-            ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+            //->distinct('k_vulnwhitelist.uid')
+            ->select('k_vuln_trivy.uid as vuln_trivy_uid')
             //->toSql();
             ->count();
 
