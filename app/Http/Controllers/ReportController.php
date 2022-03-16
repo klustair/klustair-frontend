@@ -477,18 +477,6 @@ class ReportController extends Controller
                         ->where('report_uid', $report_uid)
                         ->get();
 
-                    $os = DB::table('k_target_trivy')
-                        ->where('image_uid', $i->uid)
-                        ->where('report_uid', $report_uid)
-                        ->select('k_target_trivy.target_type as distro')
-                        ->first();
-
-                    if ($os) {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = $os->distro;
-                    } else {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = "unknown";
-                    }
-
                     // Count the vulnerabilities without ack per image
                     $vuln_ack_count = DB::table('k_vuln_trivy')
                         ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
