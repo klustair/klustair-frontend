@@ -26,5 +26,7 @@ Homestead.json
 docker/nginx/config/etc/nginx/conf.d/fastcgi.conf
 
 .composer/
+.config/
+.npm/
 
 notest.txt
