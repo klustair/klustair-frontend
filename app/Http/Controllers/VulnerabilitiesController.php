@@ -37,7 +37,7 @@ class VulnerabilitiesController extends Controller
 
         $search = "%".$request->search['value']."%";
 
-        $vuln_trivy_count = DB::table('k_vuln_trivy')
+        $vuln_trivy_count = DB::table('k_vuln_details_view')
             ->leftJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             });
@@ -51,25 +51,25 @@ class VulnerabilitiesController extends Controller
         }
 
         if ($request->fix && $request->fix == 'true') {
-            $vuln_trivy_count = $vuln_trivy_count->where('k_vuln_trivy.fixed_version', '!=', '');
+            $vuln_trivy_count = $vuln_trivy_count->where('k_vuln_details_view.fixed_version', '!=', '');
         } elseif ($request->fix && $request->fix == 'false') {
-            $vuln_trivy_count = $vuln_trivy_count->where('k_vuln_trivy.fixed_version', '=', '');
+            $vuln_trivy_count = $vuln_trivy_count->where('k_vuln_details_view.fixed_version', '=', '');
         }
 
         $vuln_trivy_count = $vuln_trivy_count->count(DB::raw('DISTINCT vulnerability_id'));
 
-        $vuln_trivy_list = DB::table('k_vuln_trivy')
+        $vuln_trivy_list = DB::table('k_vuln_details_view')
             ->leftJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
             ->distinct('vulnerability_id', 'severity')
-            ->select('k_vuln_trivy.vulnerability_id', 
-            'k_vuln_trivy.title',
-            'k_vuln_trivy.pkg_name',
-            'k_vuln_trivy.cvss',
-            'k_vuln_trivy.severity',
-            'k_vuln_trivy.uid',
-            'k_vuln_trivy.fixed_version',
+            ->select('k_vuln_details_view.vulnerability_id', 
+            'k_vuln_details_view.title',
+            'k_vuln_details_view.pkg_name',
+            'k_vuln_details_view.cvss',
+            'k_vuln_details_view.severity',
+            'k_vuln_details_view.uid',
+            'k_vuln_details_view.fixed_version',
             'k_vulnwhitelist.uid as images_vuln_whitelist_uid');
         
         if ($request->ack && $request->ack == 'true') {
@@ -79,9 +79,9 @@ class VulnerabilitiesController extends Controller
         }
 
         if ($request->fix && $request->fix == 'true') {
-            $vuln_trivy_list = $vuln_trivy_list->where('k_vuln_trivy.fixed_version', '!=', '');
+            $vuln_trivy_list = $vuln_trivy_list->where('k_vuln_details_view.fixed_version', '!=', '');
         } elseif ($request->fix && $request->fix == 'false') {
-            $vuln_trivy_list = $vuln_trivy_list->where('k_vuln_trivy.fixed_version', '=', '');
+            $vuln_trivy_list = $vuln_trivy_list->where('k_vuln_details_view.fixed_version', '=', '');
         }
         
             //->where('report_uid', '=', $report_uid)
@@ -111,13 +111,13 @@ class VulnerabilitiesController extends Controller
                 $vulnerability['cvss_base_score'] = '?';
             }
 
-            $images_count =  DB::table('k_vuln_trivy')
-                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+            $images_count =  DB::table('k_vuln_details_view')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
                 ->leftJoin('k_containers', 'k_containers.image', '=', 'k_images.fulltag')
                 ->leftJoin('k_namespaces', 'k_namespaces.uid', '=', 'k_containers.namespace_uid')
                 ->distinct('k_images.fulltag',)
                 ->select('k_images.fulltag', 'k_images.uid', 'k_images.report_uid', 'k_namespaces.name')
-                ->where('k_vuln_trivy.vulnerability_id', $vu->vulnerability_id)
+                ->where('k_vuln_details_view.vulnerability_id', $vu->vulnerability_id)
                 ->count();
 
             $vulnerability['imagecount'] = $images_count;
@@ -256,12 +256,12 @@ class VulnerabilitiesController extends Controller
         $data['error'] = $error;
 
 
-        $vulnerability = DB::table('k_vuln_trivy')
+        $vulnerability = DB::table('k_vuln_details_view')
             ->leftJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
-            ->select('k_vuln_trivy.*', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
-            ->where('k_vuln_trivy.vulnerability_id', $vulnerability_id)
+            ->select('k_vuln_details_view.*', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+            ->where('k_vuln_details_view.vulnerability_id', $vulnerability_id)
             ->first();
 
         $vulnerability = json_decode(json_encode($vulnerability), true);;
@@ -304,20 +304,20 @@ class VulnerabilitiesController extends Controller
 
         $data['vulnerability'] = json_decode(json_encode($vulnerability), true);
         
-        $packages_list =  DB::table('k_vuln_trivy')
-            ->distinct('k_vuln_trivy.pkg_name', 'k_vuln_trivy.installed_version', 'k_vuln_trivy.fixed_version',)
-            ->select('k_vuln_trivy.pkg_name', 'k_vuln_trivy.installed_version', 'k_vuln_trivy.fixed_version')
-            ->where('k_vuln_trivy.vulnerability_id', $vulnerability_id)
+        $packages_list =  DB::table('k_vuln_details_view')
+            ->distinct('k_vuln_details_view.pkg_name', 'k_vuln_details_view.installed_version', 'k_vuln_details_view.fixed_version',)
+            ->select('k_vuln_details_view.pkg_name', 'k_vuln_details_view.installed_version', 'k_vuln_details_view.fixed_version')
+            ->where('k_vuln_details_view.vulnerability_id', $vulnerability_id)
             ->get();
         $data['packages'] = json_decode(json_encode($packages_list), true);
         
-        $images_list =  DB::table('k_vuln_trivy')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+        $images_list =  DB::table('k_vuln_details_view')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
             ->leftJoin('k_containers', 'k_containers.image', '=', 'k_images.fulltag')
             ->leftJoin('k_namespaces', 'k_namespaces.uid', '=', 'k_containers.namespace_uid')
             ->distinct('k_images.fulltag',)
             ->select('k_images.fulltag', 'k_images.uid', 'k_images.report_uid', 'k_namespaces.name')
-            ->where('k_vuln_trivy.vulnerability_id', $vulnerability_id)
+            ->where('k_vuln_details_view.vulnerability_id', $vulnerability_id)
             ->get();
 
         $data['images'] = json_decode(json_encode($images_list), true);

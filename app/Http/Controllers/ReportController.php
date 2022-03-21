@@ -14,7 +14,8 @@ use App\Models\Pod;
 use App\Models\Container;
 use App\Models\Image;
 use App\Models\TargetTrivy;
-use App\Models\VulnTrivy;
+use App\Models\Vuln;
+use App\Models\VulnDetails;
 use App\Models\Vulnsummary;
 use App\Models\ContainerHasImage;
 use App\Models\ReportsSummaries;
@@ -182,27 +183,48 @@ class ReportController extends Controller
             Log::debug('ReportController::apiCreateVuln: ' . $i->uid);
             if (isset($target['Vulnerabilities'])) {
                 foreach ($target['Vulnerabilities'] as $vuln) {
+                    //Log::debug('ReportController::apiCreateVuln::VulnerabilityID : ' . $vuln['VulnerabilityID']);
 
-                    //print_r(@$vuln['SeverityInt'] ?: 0);
-                    $v = new VulnTrivy;
-                    $v->uid                 = $vuln['uid']; 
-                    $v->report_uid          = $report_uid; 
-                    $v->image_uid           = $image_uid; 
-                    $v->target_uid          = $target['uid']; 
-                    $v->vulnerability_id    = @$vuln['VulnerabilityID'] ?: ''; 
-                    $v->pkg_name            = $vuln['PkgName']; 
-                    $v->title               = @$vuln['Title'] ?: ''; 
-                    $v->descr               = @$vuln['Description'] ?: ''; 
-                    $v->installed_version   = @$vuln['InstalledVersion'] ?: ''; 
-                    $v->fixed_version       = @$vuln['FixedVersion'] ?: ''; 
-                    $v->severity_source     = @$vuln['SeveritySource'] ?: ''; 
-                    $v->severity            = @$vuln['SeverityInt'] ?: 0; 
-                    $v->last_modified_date  = @$vuln['LastModifiedDate'] ?: ''; 
-                    $v->published_date      = @$vuln['PublishedDate'] ?: ''; 
-                    $v->links               = json_encode(@$vuln['References'] ?: ''); 
-                    $v->cvss                = json_encode(@$vuln['CVSS'] ?: ''); 
-                    $v->cwe_ids             = json_encode(@$vuln['CweIDs'] ?: ''); 
+                    if (
+                        !isset($vuln['VulnerabilityID']) || $vuln['VulnerabilityID'] == '' ||
+                        !isset($vuln['PkgName']) || $vuln['PkgName'] == '' ||
+                        !isset($vuln['InstalledVersion']) || $vuln['InstalledVersion'] == '') {
+                        // skip if vulnerability has no CVE yet
+                        continue;
+                    }
+                    $v = new Vuln;
+                    $v->uid                 = $vuln['uid'];
+                    $v->report_uid          = $report_uid;
+                    $v->image_uid           = $image_uid;
+                    $v->target_uid          = $target['uid'];
+                    $v->vulnerability_id    = $vuln['VulnerabilityID'];
+                    $v->pkg_name            = $vuln['PkgName'];
+                    $v->installed_version   = $vuln['InstalledVersion']; 
                     $v->save();
+
+
+                    $vulndetails = VulnDetails::updateOrCreate(
+                        [
+                            'vulnerability_id'      => $vuln['VulnerabilityID'], 
+                            'pkg_name'              => $vuln['PkgName'],
+                            'installed_version'     => $vuln['InstalledVersion'],
+                        ],
+                        [
+                            'vulnerability_id'      => $vuln['VulnerabilityID'], 
+                            'pkg_name'              => $vuln['PkgName'],
+                            'installed_version'     => $vuln['InstalledVersion'],
+                            'title'                 => @$vuln['Title'] ?: '', 
+                            'descr'                 => @$vuln['Description'] ?: '', 
+                            'fixed_version'         => @$vuln['FixedVersion'] ?: '', 
+                            'severity_source'       => @$vuln['SeveritySource'] ?: '', 
+                            'severity'              => @$vuln['SeverityInt'] ?: 0,  
+                            'last_modified_date'    => @$vuln['LastModifiedDate'] ?: '',
+                            'published_date'        => @$vuln['PublishedDate'] ?: '',
+                            'links'                 => json_encode(@$vuln['References'] ?: ''), 
+                            'cvss'                  => json_encode(@$vuln['CVSS'] ?: ''),
+                            'cwe_ids'               => json_encode(@$vuln['CweIDs'] ?: '')
+                        ]
+                    );
                 }
                 //Log::debug('ReportController::apiCreateVuln::vulnerabilities : ' . count($target['Vulnerabilities']));
 
@@ -263,31 +285,19 @@ class ReportController extends Controller
 
             for ($i = 0; $i < 5; $i++) {
                 $severity = $i;
-                /*
-                $total = DB::table('k_vuln_trivy')
-                    ->where('report_uid', $report_uid)
-                    ->where('image_uid', $image->uid)
-                    ->where('severity', $severity)
-                    ->count();
-                $fixed = DB::table('k_vuln_trivy')
-                    ->where('report_uid', $report_uid)
-                    ->where('image_uid', $image->uid)
-                    ->where('severity', $severity)
-                    ->where('fixed', 1)
-                    ->count();
-                */
-                $vuln_ack_count = DB::table('k_vuln_trivy')
-                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                
+                $vuln_ack_count = DB::table('k_vuln_details_view')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
                 ->leftJoin('k_vulnwhitelist', function ($join) {
                     $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
                          ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
                 })
-                ->where('k_vuln_trivy.image_uid', $image->uid)
-                ->where('k_vuln_trivy.report_uid', $report_uid)
+                ->where('k_vuln_details_view.image_uid', $image->uid)
+                ->where('k_vuln_details_view.report_uid', $report_uid)
                 ->where('severity', $severity)
                 //->where('k_vulnwhitelist.uid', null) // to get only the vulns that are not whitelisted
                 ->whereNotNull('k_vulnwhitelist.uid')
-                ->distinct('k_vuln_trivy.uid')
+                ->distinct('k_vuln_details_view.uid')
                 ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
                 //->toSql();
                 ->count();
@@ -299,27 +309,27 @@ class ReportController extends Controller
             }
         }
 
-        $acknowledged_sum = DB::table('k_vuln_trivy')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+        $acknowledged_sum = DB::table('k_vuln_details_view')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
             ->rightJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
-            ->where('k_vuln_trivy.report_uid', $report_uid)
+            ->where('k_vuln_details_view.report_uid', $report_uid)
             //->distinct('k_vulnwhitelist.uid')
-            ->select('k_vuln_trivy.uid as vuln_trivy_uid')
+            ->select('k_vuln_details_view.uid as vuln_trivy_uid')
             ->count();
         
-        $not_acknowledged_sum = DB::table('k_vuln_trivy')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+        $not_acknowledged_sum = DB::table('k_vuln_details_view')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
             ->leftJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
-            ->where('k_vuln_trivy.report_uid', $report_uid)
+            ->where('k_vuln_details_view.report_uid', $report_uid)
             ->where('k_vulnwhitelist.uid', null)
             //->distinct('k_vulnwhitelist.uid')
-            ->select('k_vuln_trivy.uid as vuln_trivy_uid')
+            ->select('k_vuln_details_view.uid as vuln_trivy_uid')
             //->toSql();
             ->count();
 
@@ -381,8 +391,8 @@ class ReportController extends Controller
         if ($report_uid == null) {
             // select the latest report
             $report = DB::table('k_reports')
-                ->select('uid', 'id')
-                ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime, title")
+                ->select('uid', 'id', 'title')
+                ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime")
                 ->orderBy('id', 'DESC')
                 ->first();
                 
@@ -394,8 +404,8 @@ class ReportController extends Controller
         } else {
             // select a specific report
             $report = DB::table('k_reports')
-            ->select('uid')
-            ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime, title")
+            ->select('uid', 'title')
+            ->selectRaw("to_char(k_reports.checktime, 'DD.MM.YYYY HH24:MI') as checktime")
                 ->where('uid', $report_uid)
                 ->first();
         }
@@ -422,95 +432,94 @@ class ReportController extends Controller
             ->where('report_uid', $report_uid)
             ->get();
         
+        $pods_list = DB::table('k_pods')
+            ->where('report_uid', $report_uid)
+            ->get();
+
+
+        $vulnsummary_list = DB::table('k_vulnsummary')
+            ->where('report_uid', $report_uid)
+            ->orderBy('severity', 'DESC')
+            ->get();
+
+        
+        $containers_list = DB::table('k_containers')
+            ->where('report_uid', $report_uid)
+            ->distinct('name', 'image')
+            ->get();
+        
+        $audits_stats = DB::table('k_audits')
+            ->select('namespace_uid', 'severity_level', DB::raw('count(*) as total'))
+            ->where('report_uid', $report_uid)
+            ->groupBy('namespace_uid','severity_level')
+            ->get();
+        
+        $containers_list = DB::table('k_containers')
+            ->where('report_uid', $report_uid)
+            ->distinct('name', 'image')
+            ->get();
+        
+        $images_list = DB::table('k_container_has_images')
+            ->join('k_images', 'k_container_has_images.image_uid', '=', 'k_images.uid')
+            ->where('k_container_has_images.report_uid', $report_uid)
+            ->get();
+        
+        $vuln_ack_count_list = DB::table('count_no_ack_view')
+            ->where('report_uid', $report_uid)
+            ->get();
+
         $namespaces = [];
         foreach ($namespaces_list as $n) {
             $data['stats']['namespaces']++;
             $namespaces[$n->uid] = json_decode(json_encode($n), true);
-            $pods_list = DB::table('k_pods')
-                ->where('report_uid', $report_uid)
-                ->where('namespace_uid', $n->uid)
-                ->get();
-
-            $audits_stats = DB::table('k_audits')
-                ->select('severity_level', DB::raw('count(*) as total'))
-                ->where('report_uid', $report_uid)
-                ->where('namespace_uid', $n->uid)
-                ->groupBy('severity_level')
-                ->get();
 
             $namespaces[$n->uid]['stats'] = array(
                 'error' => 0,
                 'warning' => 0,
                 'info' => 0
             );
+            
             foreach ($audits_stats as $s) {
-                $namespaces[$n->uid]['stats'][$s->severity_level] = $s->total;
+                if ($s->namespace_uid == $n->uid) {
+                    $namespaces[$n->uid]['stats'][$s->severity_level] = $s->total;
+                }
             };
 
             foreach ($pods_list as $p) {
-                $data['stats']['pods']++;
-                $namespaces[$n->uid]['pods'][$p->uid] = json_decode(json_encode($p), true);
+                if ($p->namespace_uid == $n->uid) {
+                    $data['stats']['pods']++;
+                    $namespaces[$n->uid]['pods'][$p->uid] = json_decode(json_encode($p), true);
+                }
             }
 
-            $containers_list = DB::table('k_containers')
-                ->where('report_uid', $report_uid)
-                ->where('namespace_uid', $n->uid)
-                ->distinct('name', 'image')
-                ->get();
-            
             foreach ($containers_list as $c) {
-                $data['stats']['containers']++;
-                $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid] = json_decode(json_encode($c), true);
-                
-                $images_list = DB::table('k_container_has_images')
-                    ->join('k_images', 'k_container_has_images.image_uid', '=', 'k_images.uid')
-                    ->where('k_container_has_images.container_uid', $c->uid)
-                    ->where('k_container_has_images.report_uid', $report_uid)
-                    ->get();
-                
-                foreach ($images_list as $i) {
-                    $data['stats']['images']++;
-                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']= json_decode(json_encode($i), true);
+                if ($c->namespace_uid == $n->uid) {
+                    $data['stats']['containers']++;
+                    $namespaces[$n->uid]['pods'][$c->pod_uid]['containers'][$c->uid] = json_decode(json_encode($c), true);
 
-                    $vulnsummary_list = DB::table('k_vulnsummary')
-                        ->where('image_uid', $i->uid)
-                        ->where('report_uid', $report_uid)
-                        ->get();
-
-                    $os = DB::table('k_target_trivy')
-                        ->where('image_uid', $i->uid)
-                        ->where('report_uid', $report_uid)
-                        ->select('k_target_trivy.target_type as distro')
-                        ->first();
-
-                    if ($os) {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = $os->distro;
-                    } else {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['distro'] = "unknown";
-                    }
-
-                    // Count the vulnerabilities without ack per image
-                    $vuln_ack_count = DB::table('k_vuln_trivy')
-                        ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
-                        ->leftJoin('k_vulnwhitelist', function ($join) {
-                            $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
-                                    ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
-                        })
-                        ->where('k_vuln_trivy.image_uid', $i->uid)
-                        ->where('k_vuln_trivy.report_uid', $report_uid)
-                        ->where('k_vulnwhitelist.uid', null)
-                        ->distinct('k_vuln_trivy.uid')
-                        ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
-                        //->toSql();
-                        ->count();
-                    
-                    $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vuln_ack_count'] = $vuln_ack_count;
-                    
-                    foreach ($vulnsummary_list as $v) {
-                        $namespaces[$n->uid]['pods'][$p->uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+                    foreach ($images_list as $i) {
+                        if ($i->container_uid == $c->uid) {
+                            $data['stats']['images']++;
+                            $namespaces[$n->uid]['pods'][$c->pod_uid]['containers'][$c->uid]['imagedetails'] = json_decode(json_encode($i), true);
+                            if ($i->distro == '') {
+                                $namespaces[$n->uid]['pods'][$c->pod_uid]['containers'][$c->uid]['imagedetails']['distro'] = 'unknown';
+                            }
+                            
+                            $namespaces[$n->uid]['pods'][$c->pod_uid]['containers'][$c->uid]['imagedetails']['vuln_ack_count'] = "0";
+                            foreach ($vuln_ack_count_list as $cl) {
+                                if ($cl->image_uid == $i->uid) {
+                                    $namespaces[$n->uid]['pods'][$c->pod_uid]['containers'][$c->uid]['imagedetails']['vuln_ack_count'] = $cl->vuln_ack_count;
+                                }
+                            }
+                            
+                            foreach ($vulnsummary_list as $v) {
+                                if ($v->image_uid == $i->uid) {
+                                    $namespaces[$n->uid]['pods'][$c->pod_uid]['containers'][$c->uid]['imagedetails']['vulnsummary'][$v->uid] = json_decode(json_encode($v), true);
+                                }
+                            }
+                        }
                     }
                 }
-            
             }
         }
     
