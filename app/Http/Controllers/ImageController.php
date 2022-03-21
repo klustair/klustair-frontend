@@ -66,11 +66,11 @@ class ImageController extends Controller
         $vulnhistory_sql = <<<SQL
             to_char(k_reports.checktime, 'DD.MM HH24:MI') as checktime,
             (SELECT 
-                COUNT(k_vuln_trivy.uid) AS total 
-                FROM k_vuln_trivy 
+                COUNT(k_vuln.uid) AS total 
+                FROM k_vuln
                 LEFT JOIN k_images ON image_uid = k_images.uid
                 WHERE fulltag='$image->fulltag' and 
-                k_vuln_trivy.report_uid=k_reports.uid
+                k_vuln.report_uid=k_reports.uid
             )
         SQL;
 
@@ -103,16 +103,16 @@ class ImageController extends Controller
 
             $data['image']['targets'][$t->uid]['vulnerabilities'] = [];
 
-            $vuln_list = DB::table('k_vuln_trivy')
-                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+            $vuln_list = DB::table('k_vuln_details_view')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
                 ->leftJoin('k_vulnwhitelist', function ($join) {
                     $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
                         ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
                 })
-                ->where('k_vuln_trivy.image_uid', $image_uid)
-                ->where('k_vuln_trivy.report_uid', $report_uid)
-                ->where('k_vuln_trivy.target_uid', $t->uid)
-                ->select('k_vuln_trivy.*', 'k_images.image_b64 as image_b64', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
+                ->where('k_vuln_details_view.image_uid', $image_uid)
+                ->where('k_vuln_details_view.report_uid', $report_uid)
+                ->where('k_vuln_details_view.target_uid', $t->uid)
+                ->select('k_vuln_details_view.*', 'k_images.image_b64 as image_b64', 'k_vulnwhitelist.uid as images_vuln_whitelist_uid')
                 ->orderBy('severity', 'ASC')
                 ->get();
 
@@ -122,15 +122,9 @@ class ImageController extends Controller
 
                 $vulnerability['cvss'] = json_decode($vulnerability['cvss'], true);
 
-                /*
-                if ($vulnerability['cvss'] != ''){
-                    $vulnerability['cvss'] = current($vulnerability['cvss']);
-                }
-                */
-
-                if ($vulnerability['cvss']['version'] >= 3) {
+                if ($vulnerability['cvss'] != '' && $vulnerability['cvss']['version'] >= 3) {
                     $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v3']['scores']['base'];
-                } elseif ($vulnerability['cvss']['version'] == 2) {
+                } elseif ($vulnerability['cvss'] != '' && $vulnerability['cvss']['version'] == 2) {
                     $vulnerability['cvss_base_score'] = $vulnerability['cvss']['v2']['scores']['base'];
                 } else {
                     $vulnerability['cvss_base_score'] = '?';

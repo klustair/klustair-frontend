@@ -183,26 +183,35 @@ class ReportController extends Controller
             if (isset($target['Vulnerabilities'])) {
                 foreach ($target['Vulnerabilities'] as $vuln) {
 
-                    //print_r(@$vuln['SeverityInt'] ?: 0);
-                    $v = new VulnTrivy;
-                    $v->uid                 = $vuln['uid']; 
-                    $v->report_uid          = $report_uid; 
-                    $v->image_uid           = $image_uid; 
-                    $v->target_uid          = $target['uid']; 
-                    $v->vulnerability_id    = @$vuln['VulnerabilityID'] ?: ''; 
-                    $v->pkg_name            = $vuln['PkgName']; 
-                    $v->title               = @$vuln['Title'] ?: ''; 
-                    $v->descr               = @$vuln['Description'] ?: ''; 
+                    $v = new Vuln;
+                    $v->uid                 = $vuln['uid'];
+                    $v->report_uid          = $report_uid;
+                    $v->image_uid           = $image_uid;
+                    $v->target_uid          = $target['uid'];
+                    $v->vulnerability_id    = @$vuln['VulnerabilityID'] ?: '';
+                    $v->pkg_name            = $vuln['PkgName'];
                     $v->installed_version   = @$vuln['InstalledVersion'] ?: ''; 
-                    $v->fixed_version       = @$vuln['FixedVersion'] ?: ''; 
-                    $v->severity_source     = @$vuln['SeveritySource'] ?: ''; 
-                    $v->severity            = @$vuln['SeverityInt'] ?: 0; 
-                    $v->last_modified_date  = @$vuln['LastModifiedDate'] ?: ''; 
-                    $v->published_date      = @$vuln['PublishedDate'] ?: ''; 
-                    $v->links               = json_encode(@$vuln['References'] ?: ''); 
-                    $v->cvss                = json_encode(@$vuln['CVSS'] ?: ''); 
-                    $v->cwe_ids             = json_encode(@$vuln['CweIDs'] ?: ''); 
                     $v->save();
+
+                    $flight = Flight::updateOrCreate(
+                        [
+                            'vulnerability_id'      => @$vuln['VulnerabilityID'] ?: '', 
+                            'pkg_name'              => $vuln['PkgName'],
+                            'installed_version'     => @$vuln['InstalledVersion'] ?: ''
+                        ],
+                        [
+                            'title'                 => @$vuln['Title'] ?: '', 
+                            'descr'                 => @$vuln['Description'] ?: '', 
+                            'fixed_version'         => @$vuln['FixedVersion'] ?: '', 
+                            'severity_source'       => @$vuln['SeveritySource'] ?: '', 
+                            'severity'              => @$vuln['SeverityInt'] ?: '',  
+                            'last_modified_date'    => @$vuln['LastModifiedDate'] ?: '',
+                            'published_date'        => @$vuln['PublishedDate'] ?: '',
+                            'links'                 => json_encode(@$vuln['References'] ?: ''), 
+                            'cvss'                  => json_encode(@$vuln['CVSS'] ?: ''),
+                            'cwe_ids'               => json_encode(@$vuln['CweIDs'] ?: '')
+                        ]
+                    );
                 }
                 //Log::debug('ReportController::apiCreateVuln::vulnerabilities : ' . count($target['Vulnerabilities']));
 
@@ -263,31 +272,19 @@ class ReportController extends Controller
 
             for ($i = 0; $i < 5; $i++) {
                 $severity = $i;
-                /*
-                $total = DB::table('k_vuln_trivy')
-                    ->where('report_uid', $report_uid)
-                    ->where('image_uid', $image->uid)
-                    ->where('severity', $severity)
-                    ->count();
-                $fixed = DB::table('k_vuln_trivy')
-                    ->where('report_uid', $report_uid)
-                    ->where('image_uid', $image->uid)
-                    ->where('severity', $severity)
-                    ->where('fixed', 1)
-                    ->count();
-                */
-                $vuln_ack_count = DB::table('k_vuln_trivy')
-                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+                
+                $vuln_ack_count = DB::table('k_vuln_details_view')
+                ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
                 ->leftJoin('k_vulnwhitelist', function ($join) {
                     $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
                          ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
                 })
-                ->where('k_vuln_trivy.image_uid', $image->uid)
-                ->where('k_vuln_trivy.report_uid', $report_uid)
+                ->where('k_vuln_details_view.image_uid', $image->uid)
+                ->where('k_vuln_details_view.report_uid', $report_uid)
                 ->where('severity', $severity)
                 //->where('k_vulnwhitelist.uid', null) // to get only the vulns that are not whitelisted
                 ->whereNotNull('k_vulnwhitelist.uid')
-                ->distinct('k_vuln_trivy.uid')
+                ->distinct('k_vuln_details_view.uid')
                 ->select('k_vulnwhitelist.uid as images_vuln_whitelist_uid')
                 //->toSql();
                 ->count();
@@ -299,27 +296,27 @@ class ReportController extends Controller
             }
         }
 
-        $acknowledged_sum = DB::table('k_vuln_trivy')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+        $acknowledged_sum = DB::table('k_vuln_details_view')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
             ->rightJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
-            ->where('k_vuln_trivy.report_uid', $report_uid)
+            ->where('k_vuln_details_view.report_uid', $report_uid)
             //->distinct('k_vulnwhitelist.uid')
-            ->select('k_vuln_trivy.uid as vuln_trivy_uid')
+            ->select('k_vuln_details_view.uid as vuln_trivy_uid')
             ->count();
         
-        $not_acknowledged_sum = DB::table('k_vuln_trivy')
-            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_trivy.image_uid')
+        $not_acknowledged_sum = DB::table('k_vuln_details_view')
+            ->leftJoin('k_images', 'k_images.uid', '=', 'k_vuln_details_view.image_uid')
             ->leftJoin('k_vulnwhitelist', function ($join) {
                 $join->on('k_vulnwhitelist.wl_image_b64', '=', 'image_b64')
                      ->on('k_vulnwhitelist.wl_vuln', '=', 'vulnerability_id');
             })
-            ->where('k_vuln_trivy.report_uid', $report_uid)
+            ->where('k_vuln_details_view.report_uid', $report_uid)
             ->where('k_vulnwhitelist.uid', null)
             //->distinct('k_vulnwhitelist.uid')
-            ->select('k_vuln_trivy.uid as vuln_trivy_uid')
+            ->select('k_vuln_details_view.uid as vuln_trivy_uid')
             //->toSql();
             ->count();
 
@@ -453,19 +450,11 @@ class ReportController extends Controller
             ->join('k_images', 'k_container_has_images.image_uid', '=', 'k_images.uid')
             ->where('k_container_has_images.report_uid', $report_uid)
             ->get();
-
-        $vuln_ack_count_select = "
-            SELECT
-                k_vuln_trivy.image_uid,
-                count(distinct k_vuln_trivy.uid) AS vuln_ack_count 
-            FROM k_vuln_trivy
-            LEFT JOIN k_images ON k_images.uid = k_vuln_trivy.image_uid
-            LEFT JOIN k_vulnwhitelist ON k_vulnwhitelist.wl_image_b64 = image_b64 AND k_vulnwhitelist.wl_vuln = vulnerability_id
-            WHERE k_vuln_trivy.report_uid = '$report_uid'
-            AND k_vulnwhitelist.uid IS NULL
-            GROUP BY k_vuln_trivy.image_uid";
-        $vuln_ack_count_list =  DB::select( DB::raw($vuln_ack_count_select) );
         
+        $vuln_ack_count_list = DB::table('count_no_ack_view')
+            ->where('report_uid', $report_uid)
+            ->get();
+
         $namespaces = [];
         foreach ($namespaces_list as $n) {
             $data['stats']['namespaces']++;
