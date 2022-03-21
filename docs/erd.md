@@ -11,10 +11,16 @@ erDiagram
     POD ||..o{ CONTAINER : has
     CONTAINER }o..|| IMAGE : has
     IMAGE }o..o{ VULN : has
+    TARGET_TRIVY }|..o{ VULN : has
+    TARGET_TRIVY }o..|{ IMAGE : has
     VULN }|..|| VULN_DETAIL : has
     VULN ||..o{ VULNSUMMARY : has
     VULN ||..|| VULNWHITELIST : has
     VULN }o..o{ CWE : has
+```
+
+```mermaid
+erDiagram
     USER {
       bigint id 
       varchar name
@@ -25,7 +31,25 @@ erDiagram
       timestamp created_at
       timestamp updated_at
     }
-    PASSWORD_RESET
-    PERSONAL_ACCESS_TOKEN
-    MIGRATION
+    PASSWORD_RESET {
+      varchar email
+      varchar token
+      timestamp created_at
+    }
+    PERSONAL_ACCESS_TOKEN{
+      bigint id
+      varchar tokenable_type
+      bigint tokenable_id
+      varchar name
+      varchar token
+      text abilities
+      timestamp last_used_at
+      timestamp created_at
+      timestamp updated_at
+    }
+    MIGRATION{
+      bigint id
+      varchar migration
+      integer batch
+    }
 ```
