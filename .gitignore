@@ -25,4 +25,6 @@ Homestead.json
 # generated on nginx startup
 docker/nginx/config/etc/nginx/conf.d/fastcgi.conf
 
+.composer/
+
 notest.txt
