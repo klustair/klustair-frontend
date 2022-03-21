@@ -13,9 +13,12 @@ class VulnDetails extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false;
-    protected $primaryKey = 'uid';
+    //protected $primaryKey = 'uid'; //there is no single primary key in this table
 
     protected $fillable = [
+        'vulnerability_id',
+        'pkg_name',
+        'installed_version',
         'title',
         'descr',
         'fixed_version',

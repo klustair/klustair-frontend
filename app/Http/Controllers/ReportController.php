@@ -14,7 +14,8 @@ use App\Models\Pod;
 use App\Models\Container;
 use App\Models\Image;
 use App\Models\TargetTrivy;
-use App\Models\VulnTrivy;
+use App\Models\Vuln;
+use App\Models\VulnDetails;
 use App\Models\Vulnsummary;
 use App\Models\ContainerHasImage;
 use App\Models\ReportsSummaries;
@@ -182,29 +183,41 @@ class ReportController extends Controller
             Log::debug('ReportController::apiCreateVuln: ' . $i->uid);
             if (isset($target['Vulnerabilities'])) {
                 foreach ($target['Vulnerabilities'] as $vuln) {
+                    //Log::debug('ReportController::apiCreateVuln::VulnerabilityID : ' . $vuln['VulnerabilityID']);
 
+                    if (
+                        !isset($vuln['VulnerabilityID']) || $vuln['VulnerabilityID'] == '' ||
+                        !isset($vuln['PkgName']) || $vuln['PkgName'] == '' ||
+                        !isset($vuln['InstalledVersion']) || $vuln['InstalledVersion'] == '') {
+                        // skip if vulnerability has no CVE yet
+                        continue;
+                    }
                     $v = new Vuln;
                     $v->uid                 = $vuln['uid'];
                     $v->report_uid          = $report_uid;
                     $v->image_uid           = $image_uid;
                     $v->target_uid          = $target['uid'];
-                    $v->vulnerability_id    = @$vuln['VulnerabilityID'] ?: '';
+                    $v->vulnerability_id    = $vuln['VulnerabilityID'];
                     $v->pkg_name            = $vuln['PkgName'];
-                    $v->installed_version   = @$vuln['InstalledVersion'] ?: ''; 
+                    $v->installed_version   = $vuln['InstalledVersion']; 
                     $v->save();
 
-                    $flight = Flight::updateOrCreate(
+
+                    $vulndetails = VulnDetails::updateOrCreate(
                         [
-                            'vulnerability_id'      => @$vuln['VulnerabilityID'] ?: '', 
+                            'vulnerability_id'      => $vuln['VulnerabilityID'], 
                             'pkg_name'              => $vuln['PkgName'],
-                            'installed_version'     => @$vuln['InstalledVersion'] ?: ''
+                            'installed_version'     => $vuln['InstalledVersion'],
                         ],
                         [
+                            'vulnerability_id'      => $vuln['VulnerabilityID'], 
+                            'pkg_name'              => $vuln['PkgName'],
+                            'installed_version'     => $vuln['InstalledVersion'],
                             'title'                 => @$vuln['Title'] ?: '', 
                             'descr'                 => @$vuln['Description'] ?: '', 
                             'fixed_version'         => @$vuln['FixedVersion'] ?: '', 
                             'severity_source'       => @$vuln['SeveritySource'] ?: '', 
-                            'severity'              => @$vuln['SeverityInt'] ?: '',  
+                            'severity'              => @$vuln['SeverityInt'] ?: 0,  
                             'last_modified_date'    => @$vuln['LastModifiedDate'] ?: '',
                             'published_date'        => @$vuln['PublishedDate'] ?: '',
                             'links'                 => json_encode(@$vuln['References'] ?: ''), 

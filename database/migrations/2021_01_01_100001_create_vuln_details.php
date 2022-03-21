@@ -15,8 +15,18 @@ class CreateVulnDetails extends Migration
     {
         
         $create_sql[] = <<<SQL
+            CREATE SEQUENCE IF NOT EXISTS public.vuln_details_id_seq
+                INCREMENT 1
+                START 1
+                MINVALUE 1
+                MAXVALUE 2147483647
+                CACHE 1;
+        SQL;
+
+        $create_sql[] = <<<SQL
             CREATE TABLE IF NOT EXISTS public.k_vuln_details
                 (
+                    id integer NOT NULL DEFAULT nextval('vuln_details_id_seq'::regclass),
                     vulnerability_id character varying COLLATE pg_catalog."default" NOT NULL,
                     pkg_name character varying COLLATE pg_catalog."default" NOT NULL,
                     descr character varying COLLATE pg_catalog."default",
@@ -67,5 +77,15 @@ class CreateVulnDetails extends Migration
     public function down()
     {
         Schema::dropIfExists('k_vuln_details');
+
+
+        //k_pods
+        $delete_sql[] = <<<SQL
+            DROP SEQUENCE IF EXISTS public.vuln_details_id_seq
+        SQL;
+
+        foreach ($delete_sql as $sql ) {
+            DB::statement($sql);
+        }
     }
 }
