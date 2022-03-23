@@ -13,22 +13,6 @@ class V080 extends Migration
      */
     public function up()
     {
-        
-        ### Migrate data to splitted Table
-        $create_sql[] = <<<SQL
-            INSERT INTO public.k_vuln (uid, image_uid, report_uid, target_uid, vulnerability_id, pkg_name, installed_version)
-                SELECT 
-                uid, image_uid, report_uid, target_uid, vulnerability_id, pkg_name, installed_version
-                FROM k_vuln_trivy;
-        SQL;
-
-        $create_sql[] = <<<SQL
-            INSERT INTO public.k_vuln_details (vulnerability_id, pkg_name, descr, title, installed_version, fixed_version, severity_source, severity, last_modified_date, published_date)
-                SELECT 
-                DISTINCT vulnerability_id, pkg_name, descr, title, installed_version, fixed_version, severity_source, severity, last_modified_date, published_date
-                FROM k_vuln_trivy
-        SQL;
-
         $create_sql[] = <<<SQL
             ALTER TABLE IF EXISTS k_vuln_trivy
                 RENAME TO k_vuln_trivy_old;
