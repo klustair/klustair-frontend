@@ -1,4 +1,4 @@
-FROM nginx:1.21-alpine
+FROM nginx:1-alpine
 
 # get npm
 RUN apk --no-cache add nodejs npm
