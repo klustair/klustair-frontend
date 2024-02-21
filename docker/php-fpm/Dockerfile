@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8-fpm-alpine
 
 RUN apk --no-cache add postgresql-dev libzip-dev libxml2-dev 
 
